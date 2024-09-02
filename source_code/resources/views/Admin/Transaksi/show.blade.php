@@ -7,26 +7,6 @@
         <div class="card mb-4">
             <div class="card-header d-flex justify-content-between align-items-center">
                 <div class="card-title"><h2>Detail Transaksi</h2></div>
-                <div class="form-group">
-                    <label class="form-label">Status:</label>
-                    <div class="selectgroup w-100">
-                        <label class="selectgroup-item">
-                            <input type="radio" name="status" value="pending" class="selectgroup-input" {{ $order->status == 'pending' ? 'checked' : '' }} />
-                            <span class="selectgroup-button">Pending</span>
-                        </label>
-                        <label class="selectgroup-item">
-                            <input type="radio" name="status" value="completed" class="selectgroup-input" {{ $order->status == 'completed' ? 'checked' : '' }} />
-                            <span class="selectgroup-button">Completed</span>
-                        </label>
-                        <label class="selectgroup-item">
-                            <input type="radio" name="status" value="cancelled" class="selectgroup-input" {{ $order->status == 'cancelled' ? 'checked' : '' }} />
-                            <span class="selectgroup-button">Cancelled</span>
-                        </label>
-                    </div>
-                    @if ($errors->has('status'))
-                        <small class="text-danger">{{ $errors->first('status') }}</small>
-                    @endif
-                </div>
             </div>
             <div class="card-body">
                 <table class="table table-bordered">
@@ -125,11 +105,10 @@
         @method('PUT')
         <input type="hidden" name="status" id="statusInput" value="{{ $order->status }}">
 
-        <div class="form-group" id="subtotalGroup" style="display: none;">
-            <label for="subtotal">Edit Subtotal</label>
-            <!-- The value here is displayed initially as harga_total but will save as harga_setelah_nego -->
+        <div class="form-group" id="subtotalGroup" @if($order->status != 'Negosiasi') style="display: none;" @endif>
+            <label for="subtotal">Ubah Harga Total Setelah Negoisasi</label>
             <input type="number" name="subtotal" id="subtotal" class="form-control" value="{{ $order->harga_setelah_nego ?? $order->harga_total }}">
-        </div>
+        </div
 
         <!-- Tracking Number Input -->
         @if($order->status == 'Packing')
@@ -189,9 +168,27 @@
         <h5>Bukti Pembayaran</h5>
     </div>
     <div class="card-body">
-        <a href="{{ asset('uploads/bukti_pembayaran/' . $order->bukti_pembayaran) }}" target="_blank" class="btn btn-info">
+        <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#buktiPembayaranModal">
             Lihat Bukti Pembayaran
-        </a>
+        </button>
+
+        <div class="modal fade" id="buktiPembayaranModal" tabindex="-1" aria-labelledby="buktiPembayaranModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="buktiPembayaranModalLabel">Bukti Pembayaran</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <img src="{{ asset('uploads/bukti_pembayaran/' . $order->bukti_pembayaran) }}" class="img-fluid" alt="Bukti Pembayaran">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
     </div>
 </div>
 @endif
@@ -224,6 +221,11 @@
     }
 
     function updateStatus(newStatus) {
+        if (newStatus === 'Packing' && !{{ $order->bukti_pembayaran ? 'true' : 'false' }}) {
+        alert('Bukti pembayaran harus diunggah sebelum status bisa diubah menjadi Packing.');
+        return;
+    }
+
         $('#statusInput').val(newStatus);
 
         // Hide subtotal form for other statuses

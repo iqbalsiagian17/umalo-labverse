@@ -109,11 +109,11 @@
                         @if(auth()->user()->userDetail)
                             <form action="{{ route('cart.checkout') }}" method="POST">
                                 @csrf
-                                <button type="submit" class="primary-btn">{{ __('messages.proceed_to_checkout') }}</button>
+                                <button type="submit" class="btn text-white" style="background: #42378C;">{{ __('messages.proceed_to_checkout') }}</button>
                             </form>
                         @else
                             <p class="text-danger">{{ __('messages.complete_personal_data') }}</p>
-                            <a href="{{ route('user.create') }}" class="btn btn-primary">{{ __('messages.fill_personal_data') }}</a>
+                            <a href="{{ route('user.create') }}" class="btn text-white" style="background: #42378C;">{{ __('messages.fill_personal_data') }}</a>
                         @endif
                     </div>
                 </div>
@@ -123,7 +123,7 @@
         <div class="card mb-3 mt-4 shadow rounded border-0 h-100">
             <div class="card-body d-flex flex-column justify-content-center align-items-center" style="min-height: 300px;">
                 <h5 class="mb-1">{{ __('messages.cart_empty') }}</h5>
-                <a href="/" class="btn btn-primary mt-3">{{ __('messages.shop_now') }}</a>
+                <a href="/" class="btn text-white mt-3" style="background-color: #42378C;">{{ __('messages.shop_now') }}</a>
             </div>
         </div>
         @endif

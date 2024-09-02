@@ -59,7 +59,7 @@
             <h4 class="mt-4">{{ __('messages.order_items') }}:</h4>
             <div class="table-responsive">
                 <table class="table table-hover table-striped">
-                    <thead class="bg-primary text-white">
+                    <thead class="text-white" style="background-color: #42378C;">
                         <tr>
                             <th>{{ __('messages.product') }}</th>
                             <th class="text-center">{{ __('messages.quantity') }}</th>
@@ -107,7 +107,11 @@
                         </tr>
                     </tfoot>
                 </table>
+                <p class="text-muted small">
+                    <span class="text-danger">*</span>Harga yang tertera belum termasuk pajak PPN. Untuk mengetahui total transaksi yang sebenarnya, silakan melihat pada faktur (invoice) yang dapat diunduh.
+                </p>
             </div>
+            
             
       
             <div class="mt-4">
@@ -115,7 +119,7 @@
                     @if($order->status == 'Negosiasi' && $order->whatsapp_number)
                     <div class="alert alert-info">
                         <strong>{{ __('messages.whatsapp_number_for_negotiation') }}:</strong> {{ $order->whatsapp_number }}<br>
-                        {{ __('messages.or_you_can_contact_admin') }} <a href="/chatify">{{ __('messages.here') }}</a>.
+                        {{ __('messages.or_you_can_contact_admin') }} </a>.
                     </div>
                     
                     @endif
@@ -143,25 +147,33 @@
                 @endif
 
                 @if($order->status == 'Diterima')
-                    <div class="card mt-4">
-                        <div class="card-header">
-                            <h5>{{ __('messages.upload_payment_proof') }}</h5>
+                    <div class="card mt-4 shadow-sm">
+                        <div class="card-header text-white" style="background-color: #42378C;">
+                            <h5 class="mb-0">{{ __('messages.upload_payment_proof') }}</h5>
                         </div>
                         <div class="card-body">
                             <form action="{{ route('order.upload_bukti_pembayaran', $order->id) }}" method="POST" enctype="multipart/form-data">
                                 @csrf
                                 <div class="form-group">
-                                    <label for="bukti_pembayaran">{{ __('messages.select_payment_proof_file') }}</label>
+                                    <label for="bukti_pembayaran" class="form-label">{{ __('messages.select_payment_proof_file') }}</label>
                                     <input type="file" name="bukti_pembayaran" id="bukti_pembayaran" class="form-control" required>
                                     @if ($errors->has('bukti_pembayaran'))
                                         <small class="text-danger">{{ $errors->first('bukti_pembayaran') }}</small>
                                     @endif
                                 </div>
-                                <button type="submit" class="btn btn-primary mt-2">{{ __('messages.upload') }}</button>
+                                <div class="alert alert-warning mt-3 d-flex align-items-center">
+                                    <i class="fas fa-exclamation-circle" style="margin-right: 1.5rem;"></i>
+                                    <p class="mb-0">
+                                        Untuk mengetahui jumlah pembayaran yang harus Anda lakukan, silakan lihat pada faktur yang dapat diunduh melalui tombol 'Download Invoice' di bagian atas halaman ini. Terima kasih atas perhatian Anda.
+                                    </p>
+                                </div>
+                                
+                                <button type="submit" class="btn mt-2 w-100 text-white" style="background-color: #42378C;">{{ __('messages.upload') }}</button>
                             </form>
                         </div>
                     </div>
                 @endif
+
 
                 @if($order->bukti_pembayaran)
                     <div class="card mt-4">
@@ -178,21 +190,115 @@
             
             <!-- Transaction History -->
             @if($order->statusHistories->isNotEmpty())
-            <div class="container">
-                <div class="mt-5">
-                    <h4>{{ __('messages.transaction_history') }}</h4>
-                    <ul class="timeline">
-                        @foreach($order->statusHistories as $history)
-                            <li class="timeline-item {{ $loop->first ? '' : '' }}">
-                                <span class="timeline-date">{{ $history->created_at->format('d-m-Y H:i') }}</span>
-                                <span class="timeline-status">{{ __('messages.' . strtolower(str_replace(' ', '_', $history->status))) }}</span>
-                                <span class="timeline-desc">{{ $history->description ?? '' }}</span>
-                            </li>
-                        @endforeach
-                    </ul>
-                </div>
-            </div>
-            @endif
+    <div class="container">
+        <div class="mt-5">
+            <h4>{{ __('messages.transaction_history') }}</h4>
+            <ul class="timeline">
+                @foreach($order->statusHistories as $history)
+                    <li class="timeline-item {{ $loop->first ? 'timeline-item-first' : '' }}">
+                        <div class="timeline-marker"></div>
+                        <div class="timeline-content">
+                            <span class="timeline-date">{{ $history->created_at->format('d-m-Y H:i') }}</span>
+                            <h5 class="timeline-status">{{ __('messages.' . strtolower(str_replace(' ', '_', $history->status))) }}</h5>
+                            @if($history->description)
+                                <p class="timeline-desc">{{ $history->description }}</p>
+                            @endif
+                        </div>
+                    </li>
+                @endforeach
+            </ul>
+        </div>
+    </div>
+@endif
+
+<style>
+    /* Timeline container */
+    .timeline {
+        list-style-type: none;
+        position: relative;
+        padding-left: 40px;
+        margin: 0;
+    }
+    
+    /* Timeline item */
+    .timeline-item {
+        margin-bottom: 20px;
+        position: relative;
+        padding-left: 25px;
+    }
+    
+    /* Marker on the timeline */
+    .timeline-marker {
+        position: absolute;
+        left: 0;
+        width: 15px;
+        height: 15px;
+        background-color: #e0e0e0;
+        border-radius: 50%;
+        top: 5px;
+        border: 3px solid #ffffff;
+        box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+    }
+    
+    /* First marker (slightly larger) */
+    .timeline-item-first .timeline-marker {
+        width: 18px;
+        height: 18px;
+        top: 4px;
+    }
+    
+    /* Content next to the marker */
+    .timeline-content {
+        padding-left: 40px;
+    }
+    
+    /* Date */
+    .timeline-date {
+        display: block;
+        font-weight: 600;
+        margin-bottom: 5px;
+        color: #999999;
+    }
+    
+    /* Status */
+    .timeline-status {
+        font-size: 16px;
+        font-weight: 500;
+        color: #333333;
+    }
+    
+    /* Description */
+    .timeline-desc {
+        margin-top: 5px;
+        font-size: 14px;
+        color: #666666;
+    }
+    
+    /* Vertical line connecting the timeline markers */
+    .timeline::before {
+        content: '';
+        background-color: #e0e0e0;
+        width: 2px;
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 7px;
+    }
+    
+    /* Hover effects */
+    .timeline-item:hover .timeline-marker {
+        background-color: #999999;
+    }
+    
+    .timeline-item:hover .timeline-status {
+        color: #000000;
+    }
+    
+    .timeline-item:hover .timeline-date {
+        color: #666666;
+    }
+    </style>
+    
             <!-- Link to Review Section -->
             @if($order->status == 'Selesai')
                 <div class="mt-4 text-center">

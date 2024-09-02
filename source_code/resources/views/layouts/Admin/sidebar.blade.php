@@ -1,5 +1,5 @@
 <!-- Sidebar -->
-<div class="sidebar" data-background-color="light">
+<div class="sidebar" data-background-color="dark">
     <div class="sidebar-logo">
       <!-- Logo Header -->
       <div class="logo-header" data-background-color="dark">
@@ -13,16 +13,15 @@
         </a>
         <div class="nav-toggle">
           <button class="btn btn-toggle toggle-sidebar">
-              <i class="gg-menu-right dark" ></i>
+            <i class="gg-menu-right"></i>
           </button>
-          <button class="btn btn-toggle sidenav-toggler dark">
-              <i class="gg-menu-left dark" ></i>
+          <button class="btn btn-toggle sidenav-toggler">
+            <i class="gg-menu-left"></i>
           </button>
-      </div>
-      <button class="topbar-toggler more dark">
-          <i class="gg-more-vertical-alt dark" ></i>
-      </button>
-      
+        </div>
+        <button class="topbar-toggler more">
+          <i class="gg-more-vertical-alt"></i>
+        </button>
       </div>
       <!-- End Logo Header -->
     </div>

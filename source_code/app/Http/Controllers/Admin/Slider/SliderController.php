@@ -35,6 +35,7 @@ class SliderController extends Controller
             'image' => 'required|image',
             'deskripsi' => 'required',
             'url' => 'nullable|string',
+            'tombol' => 'nullable|string',
         ]);
 
         $imagePath = null;
@@ -56,6 +57,7 @@ class SliderController extends Controller
             'image' => $imagePath,
             'deskripsi' => $request->input('deskripsi'),
             'url' => $request->input('url'),
+            'tombol' => $request->input('tombol'),
         ]);
 
         return redirect()->route('slider.index')->with('success', 'Slider created successfully.');
@@ -88,6 +90,7 @@ class SliderController extends Controller
             'image' => 'nullable|image',
             'deskripsi' => 'required',
             'url' => 'nullable|string',
+            'tombol' => 'nullable|string',
         ]);
 
         $slider = Slider::findOrFail($id);
@@ -117,6 +120,7 @@ class SliderController extends Controller
             'image' => $imagePath,
             'deskripsi' => $request->input('deskripsi'),
             'url' => $request->input('url'),
+            'tombol' => $request->input('tombol'),
         ]);
 
         return redirect()->route('slider.index')->with('success', 'Slider updated successfully.');

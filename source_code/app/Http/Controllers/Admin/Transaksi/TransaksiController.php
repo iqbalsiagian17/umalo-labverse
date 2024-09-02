@@ -59,6 +59,13 @@ class TransaksiController extends Controller
             }
         }
     }
+
+    if ($request->status == 'Packing' && !$order->bukti_pembayaran) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Pelanggan belum mengunggah bukti pembayaran, sehingga status tidak dapat diubah menjadi Packing.'
+        ], 400);
+    }
     
         // Handle status updates and other logic
         if ($request->status == 'Pengiriman') {
@@ -76,6 +83,11 @@ class TransaksiController extends Controller
         }
     
         $order->status = $request->status;
+
+        if ($request->status == 'Packing' && $request->has('nomor_resi')) {
+            $order->nomor_resi = $request->nomor_resi;
+        }
+
         $order->save();
     
         // Log the status change with any additional info

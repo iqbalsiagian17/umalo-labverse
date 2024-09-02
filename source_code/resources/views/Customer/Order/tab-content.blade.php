@@ -2,7 +2,7 @@
 <div class="card mb-3 mt-4 shadow rounded border-0 h-100">
     <div class="card-body d-flex flex-column justify-content-center align-items-center" style="min-height: 300px;">
         <h5 class="mb-1">Belum ada Pesanan</h5>
-        <a href="/shop" class="btn btn-primary mt-3">Belanja Sekarang</a>
+        <a href="/shop" class="btn text-white mt-3" style="background-color: #42378C;">Belanja Sekarang</a>
     </div>
 </div>
 
@@ -18,7 +18,7 @@
                     <p class="mb-1"><strong>{{ __('messages.status') }}:</strong> {{ $order->status }}</p>
                 </div>
                 <div>
-                    <a href="{{ route('order.detail', $order->id) }}" class="btn btn-primary btn-sm">{{ __('messages.view_detail') }}</a>
+                    <a href="{{ route('order.detail', $order->id) }}" class="btn btn-sm text-white" style="background-color: #42378C;">{{ __('messages.view_detail') }}</a>
                     @if(in_array($order->status, ['Diterima', 'Selesai']))
                     <a href="{{ route('order.generate_pdf', $order->id) }}" class="btn btn-success btn-sm">{{ __('messages.download_invoice') }}</a>
                     @endif                

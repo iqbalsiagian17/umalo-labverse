@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('image');
             $table->text('deskripsi')->nullable();
             $table->string('url')->nullable();
+            $table->string('tombol')->nullable(); // Menambahkan kolom tombol
             $table->timestamps();
         });
     }

@@ -48,6 +48,7 @@ Route::get('produk_customer/{id}', [ProdukCostumerController::class, 'userShow']
 Route::get('/search', [ProdukCostumerController::class, 'search'])->name('produk.search');
 Route::get('/product/{id}', [ProdukCostumerController::class, 'userShow'])->name('product.show');
 Route::get('/faq', [QnaController::class, 'index'])->name('faq');
+Route::get('/shop/rating/{rating}', [ShopController::class, 'filterByRating'])->name('shop.rating');
 
 
 //Normal Users Routes List
@@ -94,6 +95,8 @@ Route::middleware(['auth', 'user-access:costumer'])->group(function () {
     Route::get('/order/{id}/generate-pdf', [OrderController::class, 'generatePdf'])->name('order.generate_pdf');
     Route::post('/order/{id}/upload_bukti_pembayaran', [OrderController::class, 'uploadBuktiPembayaran'])->name('order.upload_bukti_pembayaran');
     Route::post('/order/{id}/review', [OrderController::class, 'submitReview'])->name('order.submitReview');
+    Route::get('/order/{id}', [OrderController::class, 'show'])->name('order.details');
+    Route::get('/order/{id}', [OrderController::class, 'show'])->name('order.show');
 
 
 

@@ -146,7 +146,7 @@
     <!-- Statistik Pengunjung Hari Ini dan Waktu Kunjungan Rata-rata Hari Ini stacked vertically -->
     <div class="col-md-4">
         <div class="row">
-            <div class="col-md-12">
+            <div class="col-md-12 mb-3">
                 <div class="card shadow-sm text-center">
                     <div class="card-header text-white">
                         <h4 class="card-title">
@@ -182,14 +182,14 @@
                       <div class="col-md-6">
                           <!-- Tawk.to Account Information -->
                           <h5 class="text-muted">Tawk.to Account</h5>
-                          <p class="mb-1 text-start"><strong>Email:</strong> <a href="mailto:labserveags@gmail.com">labverseags@gmail.com</a></p>
-                          <p class="mb-3 text-start"><strong>Password:</strong> <span class="text-danger">qweqwe123123.</span></p>
+                          <p class="mb-1 text-start"><strong>Email:</strong> <a href="mailto:labserveags@gmail.com">labtekags@gmail.com</a></p>
+                          <p class="mb-3 text-start"><strong>Password:</strong> <span class="text-danger">ags123.</span></p>
                                                 </div>
                       <div class="col-md-6">
                           <!-- Google Account Information -->
                           <h5 class="text-muted">Google Account</h5>
-                          <p class="mb-1 text-start"><strong>Email:</strong> <a href="mailto:labserveags@gmail.com">labserveags@gmail.com</a></p>
-                          <p class="mb-3 text-start"><strong>Password:</strong> <span class="text-danger">labserve123</span></p>
+                          <p class="mb-1 text-start"><strong>Email:</strong> <a href="mailto:labserveags@gmail.com">labtekeags@gmail.com</a></p>
+                          <p class="mb-3 text-start"><strong>Password:</strong> <span class="text-danger">labtek123</span></p>
                       </div>
                   </div>
                   <!-- Button to Tawk.to Dashboard -->
@@ -201,11 +201,8 @@
               </div>
               
             </div>
-          
         </div>
     </div>
 </div>
-
-
 
 @endsection

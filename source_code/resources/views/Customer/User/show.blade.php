@@ -33,7 +33,7 @@
     /* Styling untuk hover pada tab */
     .nav-tabs .nav-link:hover {
         background-color: #f8f9fa;
-        color: #007bff;
+        color: #42378C;
     }
     
     /* Styling untuk konten tab */
@@ -83,7 +83,7 @@
                                                     <small class="text-danger">{{ $errors->first('foto_profile') }}</small>
                                                 @endif
                                             </div>
-                                            <button type="button" class="btn btn-primary btn-sm" onclick="document.getElementById('fotoProfileInput').click();">{{ __('messages.choose_photo') }}</button>
+                                            <button type="button" class="btn btn-sm text-white" style="background: #42378C;" onclick="document.getElementById('fotoProfileInput').click();">{{ __('messages.choose_photo') }}</button>
                                         </form>
                                 
                                         <p class="text-muted mt-3">{{ __('messages.photo_file_requirements') }}</p>
@@ -109,11 +109,11 @@
                             </div>
                             <div class="d-flex flex-column mt-4">
                                 @if (is_null($user->password) || $user->password === '')
-                                    <button type="button" class="btn btn-primary mb-2" data-bs-toggle="modal" data-bs-target="#createPasswordModal">{{ __('messages.create_password') }}</button>
+                                    <button type="button" class="btn text-white mb-2" style="background: #42378C;" data-bs-toggle="modal" data-bs-target="#createPasswordModal">{{ __('messages.create_password') }}</button>
                                 @else
-                                    <button type="button" class="btn btn-primary mb-2" data-bs-toggle="modal" data-bs-target="#changePasswordModal">{{ __('messages.change_password') }}</button>
+                                    <button type="button" class="btn text-white mb-2" style="background: #42378C;" data-bs-toggle="modal" data-bs-target="#changePasswordModal">{{ __('messages.change_password') }}</button>
                                 @endif
-                                <a href="{{ route('user.edit') }}" class="btn btn-primary">{{ __('messages.edit_data') }}</a>
+                                <a href="{{ route('user.edit') }}" class="btn text-white" style="background: #42378C;">{{ __('messages.edit_data') }}</a>
                             </div>
                         </div>
         
@@ -156,7 +156,7 @@
                         </div>
                         <hr>
                         <div class="d-flex justify-content-start">
-                            <a href="{{ route('user.editAddress', $userAddress->id) }}" class="btn btn-primary">{{ __('messages.edit_address') }}</a>
+                            <a href="{{ route('user.editAddress', $userAddress->id) }}" class="btn text-white" style="background: #42378C;">{{ __('messages.edit_address') }}</a>
                             <form method="POST" action="{{ route('user.toggleAddressStatus', $userAddress->id) }}" style="margin-left: 10px;">
                                 @csrf
                                 <button type="submit" class="btn {{ $userAddress->status == 'aktif' ? 'btn-danger' : 'btn-success' }}">
@@ -198,7 +198,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ __('messages.close') }}</button>
-                    <button type="submit" class="btn btn-primary">{{ __('messages.save_password') }}</button>
+                    <button type="submit" class="btn text-white" style="background: #42378C;">{{ __('messages.save_password') }}</button>
                 </div>
             </form>
         </div>
@@ -234,7 +234,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ __('messages.close') }}</button>
-                    <button type="submit" class="btn btn-primary">{{ __('messages.change_password') }}</button>
+                    <button type="submit" class="btn text-white" style="background: #42378C;">{{ __('messages.change_password') }}</button>
                 </div>
             </form>
         </div>

@@ -83,9 +83,10 @@ class HomeController extends Controller
     ->take(4) // Limit to the top 4 best-sellers
     ->get();
 
+    $user = User::find(auth()->id());
+    $pendingOrders = $user ? $user->orders()->where('status', 'Diterima')->whereNull('bukti_pembayaran')->get() : collect();
 
-
-    return view('customer.home.home', compact('produk', 'bigSale', 'slider','topSellingProducts' ));
+    return view('customer.home.home', compact('produk', 'bigSale', 'slider','topSellingProducts','pendingOrders' ));
 }
 
 

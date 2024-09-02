@@ -8,7 +8,7 @@
     <div class="humberger__menu__overlay"></div>
     <div class="humberger__menu__wrapper">
         <div class="humberger__menu__logo">
-            <a href="#"><img src="{{ asset('assets/images/logo.jpg') }}" alt=""></a>
+            <a href="#"><img src="{{ asset('assets/images/logo-nobg.png') }}" alt=""></a>
         </div>
         <div class="humberger__menu__cart">
             <ul>
@@ -46,7 +46,7 @@
                     <div class="nav-item dropdown">
                         <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
                             aria-haspopup="true" aria-expanded="false" style="text-decoration: none; color: inherit;">
-                            <img src="{{ Auth::user()->foto_profile ? asset(Auth::user()->foto_profile) : asset('assets/images/logo.png') }}" 
+                            <img src="{{ Auth::user()->foto_profile ? asset(Auth::user()->foto_profile) : asset('assets/images/logo-nobg.png') }}" 
                                  alt="Avatar"
                                  style="width: 30px; height: 30px; border-radius: 50%; object-fit: cover; margin-right: 8px; border: 2px solid #ccc;">
                             {{ Str::limit(explode(' ', Auth::user()->name)[0], 10) }}
@@ -145,7 +145,7 @@
             <div class="row align-items-center">
                 <div class="col-lg-3">
                     <div class="header__logo text-center mb-3">
-                        <a href="/"><img src="{{ asset('assets/images/logo.jpg') }}" alt="" style="width: 100%; height: 100px;"></a>
+                        <a href="/"><img src="{{ asset('assets/images/logo-nobg.png') }}" alt="" style="width: 100%; height: 100px;"></a>
                     </div>
                 </div>
                 <div class="col-lg-6">
@@ -153,7 +153,7 @@
                         <div class="hero__search__form">
                             <form action="{{ route('produk.search') }}" method="GET">
                                 <input type="text" name="query" placeholder="{{ __('messages.search_product') }}" value="{{ request('query') }}">
-                                <button type="submit" class="site-btn rounded" style="background-color: #42378c">{{ __('messages.search') }}</button>
+                                <button type="submit" class="site-btn rounded">{{ __('messages.search') }}</button>
                             </form>
                         </div>
                     </div>

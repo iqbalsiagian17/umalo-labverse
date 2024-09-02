@@ -64,12 +64,15 @@ return [
     'remove' => 'Hapus',
     'cart_total' => 'Total Keranjang',
     'total' => 'Total',
+    'total_akhir' => 'Harga Resmi',
     'negotiated_price' => 'Harga Setelah Nego', // Add this line
     'proceed_to_checkout' => 'Lanjutkan ke Pembayaran',
     'complete_personal_data' => 'Anda harus melengkapi data pribadi Anda sebelum melanjutkan ke pembayaran.',
     'fill_personal_data' => 'Isi Data Pribadi',
     'cart_empty' => 'Keranjang belanja Anda kosong.',
     'quantity_exceeds_stock' => 'Kuantitas melebihi stok yang tersedia!',
+    'average_rating' => 'Rata Rata Penilaian',
+    'people' => 'Customer',
 
     // Product Details
     'specifications' => 'Spesifikasi',
@@ -101,7 +104,7 @@ return [
     'download_invoice' => 'Download Invoice',
     'tracking_number' => 'Nomor Resi',
     'total_order' => 'Total Pesanan',
-    'order_details' => 'Detail Pesanan',
+    'order_details' => 'Rincian Pesanan',
     'order_number' => 'No Pesanan',
     'total_price' => 'Total Harga',
     'back_to_order_history' => 'Kembali ke Riwayat Pesanan',
@@ -123,7 +126,7 @@ return [
     'pengiriman' => 'Pengiriman',
     'selesai' => 'Selesai',
     'cancelled' => 'Dibatalkan',
-    'or_you_can_contact_admin' => 'atau Anda bisa menghubungi admin melalui berikut',
+    'or_you_can_contact_admin' => 'Jika Anda membutuhkan bantuan lebih lanjut, silakan hubungi admin melalui fitur chat di samping ini 👉 ',
     'here' => 'di sini',
 
     //Pengaturan

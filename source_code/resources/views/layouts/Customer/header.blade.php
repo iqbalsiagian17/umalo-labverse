@@ -7,13 +7,13 @@
     <meta name="keywords" content="Ogani, unica, creative, html">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Labtek</title>
+    <title>Labverse</title>
 
     <!-- Google Font -->
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@200;300;400;600;900&display=swap" rel="stylesheet">
     
     <!-- Favicon -->
-    <link rel="icon" href="{{ asset('assets/images/logo1.png') }}" type="image/png">
+    <link rel="icon" href="{{ asset('assets/images/logo-nobg.png') }}" type="image/png">
 
     <!-- Css Styles -->
     <link rel="stylesheet" href="{{ asset('ogani/css/bootstrap.min.css') }}" type="text/css">

@@ -7,7 +7,7 @@
             <div class="col-lg-3 col-md-5">
                 <div class="sidebar">
                     <div class="sidebar__item">
-                        <h4 style="color: #416bbf;">{{ __('messages.komoditas') }}</h4>
+                        <h4 style="color: #42378C;">{{ __('messages.komoditas') }}</h4>
                         <ul>
                             @foreach ($komoditas as $komoditasi)
                                 <li><a href="#">{{ $komoditasi->nama }}</a></li>
@@ -15,7 +15,7 @@
                         </ul>
                     </div>
                     <div class="sidebar__item">
-                        <h4 style="color:#416bbf;">{{ __('messages.kategori') }}</h4>
+                        <h4 style="color:#42378C;">{{ __('messages.kategori') }}</h4>
                         <ul>
                             @foreach ($kategori as $kategoris)
                                 <li>

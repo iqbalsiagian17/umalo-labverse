@@ -73,13 +73,14 @@ class UserDetailController extends Controller
     public function edit()
     {
         $userDetail = Auth::user()->userDetail;
+        $userAddress = Auth::user()->addresses->where('status', 'aktif')->first(); // Get the first active address
     
         if (!$userDetail) {
             return redirect()->route('user.create') // Menggunakan nama rute yang benar
                 ->with('warning', 'Please complete your details.');
         }
     
-        return view('customer.user.edit', compact('userDetail'));
+        return view('customer.user.edit', compact('userDetail','userAddress'));
     }
 
     public function update(Request $request)

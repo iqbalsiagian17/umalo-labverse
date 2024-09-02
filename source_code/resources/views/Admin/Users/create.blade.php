@@ -27,6 +27,13 @@
                         @endif
                     </div>
                     <div class="form-group">
+                        <label for="perusahaan" class="form-label">Perusahaan</label>
+                        <input type="text" class="form-control" id="perusahaan" name="perusahaan" value="{{ old('perusahaan') }}" required>
+                        @if ($errors->has('perusahaan'))
+                            <small class="text-danger">{{ $errors->first('perusahaan') }}</small>
+                        @endif
+                    </div>
+                    <div class="form-group">
                         <label for="email" class="form-label">Email</label>
                         <input type="email" class="form-control" id="email" name="email" value="{{ old('email') }}" required>
                         @if ($errors->has('email'))
@@ -88,10 +95,10 @@
                         @endif
                     </div>
                     <div class="form-group">
-                        <label for="perusahaan" class="form-label">Perusahaan</label>
-                        <input type="text" class="form-control" id="perusahaan" name="perusahaan" value="{{ old('perusahaan') }}" required>
-                        @if ($errors->has('perusahaan'))
-                            <small class="text-danger">{{ $errors->first('perusahaan') }}</small>
+                        <label for="tambahan" class="form-label">Detail Lebih Alamat</label>
+                        <input type="text" class="form-control" id="tambahan" name="tambahan" value="{{ old('tambahan') }}" required>
+                        @if ($errors->has('tambahan'))
+                            <small class="text-danger">{{ $errors->first('tambahan') }}</small>
                         @endif
                     </div>
                     <div class="form-group">

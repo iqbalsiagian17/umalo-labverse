@@ -48,7 +48,7 @@
                         </div>
                     </div>
                 </div>
-                <button type="submit" class="btn btn-primary">{{ __('messages.save') }}</button>
+                <button type="submit" class="btn text-white" style="background: #42378C;">{{ __('messages.save') }}</button>
             </form>
         </div>
     </div>

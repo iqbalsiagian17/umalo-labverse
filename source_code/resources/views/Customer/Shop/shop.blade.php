@@ -8,7 +8,7 @@
                 <div class="col-lg-3 col-md-5">
                     <div class="sidebar">
                         <div class="sidebar__item">
-                            <h4 style="color: #416bbf;">{{ __('messages.komoditas') }}</h4>
+                            <h4 style="color: #42378C;">{{ __('messages.komoditas') }}</h4>
                             <ul>
                                 @foreach ($komoditas as $komoditasi)
                                     <li><a href="#">{{ $komoditasi->nama }}</a></li>
@@ -16,7 +16,7 @@
                             </ul>
                         </div>
                         <div class="sidebar__item">
-                            <h4 style="color:#416bbf;">{{ __('messages.kategori') }}</h4>
+                            <h4 style="color:#42378C;">{{ __('messages.kategori') }}</h4>
                             <ul>
                                 @foreach ($kategori as $kategoris)
                                     <li><a href="{{ route('shop.category', $kategoris->id) }}">{{ \Illuminate\Support\Str::limit($kategoris->nama, 25, '...') }}</a>
@@ -24,8 +24,43 @@
                                 @endforeach
                             </ul>
                         </div>
+                        <div class="sidebar__item">
+                            <h4 style="color:#42378C;">{{ __('Rating') }}</h4>
+                            <ul>
+                                @for ($i = 5; $i >= 1; $i--)
+                                    <li>
+                                        <a href="{{ route('shop.rating', $i) }}" class="rating-link">
+                                            @for ($j = 1; $j <= $i; $j++)
+                                                <i class="fa fa-star star-colored"></i>
+                                            @endfor
+                                        </a>
+                                    </li>
+                                @endfor
+                            </ul>
+                            <style>
+                                .star-colored {
+                                    color: #ffc107; /* Bootstrap yellow color for stars */
+                                    margin-right: 2px; /* Optional: space between stars */
+                                }
+                            
+                                .rating-link {
+                                    text-decoration: none; /* Remove underline from links */
+                                    color: #333; /* Default text color */
+                                }
+                            
+                                .rating-link:hover .star-colored {
+                                    color: #ff9800; /* Darker yellow on hover */
+                                }
+                            
+                                .rating-link:hover {
+                                    color: #000; /* Darker text color on hover */
+                                }
+                            </style>
+                                                        
+                        </div>
                     </div>
                 </div>
+                
                 <div class="col-lg-9 col-md-7">
 
                     <div class="filter__item">

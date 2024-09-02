@@ -27,7 +27,7 @@
       </div>
       <!-- Navbar Header -->
       <nav
-        class="navbar navbar-header navbar-header-transparent navbar-expand-lg border-bottom" data-background-color="dark"
+        class="navbar navbar-header navbar-header-transparent navbar-expand-lg border-bottom"
       >
         <div class="container-fluid">
 
@@ -239,7 +239,7 @@
                 <div class="quick-actions-scroll scrollbar-outer">
                   <div class="quick-actions-items">
                     <div class="row m-0">
-                      <a class="col-6 col-md-4 p-0" href="">
+                      <a class="col-6 col-md-4 p-0" href="/chatify">
                         <div class="quick-actions-item">
                             <div class="avatar-item bg-success rounded-circle">
                                 <i class="fas fa-comments"></i>
@@ -329,8 +329,8 @@
                         />
                       </div>
                       <div class="u-text">
-                        <h4 class="text-white">{{ Auth::user()->name }}</h4>
-                        <p class="text-white">{{ Auth::user()->email }}</p>
+                        <h4>{{ Auth::user()->name }}</h4>
+                        <p class="text-muted">{{ Auth::user()->email }}</p>
                       </div>
                     </div>
                   </li>

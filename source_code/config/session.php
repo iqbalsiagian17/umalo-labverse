@@ -198,4 +198,7 @@ return [
 
     'same_site' => 'lax',
 
+    // config/session.php
+    'remember_lifetime' => env('SESSION_REMEMBER_LIFETIME', 43200), // 30 days
+
 ];

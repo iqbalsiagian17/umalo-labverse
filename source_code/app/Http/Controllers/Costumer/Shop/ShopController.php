@@ -8,6 +8,7 @@ use App\Models\Kategori;
 use App\Models\Komoditas;
 use App\Models\Produk;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class ShopController extends Controller
 {
@@ -105,6 +106,26 @@ class ShopController extends Controller
     })->get();
 
     return view('customer.bigsale.kategori', compact('products', 'kategori', 'bigSale','komoditas'));
+}
+
+public function filterByRating($rating)
+{
+    $komoditas = Komoditas::all(); // Untuk sidebar komoditas
+    $kategori = Kategori::all(); // Untuk sidebar kategori
+
+    // Fetch products with the exact average rating specified
+    $produk = Produk::whereHas('reviews', function($query) use ($rating) {
+        $query->select('produk_id', DB::raw('AVG(rating) as average_rating'))
+              ->groupBy('produk_id')
+              ->havingRaw('ROUND(AVG(rating), 1) = ?', [$rating]);
+    })->with(['reviews' => function($query) {
+        $query->select('produk_id', DB::raw('AVG(rating) as average_rating'))->groupBy('produk_id');
+    }])->paginate(9); // Paginate the results
+
+    // Get the total count of filtered products
+    $productCount = $produk->total();
+
+    return view('customer.shop.shop', compact('produk', 'komoditas', 'kategori', 'productCount'));
 }
 
 

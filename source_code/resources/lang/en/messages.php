@@ -68,12 +68,15 @@ return [
     'remove' => 'Remove',
     'cart_total' => 'Cart Total',
     'total' => 'Total',
+    'total_akhir' => 'Official Price',
     'negotiated_price' => 'Negotiated Price', // Add this line
     'proceed_to_checkout' => 'Proceed to Checkout',
     'complete_personal_data' => 'You must complete your personal data before proceeding to checkout.',
     'fill_personal_data' => 'Fill Personal Data',
     'cart_empty' => 'Your cart is empty.',
     'quantity_exceeds_stock' => 'Quantity exceeds available stock!',
+    'average_rating' => 'Average Rating',
+    'people'=> 'People',
 
      // Product Details
     'specifications' => 'Specifications',

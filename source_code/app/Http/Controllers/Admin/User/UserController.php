@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin\User;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Models\UserAddress;
 use App\Models\UserDetail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -37,12 +38,20 @@ class UserController extends Controller
         UserDetail::create([
             'user_id' => $user->id,
             'no_telepone' => $request->no_telepone,
+            'perusahaan' => $request->perusahaan,  // Save perusahaan field
+            'lahir' => $request->lahir,
+            'jenis_kelamin' => $request->jenis_kelamin,
+
+        ]);
+
+        UserAddress::create([
+            'user_id' => $user->id,
             'alamat' => $request->alamat,
             'kota' => $request->kota,
             'provinsi' => $request->provinsi,
             'kode_pos' => $request->kode_pos,
-            'lahir' => $request->lahir,
-            'jenis_kelamin' => $request->jenis_kelamin,
+            'tambahan' => $request->tambahan,
+
         ]);
     
         return redirect()->route('users.index')->with('success', 'User created successfully.');
@@ -68,45 +77,49 @@ class UserController extends Controller
     }
 
     public function update(Request $request, $id)
-{
-    // Validate the input data
-    $validatedData = $request->validate([
-        'name' => 'required|string|max:255',
-        'email' => 'required|email|unique:users,email,' . $id,
-        'password' => 'nullable|string|min:8|confirmed', // Make password nullable to allow optional update
-        'role' => 'required|in:0,1', // 0 for customer, 1 for admin
-    ]);
-
-    // Find the user
-    $user = User::findOrFail($id);
-
-    // Check if a new password is being set and hash it
-    if ($request->filled('password')) {
-        $validatedData['password'] = bcrypt($request->password);
-    } else {
-        // Remove the password field if it wasn't filled, so it won't be updated
-        unset($validatedData['password']);
+    {
+        $validatedData = $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email,' . $id,
+            'password' => 'nullable|string|min:8|confirmed', // Password is optional in update
+            'role' => 'required|in:0,1', // 0 for customer, 1 for admin
+        ]);
+    
+        $user = User::findOrFail($id);
+    
+        // If password is provided, hash it; otherwise, keep the existing password
+        if ($request->filled('password')) {
+            $validatedData['password'] = bcrypt($validatedData['password']);
+        } else {
+            unset($validatedData['password']); // Remove password from $validatedData if not provided
+        }
+    
+        // Update the user data
+        $user->update($validatedData);
+    
+        // Update user details
+        $user->userDetail->update([
+            'no_telepone' => $request->no_telepone,
+            'perusahaan' => $request->perusahaan,
+            'lahir' => $request->lahir,
+            'jenis_kelamin' => $request->jenis_kelamin,
+        ]);
+    
+        // Update or create user address
+        $user->addresses()->updateOrCreate(
+            ['user_id' => $user->id], // Criteria for matching the existing record
+            [
+                'alamat' => $request->alamat,
+                'kota' => $request->kota,
+                'provinsi' => $request->provinsi,
+                'kode_pos' => $request->kode_pos,
+                'tambahan' => $request->tambahan,
+            ]
+        );
+    
+        return redirect()->route('users.index')->with('success', 'User updated successfully.');
     }
-
-    // Update the user's data
-    $user->update($validatedData);
-
-    // Find or create the UserDetail record
-    $userDetail = UserDetail::firstOrNew(['user_id' => $id]);
-
-    // Update the UserDetail data
-    $userDetail->no_telepone = $request->no_telepone;
-    $userDetail->alamat = $request->alamat;
-    $userDetail->kota = $request->kota;
-    $userDetail->provinsi = $request->provinsi;
-    $userDetail->perusahaan = $request->perusahaan;
-    $userDetail->kode_pos = $request->kode_pos;
-    $userDetail->lahir = $request->lahir;
-    $userDetail->jenis_kelamin = $request->jenis_kelamin;
-    $userDetail->save(); // Save the record (create or update)
-
-    return redirect()->route('users.index')->with('success', 'User updated successfully.');
-}
+    
 
 
 

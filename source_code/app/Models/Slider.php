@@ -15,5 +15,6 @@ class Slider extends Model
         'image',
         'deskripsi',
         'url',
+        'tombol',
     ];
 }

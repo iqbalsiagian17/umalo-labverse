@@ -5,7 +5,7 @@
     <div class="col-md-12">
         <div class="card">
             <div class="card-header">
-                <h2>Create Big Sale</h2>
+                <h2>Membuat Big Sale</h2>
             </div>
             <div class="card-body">
                 @if ($errors->any())
@@ -24,28 +24,28 @@
                     <!-- Step 1: Judul, Mulai, Berakhir, Status, Image -->
                     <div id="step1">
                         <div class="form-group mb-3">
-                            <label for="judul">Judul</label>
+                            <label for="judul"><span class="text-danger">*</span> Judul</label>
                             <input type="text" class="form-control" id="judul" name="judul" value="{{ old('judul') }}" required>
                             @if ($errors->has('judul'))
                                 <small class="text-danger">{{ $errors->first('judul') }}</small>
                             @endif
                         </div>
                         <div class="form-group mb-3">
-                            <label for="mulai">Mulai</label>
+                            <label for="mulai"><span class="text-danger">*</span> Mulai</label>
                             <input type="datetime-local" class="form-control" id="mulai" name="mulai" value="{{ old('mulai') }}" required>
                             @if ($errors->has('mulai'))
                                 <small class="text-danger">{{ $errors->first('mulai') }}</small>
                             @endif
                         </div>
                         <div class="form-group mb-3">
-                            <label for="berakhir">Berakhir</label>
+                            <label for="berakhir"><span class="text-danger">*</span> Berakhir</label>
                             <input type="datetime-local" class="form-control" id="berakhir" name="berakhir" value="{{ old('berakhir') }}" required>
                             @if ($errors->has('berakhir'))
                                 <small class="text-danger">{{ $errors->first('berakhir') }}</small>
                             @endif
                         </div>
                         <div class="form-group mb-3">
-                            <label for="status">Status</label>
+                            <label for="status"><span class="text-danger">*</span> Status</label>
                             <select class="form-control" id="status" name="status">
                                 <option value="aktif" {{ old('status') == 'aktif' ? 'selected' : '' }}>Aktif</option>
                                 <option value="tidak aktif" {{ old('status') == 'tidak aktif' ? 'selected' : '' }}>Tidak Aktif</option>
@@ -56,7 +56,7 @@
                         </div>
 
                         <div class="form-group mb-3">
-                            <label for="image" class="form-label">Image:</label>
+                            <label for="image" class="form-label"><span class="text-danger">*</span> Gambar:</label>
                             <input type="file" class="form-control" id="image" name="image">
                             @if ($errors->has('image'))
                                 <small class="text-danger">{{ $errors->first('image') }}</small>
@@ -70,7 +70,7 @@
                     <!-- Step 2: Diskon Persen, Produk, Filter -->
                     <div id="step2" style="display: none;">
                         <div class="form-group mb-3">
-                            <label for="diskon_persen">Diskon Persen</label>
+                            <label for="diskon_persen"><span class="text-danger">*</span> Diskon Persen</label>
                             <div class="input-group">
                                 <input type="number" class="form-control" id="diskon_persen" name="diskon_persen" value="{{ old('diskon_persen') }}" placeholder="Masukkan Persentase Diskon">
                                 <div class="input-group-append">
@@ -98,7 +98,7 @@
                         </div>
 
                         <div class="form-group mb-3">
-                            <label for="products">Produk</label>
+                            <label for="products"><span class="text-danger">*</span> Produk</label>
                             <div class="row" id="productsList">
                                 @foreach($products as $product)
                                     <div class="col-md-2 col-sm-4 mb-4 product-item" data-category="{{ $product->kategori_id }}">

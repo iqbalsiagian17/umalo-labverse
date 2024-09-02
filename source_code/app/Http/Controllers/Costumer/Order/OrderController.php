@@ -169,8 +169,8 @@ public function submitReview(Request $request, $id)
     $request->validate([
         'review' => 'required|string|max:1000',
         'rating' => 'required|integer|min:1|max:5',
-        'review_images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-        'review_videos.*' => 'nullable|mimes:mp4,mov,ogg,qt|max:20000',
+        'review_images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:20048',
+        'review_videos.*' => 'nullable|mimes:mp4,mov,ogg,qt|max:280000',
     ]);
 
     $orderItem = $order->orderItems->first();

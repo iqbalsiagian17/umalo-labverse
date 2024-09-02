@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Review extends Model
 {
-    protected $fillable = ['product_id', 'user_id', 'content','rating','images', 
+    protected $fillable = ['produk_id', 'user_id', 'content','rating','images', 
         'videos'];
 
           // Automatically cast the images and videos fields to and from arrays
@@ -16,7 +16,7 @@ class Review extends Model
     ];
     public function product()
     {
-        return $this->belongsTo(Produk::class);
+        return $this->belongsTo(Produk::class, 'produk_id');
     }
 
     public function user()

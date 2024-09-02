@@ -63,17 +63,15 @@
             <div class="col-lg-3 col-md-12 col-sm-12 d-flex justify-content-center mb-4">
                 <div class="footer__widget">
                     <div class="footer__about__logo d-flex flex-column align-items-center">
-                        <a href="/">
-                            <img src="{{ asset('assets/images/logo-nobg.png') }}" alt="Logo Perusahaan" style="width: 100%; height: 100px;">
+                        <a href="./index.html">
+                            <img src="{{ asset('assets/images/AGS-logo.png') }}" alt="" style="width: 100%; height: 100px; margin-bottom: 10px;">
                         </a>
-                        <p style="margin: 5px 0; text-align: center;">Bagian dari</p>
-                        <a href="/ags.com">
-                            <img src="{{ asset('assets/images/AGS-logo.png') }}" alt="Logo AGS" style="width: 100%; height: 100px; margin-bottom: 10px;">
+                        <a href="./index.html">
+                            <img src="{{ asset('assets/images/logo-nobg.png') }}" alt="" style="width: 100%; height: 100px;">
                         </a>
                     </div>
                 </div>
             </div>
-            
         </div>
         <div class="row">
             <div class="col-lg-12 d-flex justify-content-center">
@@ -94,38 +92,6 @@
 </footer>
 <!-- Footer Section End -->
 
-
-
-{{-- @if(Auth::check())
-   @php
-       $user = Auth::user();
-       $email = $user->email;
-       $no_telepon = $user->userDetail->no_telepone ?? 'N/A'; // Pastikan relasi UserDetail ada
-       $perusahaan = $user->userDetail->perusahaan ?? 'N/A'; // Pastikan relasi UserDetail ada
-   @endphp
-
-   <!--Start of Tawk.to Script-->
-   <script type="text/javascript">
-       var Tawk_API = Tawk_API || {};
-       Tawk_API.visitor = {
-           name : '{{ $user->name }}',
-           email : '{{ $email }}',
-           phone : '{{ $no_telepon }}',
-           job_title: '{{ $perusahaan }}'
-       };
-
-       var Tawk_LoadStart = new Date();
-       (function(){
-           var s1 = document.createElement("script"), s0 = document.getElementsByTagName("script")[0];
-           s1.async = true;
-           s1.src = 'https://embed.tawk.to/66b98f50146b7af4a4392fd9/1i52dfl1n';
-           s1.charset = 'UTF-8';
-           s1.setAttribute('crossorigin', '*');
-           s0.parentNode.insertBefore(s1, s0);
-       })();
-   </script>
-   <!--End of Tawk.to Script-->
-@endif --}}
 
 
 @if(Auth::check())
@@ -158,6 +124,8 @@
    </script>
    <!--End of Tawk.to Script-->
 @endif
+
+
 
 
     <!-- Js Plugins -->

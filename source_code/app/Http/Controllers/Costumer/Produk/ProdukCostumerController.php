@@ -19,7 +19,9 @@ class ProdukCostumerController extends Controller
     
     $bigSale = $produk->bigSales->first();
     $bigSaleItem = $produk->bigSales()->where('status', 'aktif')->first();
-    
+    $averageRating = $produk->reviews()->avg('rating');
+    $totalRatings = $produk->reviews()->count();
+
     $produK = Produk::where('id', '!=', $id)
                     ->where(function ($query) use ($produk) {
                         $query->where('komoditas_id', $produk->komoditas_id)
@@ -38,7 +40,7 @@ class ProdukCostumerController extends Controller
                   ->latest()
                   ->first();
     
-    return view('customer.produk.show', compact('produk', 'images', 'produK', 'bigSale','bigSaleItem', 'order'));
+    return view('customer.produk.show', compact('produk', 'images', 'produK', 'bigSale','bigSaleItem', 'order','averageRating','totalRatings'));
 }
     
     

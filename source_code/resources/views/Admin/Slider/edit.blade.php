@@ -33,6 +33,13 @@
                             <small class="text-danger">{{ $errors->first('url') }}</small>
                         @endif
                     </div>
+                    <div class="form-group mb-3">
+                        <label for="tombol" class="form-label">Button Text:</label>
+                        <input type="text" class="form-control" id="tombol" name="tombol" value="{{ old('tombol', $slider->tombol) }}">
+                        @if ($errors->has('tombol'))
+                            <small class="text-danger">{{ $errors->first('tombol') }}</small>
+                        @endif
+                    </div>
                     <button type="submit" class="btn btn-success">Update</button>
                     <a href="{{ route('slider.index') }}" class="btn btn-secondary">Back</a>
                 </form>

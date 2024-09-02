@@ -46,14 +46,14 @@
                         <!-- General Information Tab -->
                         <div class="tab-pane fade show active" id="general" role="tabpanel" aria-labelledby="general-tab">
                             <div class="form-group">
-                                <label for="nama">Nama Produk:</label>
+                                <label for="nama"><span class="text-danger">*</span> Nama Produk: </label>
                                 <input type="text" name="nama" id="nama" class="form-control" value="{{ old('nama') }}" required>
                                 @if ($errors->has('nama'))
                                     <small class="text-danger">{{ $errors->first('nama') }}</small>
                                 @endif
                             </div>
                             <div class="form-group">
-                                <label for="nego">Bisa Nego:</label>
+                                <label for="nego"><span class="text-danger">*</span> Bisa Nego:</label>
                                 <select name="nego" id="nego" class="form-control" required>
                                     <option value="" disabled {{ old('nego') ? '' : 'selected' }}>Pilih opsi</option>
                                     <option value="ya" {{ old('nego') == 'ya' ? 'selected' : '' }}>Ya</option>
@@ -64,7 +64,7 @@
                                 @endif
                             </div>                            
                             <div class="form-group">
-                                <label for="harga_ditampilkan">Harga Ditampilkan:</label>
+                                <label for="harga_ditampilkan"> <span class="text-danger">*</span> Harga Ditampilkan:</label>
                                 <select name="harga_ditampilkan" id="harga_ditampilkan" class="form-control" required>
                                     <option value="" disabled {{ old('harga_ditampilkan') ? '' : 'selected' }}>Pilih opsi</option>
                                     <option value="ya" {{ old('harga_ditampilkan') == 'ya' ? 'selected' : '' }}>Ya</option>
@@ -76,7 +76,7 @@
                             </div>
                             
                             <div class="form-group">
-                                <label for="harga_tayang">Harga Produk:</label>
+                                <label for="harga_tayang"><span class="text-danger">*</span> Harga Produk:</label>
                                 <input type="number" step="0.01" name="harga_tayang" id="harga_tayang" class="form-control" value="{{ old('harga_tayang') }}" required>
                                 @if ($errors->has('harga_tayang'))
                                     <small class="text-danger">{{ $errors->first('harga_tayang') }}</small>
@@ -84,7 +84,7 @@
                             </div>
 
                             <div class="form-group">
-                                <label for="spesifikasi_produk">Spesifikasi Produk:</label>
+                                <label for="spesifikasi_produk"><span class="text-danger">*</span> Spesifikasi Produk:</label>
                                 <textarea name="spesifikasi_produk" id="spesifikasi_produk" class="form-control" required>{{ old('spesifikasi_produk') }}
                                     <div>
                                         <ol>
@@ -118,7 +118,7 @@
                             </script>
 
                             <div class="form-group">
-                                <label for="link_ekatalog">Link E-katalog:</label>
+                                <label for="link_ekatalog"><span class="text-danger">*</span> Link E-katalog:</label>
                                 <input type="text" name="link_ekatalog" id="link_ekatalog" class="form-control" value="{{ old('link_ekatalog') }}" required>
                                 @if ($errors->has('link_ekatalog'))
                                     <small class="text-danger">{{ $errors->first('link_ekatalog') }}</small>
@@ -128,7 +128,7 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label for="masa_berlaku_produk">Masa Berlaku Produk:</label>
+                                        <label for="masa_berlaku_produk"><span class="text-danger">*</span> Masa Berlaku Produk:</label>
                                         <input type="date" name="masa_berlaku_produk" id="masa_berlaku_produk" class="form-control" value="{{ old('masa_berlaku_produk') }}" required>
                                         @if ($errors->has('masa_berlaku_produk'))
                                             <small class="text-danger">{{ $errors->first('masa_berlaku_produk') }}</small>
@@ -138,7 +138,7 @@
 
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label for="stok">Stok:</label>
+                                        <label for="stok"><span class="text-danger">*</span> Stok:</label>
                                         <input type="number" name="stok" id="stok" class="form-control" value="{{ old('stok') }}" required>
                                         @if ($errors->has('stok'))
                                             <small class="text-danger">{{ $errors->first('stok') }}</small>
@@ -150,7 +150,7 @@
                             <div class="row">
                                 <div class="col-md-4">
                                     <div class="form-group">
-                                        <label for="komoditas_id">Komoditas:</label>
+                                        <label for="komoditas_id"><span class="text-danger">*</span> Komoditas:</label>
                                         <select name="komoditas_id" class="form-control" id="komoditas_id" required>
                                             @foreach($komoditas as $k)
                                                 <option value="{{ $k->id }}" {{ old('komoditas_id') == $k->id ? 'selected' : '' }}>{{ $k->nama }}</option>
@@ -164,7 +164,7 @@
     
                                 <div class="col-md-4">
                                     <div class="form-group">
-                                        <label for="kategori_id">Kategori:</label>
+                                        <label for="kategori_id"><span class="text-danger">*</span> Kategori:</label>
                                         <select name="kategori_id" id="kategori_id" class="form-control" required>
                                             <option value="">Pilih Kategori</option>
                                             @foreach($kategoris as $kategori)
@@ -179,7 +179,7 @@
     
                                 <div class="col-md-4">
                                     <div class="form-group">
-                                        <label for="sub_kategori_id">Sub Kategori:</label>
+                                        <label for="sub_kategori_id"><span class="text-danger">*</span> Sub Kategori:</label>
                                         <select name="sub_kategori_id" id="sub_kategori_id" class="form-control" required>
                                             <option value="">Pilih Sub Kategori</option>
                                         </select>
@@ -191,7 +191,7 @@
                             </div>
 
                             <div class="form-group">
-                                <label for="gambar">Gambar Produk:</label>
+                                <label for="gambar"><span class="text-danger">*</span> Gambar Produk:</label>
                                 <input type="file" name="gambar[]" id="gambar[]" class="form-control" multiple required>
                                 @if ($errors->has('gambar.*'))
                                     <small class="text-danger">{{ $errors->first('gambar.*') }}</small>
