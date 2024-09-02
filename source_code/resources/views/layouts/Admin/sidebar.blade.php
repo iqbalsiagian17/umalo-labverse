@@ -5,7 +5,7 @@
       <div class="logo-header" data-background-color="dark">
         <a href="{{ route('dashboard') }}" class="logo">
           <img
-            src="{{ asset('umalo/umalo-labverse/source_code/public/assets/images/logo-nobg.png') }}"
+            src="{{ asset('assets/images/logo-nobg.png') }}"
             alt="navbar brand"
             class="navbar-brand"
             width="200"

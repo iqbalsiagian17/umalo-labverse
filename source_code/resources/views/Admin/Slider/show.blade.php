@@ -13,7 +13,7 @@
                         <tr>
                             <th>Image</th>
                             <td>
-                                <img src="{{ asset('/umalo/umalo-labverse/source_code/public/'.$slider->image) }}" class="img-fluid img-thumbnail" width="300">
+                                <img src="{{ asset($slider->image) }}" class="img-fluid img-thumbnail" width="300">
                             </td>
                         </tr>
                         <tr>

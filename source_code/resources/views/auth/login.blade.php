@@ -9,7 +9,7 @@
             <div class="col-md-6 rounded-4 d-flex justify-content-center align-items-center flex-column left-box" style="background: #42378C;">
                 <div class="inner-box rounded-4 p-4" style="background: #ffffff; width: 70%;">
                     <div class="featured-image mb-3 d-flex justify-content-center">
-                        <img src="{{ asset('/umalo/umalo-labverse/source_code/public/assets/images/logo-nobg.png') }}" class="img-fluid" style="width: 250px;">
+                        <img src="{{ asset('assets/images/logo-nobg.png') }}" class="img-fluid" style="width: 250px;">
                     </div>
                     <p class="text-dark fs-2 text-center">{{ __('messages.already_verified') }}</p>
                     <p class="text-dark text-wrap text-center">{{ __('messages.discover_technology') }}</p>

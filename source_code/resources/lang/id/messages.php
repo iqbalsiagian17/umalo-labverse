@@ -128,6 +128,8 @@ return [
     'cancelled' => 'Dibatalkan',
     'or_you_can_contact_admin' => 'Jika Anda membutuhkan bantuan lebih lanjut, silakan hubungi admin melalui fitur chat di samping ini 👉 ',
     'here' => 'di sini',
+    'subtotal_before_negotiation' => 'Subtotal Sebelum Negosiasi',
+
 
     //Pengaturan
     'personal_profile' => 'Profil Pribadi',
@@ -170,6 +172,8 @@ return [
     'deactivate' => 'Tidak aktif',
     'activate' => 'Aktif',
     'add_new_address' => 'Tambahkan Alamat',
+    'user_photo' => 'Foto Pengguna',
+
 
     //login
     'already_verified' => 'Telah Di Verifikasi',

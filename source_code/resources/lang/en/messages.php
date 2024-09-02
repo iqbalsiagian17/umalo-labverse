@@ -132,6 +132,8 @@ return [
     'cancelled' => 'Cancelled',
     'or_you_can_contact_admin' => 'or you can contact the admin via the following',
     'here' => 'here',
+    'subtotal_before_negotiation' => 'Subtotal Before Negotiation',
+
 
 
 
@@ -175,6 +177,8 @@ return [
     'deactivate' => 'Deactivate',
     'activate' => 'Activate',
     'add_new_address' => 'Add New Address',
+    'user_photo' => 'User Photo',
+
 
     //login
     'already_verified' => 'Already Verified',

@@ -11,25 +11,25 @@
 
     <!-- Google Font -->
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@200;300;400;600;900&display=swap" rel="stylesheet">
-    
+
     <!-- Favicon -->
-    <link rel="icon" href="{{ asset('/umalo/umalo-labverse/source_code/public/assets/images/logo-nobg.png') }}" type="image/png">
+    <link rel="icon" href="{{ asset('assets/images/logo-nobg.png') }}" type="image/png">
 
     <!-- Css Styles -->
-    <link rel="stylesheet" href="{{ asset('/umalo/umalo-labverse/source_code/public/ogani/css/bootstrap.min.css') }}" type="text/css">
+    <link rel="stylesheet" href="{{ asset('ogani/css/bootstrap.min.css') }}" type="text/css">
 
-    <link rel="stylesheet" href="{{ asset('/umalo/umalo-labverse/source_code/public/ogani/css/font-awesome.min.css') }}" type="text/css">
-    <link rel="stylesheet" href="{{ asset('/umalo/umalo-labverse/source_code/public/ogani/css/elegant-icons.css') }}" type="text/css">
-    <link rel="stylesheet" href="{{ asset('/umalo/umalo-labverse/source_code/public/ogani/css/nice-select.css') }}" type="text/css">
-    <link rel="stylesheet" href="{{ asset('/umalo/umalo-labverse/source_code/public/ogani/css/jquery-ui.min.css') }}" type="text/css">
-    <link rel="stylesheet" href="{{ asset('/umalo/umalo-labverse/source_code/public/ogani/css/owl.carousel.min.css') }}" type="text/css">
-    <link rel="stylesheet" href="{{ asset('/umalo/umalo-labverse/source_code/public/ogani/css/slicknav.min.css') }}" type="text/css">
-    <link rel="stylesheet" href="{{ asset('/umalo/umalo-labverse/source_code/public/ogani/css/style.css') }}" type="text/css">
-    
+    <link rel="stylesheet" href="{{ asset('ogani/css/font-awesome.min.css') }}" type="text/css">
+    <link rel="stylesheet" href="{{ asset('ogani/css/elegant-icons.css') }}" type="text/css">
+    <link rel="stylesheet" href="{{ asset('ogani/css/nice-select.css') }}" type="text/css">
+    <link rel="stylesheet" href="{{ asset('ogani/css/jquery-ui.min.css') }}" type="text/css">
+    <link rel="stylesheet" href="{{ asset('ogani/css/owl.carousel.min.css') }}" type="text/css">
+    <link rel="stylesheet" href="{{ asset('ogani/css/slicknav.min.css') }}" type="text/css">
+    <link rel="stylesheet" href="{{ asset('ogani/css/style.css') }}" type="text/css">
+
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/owl-carousel/1.3.3/owl.carousel.min.css">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/owl-carousel/1.3.3/owl.theme.min.css">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/owl-carousel/1.3.3/owl.carousel.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/owl-carousel/1.3.3/owl.theme.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/owl-carousel/1.3.3/owl.carousel.min.js"></script>
 
 </head>

@@ -180,7 +180,7 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        <img src="{{ asset('/umalo/umalo-labverse/source_code/public/uploads/bukti_pembayaran/' . $order->bukti_pembayaran) }}" class="img-fluid" alt="Bukti Pembayaran">
+                        <img src="{{ asset('uploads/bukti_pembayaran/' . $order->bukti_pembayaran) }}" class="img-fluid" alt="Bukti Pembayaran">
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>

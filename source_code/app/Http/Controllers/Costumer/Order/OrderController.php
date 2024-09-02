@@ -193,6 +193,7 @@ public function submitReview(Request $request, $id)
                 $videos[] = $path;
             }
         }
+       // dd($images, $videos);
 
         $orderItem->produk->reviews()->create([
             'user_id' => auth()->id(),

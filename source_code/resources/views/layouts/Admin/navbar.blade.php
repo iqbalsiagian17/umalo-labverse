@@ -307,7 +307,7 @@
               >
                 <div class="avatar-sm">
                   <img
-                    src="{{ asset('umalo/umalo-labverse/source_code/public/assets/images/logo-nobg.png') }}"
+                    src="{{ asset('assets/images/logo-nobg.png') }}"
                     alt="..."
                     class="avatar-img rounded-circle"
                   />
@@ -323,7 +323,7 @@
                     <div class="user-box">
                       <div class="avatar-lg">
                         <img
-                          src="{{ asset('umalo/umalo-labverse/source_code/public/assets/images/logo-nobg.png') }}"
+                          src="{{ asset('assets/images/logo-nobg.png') }}"
                           alt="image profile"
                           class="avatar-img rounded"
                         />
