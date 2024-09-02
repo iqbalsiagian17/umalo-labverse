@@ -28,7 +28,7 @@
                                 <!-- If no sliders are available, show a default image -->
                                 <div class="carousel-item active">
                                     <div class="hero__item set-bg rounded"
-                                        data-setbg="{{ asset('assets/images/slider.png') }}">
+                                        data-setbg="{{ asset('/umalo/umalo-labverse/source_code/public/assets/images/slider.png') }}">
                                         <div class="hero__text">
                                             <span></span>
                                             <h2 class="text-white">{{ __('messages.slider_title') }}</h2>
@@ -37,14 +37,14 @@
                                             $formattedText = wordwrap($text, 100, "<br>\n", true);
                                         @endphp
                                         
-                                        <p class="text-white">{!! $formattedText !!}</p><a href="/shop" class="primary-btn rounded">{{ __('messages.shop_now') }}</a>
+                                        <p class="text-white">{!! $formattedText !!}</p><a href="{{ route('shop') }}" class="primary-btn rounded">{{ __('messages.shop_now') }}</a>
                                         </div>
                                     </div>
                                 </div>
                             @else
                                 @foreach ($slider as $index => $sliders)
                                     <div class="carousel-item {{ $index == 0 ? 'active' : '' }}">
-                                        <div class="hero__item set-bg rounded" data-setbg="{{ asset($sliders->image) }}">
+                                        <div class="hero__item set-bg rounded" data-setbg="{{ asset('umalo/umalo-labverse/source_code/public/' . $sliders->image) }}">
                                             <div class="hero__text">
                                                 <h2 class="text-white">{{ $sliders->deskripsi }}</h2>
                                                 <a href="{{ $sliders->url }}" class="primary-btn rounded">{{ $sliders->tombol }}</a>
@@ -125,7 +125,7 @@
                                 <section class="exclusive-deal-area">
                                     <div class="container-fluid">
                                         <div class="row justify-content-center align-items-center rounded"
-                                            style="background: url('{{ asset($bigSale->image) }}') no-repeat center center/cover; position: relative;">
+                                            style="background: url('{{ asset('umalo/umalo-labverse/source_code/public/'.$bigSale->image) }}') no-repeat center center/cover; position: relative;">
                                             <div
                                                 style="position: absxolute; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.7);">
                                             </div>
@@ -178,7 +178,7 @@
                                         <div class="col-lg-3 col-md-4 col-sm-6 mix oranges fresh-meat">
                                             <div class="featured__item">
                                                 <div class="featured__item__pic"
-                                                    style="position: relative; background-image: url('{{ asset($imagePath) }}'); background-size: cover; background-position: center; border-radius: 10px;">
+                                                    style="position: relative; background-image: url('{{ asset('umalo/umalo-labverse/source_code/public/'.$imagePath) }}'); background-size: cover; background-position: center; border-radius: 10px;">
                                                     @if ($product->nego === 'ya')
                                                         <span class="nego-badge">Bisa Nego</span>
                                                     @endif
@@ -312,7 +312,7 @@
                             <div class="col-lg-3 col-md-4 col-sm-6 mix oranges fresh-meat">
                                 <div class="featured__item">
                                     <div class="featured__item__pic"
-                                        style="background-image: url('{{ asset($imagePath) }}'); background-size: cover; background-position: center; border-radius: 10px;">
+                                        style="background-image: url('{{ asset('umalo/umalo-labverse/source_code/public/'.$imagePath) }}'); background-size: cover; background-position: center; border-radius: 10px;">
                                         @if ($item->nego === 'ya')
                                             <span class="nego-badge">{{ __('messages.bisa_nego') }}</span>
                                         @endif
@@ -384,7 +384,7 @@
                     <div class="col-lg-3 col-md-4 col-sm-6 mix oranges fresh-meat">
                         <div class="featured__item">
                             <div class="featured__item__pic"
-                                style="background-image: url('{{ asset($imagePath) }}'); background-size: cover; background-position: center; border-radius: 10px;">
+                                style="background-image: url('{{ asset('umalo/umalo-labverse/source_code/public/'.$imagePath) }}'); background-size: cover; background-position: center; border-radius: 10px;">
                                 @if ($item->harga_potongan)
                                     <span class="nego-badge bg-danger">{{ __('Diskon!!') }}</span>
                                 @elseif ($item->nego === 'ya')
@@ -430,7 +430,7 @@
 
                     @if ($index == 7 && $produk->count() > 8)
                         <div class="col-lg-12 text-center mt-3">
-                            <a href="/shop" class="primary-btn rounded">{{ __('messages.selengkapnya') }}</a>
+                            <a href="{{ route('shop') }}" class="primary-btn rounded">{{ __('messages.selengkapnya') }}</a>
                         </div>
                         @break
                     @endif

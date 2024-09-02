@@ -8,7 +8,7 @@
     <div class="humberger__menu__overlay"></div>
     <div class="humberger__menu__wrapper">
         <div class="humberger__menu__logo">
-            <a href="#"><img src="{{ asset('assets/images/logo-nobg.png') }}" alt=""></a>
+            <a href="{{ route('home') }}"><img src="{{ asset('/umalo/umalo-labverse/source_code/public/assets/images/logo-nobg.png') }}" alt=""></a>
         </div>
         <div class="humberger__menu__cart">
             <ul>
@@ -23,8 +23,8 @@
             <div class="header__top__right__language">
                 <img id="language-flag" 
                         src="{{ app()->getLocale() == 'en' 
-                                ? asset('kaiadmin-lite-1.2.0/assets/img/flags/england.png') 
-                                : asset('kaiadmin-lite-1.2.0/assets/img/flags/id.png') }}"
+                                ? asset('/umalo/umalo-labverse/source_code/public/kaiadmin-lite-1.2.0/assets/img/flags/england.png') 
+                                : asset('/umalo/umalo-labverse/source_code/public/kaiadmin-lite-1.2.0/assets/img/flags/id.png') }}"
                         alt="{{ app()->getLocale() == 'en' ? 'English' : 'Indonesia' }}" 
                         data-lang="{{ app()->getLocale() }}">
                     <div id="language-text">
@@ -46,7 +46,7 @@
                     <div class="nav-item dropdown">
                         <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
                             aria-haspopup="true" aria-expanded="false" style="text-decoration: none; color: inherit;">
-                            <img src="{{ Auth::user()->foto_profile ? asset(Auth::user()->foto_profile) : asset('assets/images/logo-nobg.png') }}" 
+                            <img src="{{ Auth::user()->foto_profile ? asset(Auth::user()->foto_profile) : asset('/umalo/umalo-labverse/source_code/public/assets/images/logo-nobg.png') }}" 
                                  alt="Avatar"
                                  style="width: 30px; height: 30px; border-radius: 50%; object-fit: cover; margin-right: 8px; border: 2px solid #ccc;">
                             {{ Str::limit(explode(' ', Auth::user()->name)[0], 10) }}
@@ -75,8 +75,8 @@
         </div>
         <nav class="humberger__menu__nav mobile-menu">
             <ul>
-                <li class="active"><a href="/">Home</a></li>
-                <li><a href="/shop">Shop</a></li>
+                <li class="active"><a href="{{ route('home') }}">Home</a></li>
+                <li><a href="{{ route('shop') }}">Shop</a></li>
             </ul>
         </nav>
         <div id="mobile-menu-wrap"></div>
@@ -89,7 +89,7 @@
         <div class="humberger__menu__contact">
             <ul>
                 <li><i class="fa fa-envelope"></i> info@labtek.id</li>
-                <li>Level-Up Your Output With <LABTEK></LABTEK></li>
+                <li>Level-Up Your Output With Labverse</li>
             </ul>
         </div>
     </div>
@@ -104,7 +104,7 @@
                         <div class="header__top__left">
                             <ul>
                                 <li><i class="fa fa-envelope"></i>info@labtek.id</li>
-                                <li>Level-Up Your Output With LABTEK</li>
+                                <li>Level-Up Your Output With Labverse</li>
                             </ul>
                         </div>
                     </div>
@@ -113,8 +113,8 @@
                             <div class="header__top__right__language">
                                 <img id="language-flag" 
                                         src="{{ app()->getLocale() == 'en' 
-                                                ? asset('kaiadmin-lite-1.2.0/assets/img/flags/england.png') 
-                                                : asset('kaiadmin-lite-1.2.0/assets/img/flags/id.png') }}"
+                                                ? asset('/umalo/umalo-labverse/source_code/public/kaiadmin-lite-1.2.0/assets/img/flags/england.png') 
+                                                : asset('/umalo/umalo-labverse/source_code/public/kaiadmin-lite-1.2.0/assets/img/flags/id.png') }}"
                                         alt="{{ app()->getLocale() == 'en' ? 'English' : 'Indonesia' }}" 
                                         data-lang="{{ app()->getLocale() }}">
                                     <div id="language-text">
@@ -145,7 +145,7 @@
             <div class="row align-items-center">
                 <div class="col-lg-3">
                     <div class="header__logo text-center mb-3">
-                        <a href="/"><img src="{{ asset('assets/images/logo-nobg.png') }}" alt="" style="width: 100%; height: 100px;"></a>
+                        <a href="{{ route('home') }}"><img src="{{ asset('/umalo/umalo-labverse/source_code/public/assets/images/logo-nobg.png') }}" alt="" style="width: 100%; height: 100px;"></a>
                     </div>
                 </div>
                 <div class="col-lg-6">
@@ -185,7 +185,7 @@
                                         aria-haspopup="true" aria-expanded="false" style="text-decoration: none; color: inherit;">
                                         <!-- Avatar Gambar -->
                                     @if (Auth::check())
-                                        <img src="{{ Auth::user()->foto_profile ? asset(Auth::user()->foto_profile) : asset('assets/images/logo.png') }}" 
+                                        <img src="{{ Auth::user()->foto_profile ? asset(Auth::user()->foto_profile) : asset('/umalo/umalo-labverse/source_code/public/assets/images/logo.png') }}" 
                                              alt="Avatar"
                                              style="width: 50px; height: 50px; border-radius: 50%; object-fit: cover; margin-right: 8px; border: 2px solid #ccc;">
                                     @else
@@ -239,7 +239,7 @@
 <nav class="navbar navbar-dark bg-white navbar-expand fixed-bottom d-md-none d-lg-none d-xl-none p-0 shadow">
     <ul class="navbar-nav nav-justified w-100 shadow">
         <li class="nav-item">
-            <a href="/" class="nav-link text-center text-dark">
+            <a href="{{ route('home') }}" class="nav-link text-center text-dark">
                 <div class="icon-circle">
                     <svg width="1.5em" height="1.5em" viewBox="0 0 16 16" class="bi bi-house" fill="currentColor"
                         xmlns="http://www.w3.org/2000/svg">

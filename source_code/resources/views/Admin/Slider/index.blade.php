@@ -30,7 +30,7 @@
                         @foreach ($sliders as $index => $slider)
                             <tr>
                                 <td>{{ $index + 1 }}</td> <!-- Nomor urut -->
-                                <td><img src="{{ asset($slider->image) }}" width="100" class="img-fluid img-thumbnail"></td> <!-- Gambar -->
+                                <td><img src="{{ asset('/umalo/umalo-labverse/source_code/public/'.$slider->image) }}" width="100" class="img-fluid img-thumbnail"></td> <!-- Gambar -->
                                 <td>{{ $slider->deskripsi }}</td> <!-- Deskripsi -->
                                 <td>{{ $slider->url }}</td> <!-- URL -->
                                 <td> <!-- Aksi -->

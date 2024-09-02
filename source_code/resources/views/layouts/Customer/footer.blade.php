@@ -40,10 +40,10 @@
                         <div class="col-lg-6 col-md-6 col-sm-6">
                             <h6>{{ __('messages.help_resources') }}</h6>
                             <ul style="text-decoration: underline;">
-                                <li><a href="/shop">{{ __('messages.find_product') }}</a></li>
+                                <li><a href="{{ route('shop') }}">{{ __('messages.find_product') }}</a></li>
 {{--                                 <li><a href="/sign-up">{{ __('messages.login_member') }}</a></li> --}}
-                                <li><a href="/cart">{{ __('messages.shopping_cart') }}</a></li>
-                                <li><a href="/">{{ __('messages.home') }}</a></li>
+                                <li><a href="{{ 'cart' }}">{{ __('messages.shopping_cart') }}</a></li>
+                                <li><a href="{{ route('home')  }}">{{ __('messages.home') }}</a></li>
                             </ul>
                         </div>
                         <div class="col-lg-6 col-md-6 col-sm-6">
@@ -64,10 +64,10 @@
                 <div class="footer__widget">
                     <div class="footer__about__logo d-flex flex-column align-items-center">
                         <a href="./index.html">
-                            <img src="{{ asset('assets/images/AGS-logo.png') }}" alt="" style="width: 100%; height: 100px; margin-bottom: 10px;">
+                            <img src="{{ asset('/umalo/umalo-labverse/source_code/public/assets/images/AGS-logo.png') }}" alt="" style="width: 100%; height: 100px; margin-bottom: 10px;">
                         </a>
                         <a href="./index.html">
-                            <img src="{{ asset('assets/images/logo-nobg.png') }}" alt="" style="width: 100%; height: 100px;">
+                            <img src="{{ asset('/umalo/umalo-labverse/source_code/public/assets/images/logo-nobg.png') }}" alt="" style="width: 100%; height: 100px;">
                         </a>
                     </div>
                 </div>
@@ -129,15 +129,15 @@
 
 
     <!-- Js Plugins -->
-    <script src="{{ asset('ogani/js/jquery-3.3.1.min.js') }}"></script>
-    <script src="{{ asset('ogani/js/bootstrap.bundle.min.js') }}"></script> <!-- Use bootstrap.bundle.min.js for Bootstrap 5 -->
-    <script src="{{ asset('ogani/js/bootstrap.min.js') }}"></script>
-    <script src="{{ asset('ogani/js/jquery.nice-select.min.js') }}"></script>
-    <script src="{{ asset('ogani/js/jquery-ui.min.js') }}"></script>
-    <script src="{{ asset('ogani/js/jquery.slicknav.js') }}"></script>
-    <script src="{{ asset('ogani/js/mixitup.min.js') }}"></script>
-    <script src="{{ asset('ogani/js/owl.carousel.min.js') }}"></script>
-    <script src="{{ asset('ogani/js/main.js') }}"></script>
+    <script src="{{ asset('/umalo/umalo-labverse/source_code/public/ogani/js/jquery-3.3.1.min.js') }}"></script>
+    <script src="{{ asset('/umalo/umalo-labverse/source_code/public/ogani/js/bootstrap.bundle.min.js') }}"></script> <!-- Use bootstrap.bundle.min.js for Bootstrap 5 -->
+    <script src="{{ asset('/umalo/umalo-labverse/source_code/public/ogani/js/bootstrap.min.js') }}"></script>
+    <script src="{{ asset('/umalo/umalo-labverse/source_code/public/ogani/js/jquery.nice-select.min.js') }}"></script>
+    <script src="{{ asset('/umalo/umalo-labverse/source_code/public/ogani/js/jquery-ui.min.js') }}"></script>
+    <script src="{{ asset('/umalo/umalo-labverse/source_code/public/ogani/js/jquery.slicknav.js') }}"></script>
+    <script src="{{ asset('/umalo/umalo-labverse/source_code/public/ogani/js/mixitup.min.js') }}"></script>
+    <script src="{{ asset('/umalo/umalo-labverse/source_code/public/ogani/js/owl.carousel.min.js') }}"></script>
+    <script src="{{ asset('/umalo/umalo-labverse/source_code/public/ogani/js/main.js') }}"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js"></script>

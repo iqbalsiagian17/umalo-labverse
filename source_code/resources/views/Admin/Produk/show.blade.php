@@ -155,7 +155,7 @@
                     <div class="row">
                         @foreach ($produk->images as $image)
                             <div class="col-md-6 mb-3">
-                                <img src="{{ asset($image->gambar) }}" alt="Gambar Produk" class="img-fluid rounded shadow-sm">
+                                <img src="{{ asset('/umalo/umalo-labverse/source_code/public/'.$image->gambar) }}" alt="Gambar Produk" class="img-fluid rounded shadow-sm">
                             </div>
                         @endforeach
                     </div>

@@ -200,7 +200,7 @@
                             <div class="mt-2 d-flex flex-wrap">
                                 @foreach($produk->images as $image)
                                     <div class="position-relative" style="margin-right: 10px;">
-                                        <img src="{{ asset($image->gambar) }}" alt="Gambar Produk" style="width: 100px; height: 100px;">
+                                        <img src="{{ asset('/umalo/umalo-labverse/source_code/public/' .$image->gambar) }}" alt="Gambar Produk" style="width: 100px; height: 100px;">
                                         <button type="button" class="btn btn-danger btn-sm position-absolute" style="top: 0; right: 0;" onclick="removeImage({{ $image->id }})">Hapus</button>
                                     </div>
                                 @endforeach

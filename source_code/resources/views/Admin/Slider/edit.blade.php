@@ -14,7 +14,7 @@
                     <div class="form-group mb-3">
                         <label for="image" class="form-label">Image:</label>
                         <input type="file" class="form-control" id="image" name="image">
-                        <img src="{{ asset($slider->image) }}" width="100" class="img-fluid img-thumbnail mt-2">
+                        <img src="{{ asset('/umalo/umalo-labverse/source_code/public/'.$slider->image) }}" width="100" class="img-fluid img-thumbnail mt-2">
                         @if ($errors->has('image'))
                             <small class="text-danger">{{ $errors->first('image') }}</small>
                         @endif

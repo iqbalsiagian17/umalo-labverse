@@ -123,7 +123,7 @@
         <div class="card mb-3 mt-4 shadow rounded border-0 h-100">
             <div class="card-body d-flex flex-column justify-content-center align-items-center" style="min-height: 300px;">
                 <h5 class="mb-1">{{ __('messages.cart_empty') }}</h5>
-                <a href="/" class="btn text-white mt-3" style="background-color: #42378C;">{{ __('messages.shop_now') }}</a>
+                <a href="{{ route('shop') }}" class="btn text-white mt-3" style="background-color: #42378C;">{{ __('messages.shop_now') }}</a>
             </div>
         </div>
         @endif

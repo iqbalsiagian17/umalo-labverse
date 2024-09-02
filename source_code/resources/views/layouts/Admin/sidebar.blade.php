@@ -3,9 +3,9 @@
     <div class="sidebar-logo">
       <!-- Logo Header -->
       <div class="logo-header" data-background-color="dark">
-        <a href="/dashboard" class="logo">
+        <a href="{{ route('dashboard') }}" class="logo">
           <img
-            src="{{ asset('assets/images/logo-nobg.png') }}"
+            src="{{ asset('umalo/umalo-labverse/source_code/public/assets/images/logo-nobg.png') }}"
             alt="navbar brand"
             class="navbar-brand"
             width="200"
@@ -29,7 +29,7 @@
       <div class="sidebar-content">
         <ul class="nav nav-secondary">
           <li class="nav-item">
-            <a href="/dashboard">
+            <a href="{{ route('dashboard') }}">
               <i class="fas fa-home"></i>
               <p>Dashboard</p>
              </a>

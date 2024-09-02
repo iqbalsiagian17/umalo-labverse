@@ -10,7 +10,7 @@
                     <div class="product__details__pic__item">
                         @if($images->isNotEmpty())
                             <img class="product__details__pic__item--large"
-                                src="{{ asset($images->first()->gambar) }}" alt="{{ $produk->nama }}">
+                                src="{{ asset('/umalo/umalo-labverse/source_code/public/' .$images->first()->gambar) }}" alt="{{ $produk->nama }}">
                         @else
                             <img src="https://via.placeholder.com/150" class="img-fluid mb-2" alt="{{ $produk->nama }}">
                         @endif
@@ -20,7 +20,7 @@
                         @if($images->isNotEmpty())
                             @foreach ($images as $image)
                                 <img data-imgbigurl="{{ asset($image->gambar) }}"
-                                     src="{{ asset($image->gambar) }}" alt="{{ $produk->nama }}">
+                                     src="{{ asset('/umalo/umalo-labverse/source_code/public/'.$image->gambar) }}" alt="{{ $produk->nama }}">
                             @endforeach
                        @endif
                     </div>
@@ -502,7 +502,7 @@
                     <div class="col-lg-3 col-md-4 col-sm-6 mix oranges fresh-meat">
                         <div class="featured__item">
                             <div class="featured__item__pic"
-                                style="background-image: url('{{ asset($imagePath) }}'); background-size: cover; background-position: center; border-radius: 10px;">
+                                style="background-image: url('{{ asset('/umalo/umalo-labverse/source_code/public/' .$imagePath) }}'); background-size: cover; background-position: center; border-radius: 10px;">
                                 @if ($item->nego === 'ya')
                                 <span class="nego-badge">{{ __('messages.negotiable') }}</span>
                             @endif

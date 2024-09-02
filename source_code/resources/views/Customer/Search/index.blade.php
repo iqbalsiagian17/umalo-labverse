@@ -81,7 +81,7 @@
                                             : 'path/to/default/image.jpg';
                                     @endphp
                                     <div class="product__item__pic"
-                                        style="background-image: url('{{ asset($imagePath) }}');">
+                                        style="background-image: url('{{ asset('/umalo/umalo-labverse/source_code/public/'.$imagePath) }}');">
                                         @if ($product->nego === 'ya')
                                             <span class="nego-badge">Bisa Nego</span>
                                         @endif
