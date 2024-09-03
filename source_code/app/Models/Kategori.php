@@ -13,9 +13,9 @@ class Kategori extends Model
 
     protected $fillable = ['nama', 'flag'];
     
-    public function subkategoris()
+    public function subKategori()
     {
-        return $this->hasMany(SubKategori::class);
+        return $this->hasMany(SubKategori::class, 'kategori_id');
     }
 
     public function produk()

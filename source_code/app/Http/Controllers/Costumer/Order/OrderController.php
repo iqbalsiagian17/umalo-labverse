@@ -142,7 +142,7 @@ public function transactionHistory($id)
 public function uploadBuktiPembayaran(Request $request, $id)
 {
     $request->validate([
-        'bukti_pembayaran' => 'required|mimes:jpg,jpeg,png,pdf|max:2048',
+        'bukti_pembayaran' => 'required|mimes:jpg,jpeg,png,pdf|max:12048',
     ]);
 
     $order = Order::findOrFail($id);

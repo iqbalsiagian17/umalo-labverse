@@ -250,7 +250,13 @@
                                         <label for="sub_kategori_id">Sub Kategori:</label>
                                         <select name="sub_kategori_id" id="sub_kategori_id" class="form-control" required>
                                             <option value="">Pilih Sub Kategori</option>
-                                            <!-- Sub kategori akan dimuat melalui AJAX -->
+                                            @foreach($kategoris as $kategori)
+                                                @foreach($kategori->subKategori as $subKategori)
+                                                    <option value="{{ $subKategori->id }}" data-kategori-id="{{ $kategori->id }}" {{ old('sub_kategori_id', $produk->sub_kategori_id) == $subKategori->id ? 'selected' : '' }}>
+                                                        {{ $subKategori->nama }}
+                                                    </option>
+                                                @endforeach
+                                            @endforeach
                                         </select>
                                         @if ($errors->has('sub_kategori_id'))
                                             <small class="text-danger">{{ $errors->first('sub_kategori_id') }}</small>
@@ -540,42 +546,40 @@
         });
     </script>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            var kategoriSelect = document.getElementById('kategori_id');
-            var subKategoriSelect = document.getElementById('sub_kategori_id');
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+var kategoriSelect = document.getElementById('kategori_id');
+var subKategoriSelect = document.getElementById('sub_kategori_id');
 
-            // Function to load sub categories
-            function loadSubKategoris(kategoriId, selectedSubKategoriId = null) {
-                subKategoriSelect.innerHTML = '<option value="">Memuat...</option>';
+function filterSubKategoris() {
+    const selectedKategoriId = kategoriSelect.value;
 
-                fetch(`/admin/produk/getSubKategori/${kategoriId}`)
-                    .then(response => response.json())
-                    .then(data => {
-                        subKategoriSelect.innerHTML = '<option value="">Pilih Sub Kategori</option>';
-                        data.forEach(function(subKategori) {
-                            var option = document.createElement('option');
-                            option.value = subKategori.id;
-                            option.textContent = subKategori.nama;
-                            if (subKategori.id == selectedSubKategoriId) {
-                                option.selected = true;
-                            }
-                            subKategoriSelect.appendChild(option);
-                        });
-                    });
-            }
+    // Sembunyikan semua subkategori
+    Array.from(subKategoriSelect.options).forEach(option => {
+        option.style.display = 'none';
+        option.disabled = true;
+    });
 
-            // Initial load of sub categories based on the selected kategori
-            if (kategoriSelect.value) {
-                loadSubKategoris(kategoriSelect.value, '{{ $produk->sub_kategori_id }}');
-            }
+    // Tampilkan hanya subkategori yang sesuai
+    Array.from(subKategoriSelect.options).forEach(option => {
+        if (option.getAttribute('data-kategori-id') === selectedKategoriId) {
+            option.style.display = 'block';
+            option.disabled = false;
+        }
+    });
 
-            // Event listener for kategori change
-            kategoriSelect.addEventListener('change', function() {
-                loadSubKategoris(this.value);
-            });
-        });
-    </script>
+    // Set subkategori ke opsi pertama yang sesuai
+    subKategoriSelect.value = '';
+}
+
+// Filter subkategori saat halaman pertama kali dimuat
+filterSubKategoris();
+
+// Tambahkan event listener untuk filter ulang saat kategori berubah
+kategoriSelect.addEventListener('change', filterSubKategoris);
+});
+
+</script>
 
     <script>
         document.querySelectorAll('input[name="status"]').forEach(function(radio) {

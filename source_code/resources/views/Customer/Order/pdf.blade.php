@@ -258,7 +258,14 @@
                     <td>Rp {{ number_format($item->harga * $item->jumlah, 0, ',', '.') }}</td>
                 </tr>
             @endforeach
-
+            @if (in_array($order->status, ['Diterima', 'Packing', 'Pengiriman', 'Selesai']) && $order->orderItems->contains(function ($item) {
+                return $item->produk->nego == 'ya';
+            }))
+                <tr>
+                    <td colspan="4" style="text-align:right;"><strong>Subtotal Sebelum Nego</strong></td>
+                    <td>Rp {{ number_format($order->harga_total, 0, ',', '.') }}</td>
+                </tr>
+            @endif
             @if (
                 $order->orderItems->contains(function ($item) {
                     return $item->produk->nego == 'ya';
