@@ -39,7 +39,7 @@
                     </div>
                 </div>
     
-                <form action="{{ route('produk.store') }}" method="POST" enctype="multipart/form-data">
+                <form id="produkForm" action="{{ route('produk.store') }}" method="POST" enctype="multipart/form-data">
                     @csrf
     
                     <div class="tab-content" id="productFormContent">
@@ -62,7 +62,8 @@
                                 @if ($errors->has('nego'))
                                     <small class="text-danger">{{ $errors->first('nego') }}</small>
                                 @endif
-                            </div>                            
+                            </div>
+                            
                             <div class="form-group">
                                 <label for="harga_ditampilkan"> <span class="text-danger">*</span> Harga Ditampilkan:</label>
                                 <select name="harga_ditampilkan" id="harga_ditampilkan" class="form-control" required>
@@ -82,7 +83,6 @@
                                     <small class="text-danger">{{ $errors->first('harga_tayang') }}</small>
                                 @endif
                             </div>
-
                             <div class="form-group">
                                 <label for="spesifikasi_produk"><span class="text-danger">*</span> Spesifikasi Produk:</label>
                                 <textarea name="spesifikasi_produk" id="spesifikasi_produk" class="form-control" required>{{ old('spesifikasi_produk') }}
@@ -420,7 +420,7 @@
                                 </table>
                                 <button type="button" class="btn btn-secondary mt-3" id="add-detail">Tambah Detail</button>
                             </div>
-                            <button type="submit" id="saveButton" class="btn btn-primary mt-3" >Simpan</button>
+                            <button type="button" id="saveButton" class="btn btn-primary mt-3">Simpan</button>
                         </div>
                     </div>
     
@@ -607,6 +607,26 @@ kategoriSelect.addEventListener('change', filterSubKategoris);
     }
 });
 
+</script>
+<script>
+    document.getElementById('saveButton').addEventListener('click', function(event) {
+        event.preventDefault(); // Prevent form submission
+
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "Make sure all the data is correct before saving.",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Yes, save it!',
+            cancelButtonText: 'No, cancel!',
+            reverseButtons: true
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // If confirmed, submit the form
+                document.getElementById('produkForm').submit();
+            }
+        });
+    });
 </script>
 
 @endsection

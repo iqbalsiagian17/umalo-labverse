@@ -288,11 +288,20 @@ class ProdukController extends Controller
 
     public function updateStatus(Request $request, $id)
     {
-        $produk = Produk::find($id);
-        $produk->status = $request->status;
-        $produk->save();
-
-        return response()->json(['success' => true]);
+        $request->validate([
+            'status' => 'required|in:arsip,publish',
+        ]);
+    
+        try {
+            $produk = Produk::findOrFail($id);
+            $produk->status = $request->input('status');
+            $produk->save();
+    
+            return redirect()->route('produk.show', $produk->id)->with('success', 'Status berhasil diperbarui');
+        } catch (\Exception $e) {
+            return redirect()->route('produk.show', $produk->id)->with('error', 'Terjadi kesalahan saat memperbarui status: ' . $e->getMessage());
+        }
     }
+    
 
 }

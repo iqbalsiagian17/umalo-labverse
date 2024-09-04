@@ -135,7 +135,7 @@ Route::middleware(['auth', 'user-access:admin'])->group(function () {
 
 
     Route::get('admin/produk/getSubKategori/{kategoriId}', [ProdukController::class, 'getSubKategori']);
-    Route::post('/produk/update-status/{id}', [ProdukController::class, 'updateStatus'])->name('produk.updateStatus');
+    Route::post('/produk/update-status/{id}', [ProdukController::class, 'updateStatus'])->name('produk.update-status');
 
     Route::prefix('admin/masterdata')->name('admin.masterdata.')->group(function () {
         Route::resource('kategori', KategoriController::class);

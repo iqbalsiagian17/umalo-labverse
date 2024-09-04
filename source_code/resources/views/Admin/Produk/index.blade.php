@@ -60,7 +60,7 @@
                                     <form action="{{ route('produk.destroy', $produk->id) }}" method="POST" style="display:inline-block;">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Apakah Anda yakin ingin menghapus produk ini?')">Hapus</button>
+                                        <button type="button" class="btn btn-danger btn-sm delete-button">Hapus</button>
                                     </form>
                                 </td>
                             </tr>
@@ -80,9 +80,32 @@
     </div>
 </div>
 
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<!-- Include SweetAlert2 JS -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
+
 <script>
     $(document).ready(function() {
+        // SweetAlert confirmation for deletion
+        $('.delete-button').on('click', function(e) {
+            e.preventDefault(); // Prevent form submission
+            
+            var form = $(this).closest('form'); // Get the form
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, delete it!',
+                cancelButtonText: 'No, cancel!',
+                reverseButtons: true
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    form.submit(); // Submit the form if confirmed
+                }
+            });
+        });
+
+        // AJAX search functionality
         $('#search').on('keyup', function() {
             var query = $(this).val();
             $.ajax({

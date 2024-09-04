@@ -12,22 +12,33 @@
                         <span class="badge badge-success">Bisa Nego</span>
                     @endif
                 </div>
-                <div class="form-group">
-                    <label class="form-label">Status:</label>
-                    <div class="selectgroup w-100">
-                        <label class="selectgroup-item">
-                            <input type="radio" name="status" value="arsip" class="selectgroup-input" {{ $produk->status == 'arsip' ? 'checked' : '' }} />
-                            <span class="selectgroup-button">Arsip</span>
-                        </label>
-                        <label class="selectgroup-item">
-                            <input type="radio" name="status" value="publish" class="selectgroup-input" {{ $produk->status == 'publish' ? 'checked' : '' }} />
-                            <span class="selectgroup-button">Publish</span>
-                        </label>
+                 <!-- Start Form for Updating Status -->
+                 <form id="statusForm" action="{{ route('produk.update-status', $produk->id) }}" method="POST">
+                    @csrf
+                    @method('POST')
+
+                    <div class="form-group">
+                        <label class="form-label">Status:</label>
+                        <div class="selectgroup w-100">
+                            <label class="selectgroup-item">
+                                <input type="radio" name="status" value="arsip" class="selectgroup-input"
+                                    {{ $produk->status == 'arsip' ? 'checked' : '' }}
+                                    onchange="confirmStatusChange('arsip')" />
+                                <span class="selectgroup-button">Arsip</span>
+                            </label>
+                            <label class="selectgroup-item">
+                                <input type="radio" name="status" value="publish" class="selectgroup-input"
+                                    {{ $produk->status == 'publish' ? 'checked' : '' }}
+                                    onchange="confirmStatusChange('publish')" />
+                                <span class="selectgroup-button">Publish</span>
+                            </label>
+                        </div>
+                        @if ($errors->has('status'))
+                            <small class="text-danger">{{ $errors->first('status') }}</small>
+                        @endif
                     </div>
-                    @if ($errors->has('status'))
-                        <small class="text-danger">{{ $errors->first('status') }}</small>
-                    @endif
-                </div>
+                </form>
+                <!-- End Form for Updating Status -->
             </div>            
             <div class="card-body">
                 <table class="table table-bordered">
@@ -124,7 +135,7 @@
                         </tr>
                         <tr>
                             <td>Spesifikasi Produk</td>
-                            <td>{{ $produk->spesifikasi_produk ?: '-' }}</td>
+                            <td>{!! $produk->spesifikasi_produk ?: '-' !!}</td>
                         </tr>
                         <tr>
                             <td>Komoditas</td>
@@ -155,7 +166,7 @@
                     <div class="row">
                         @foreach ($produk->images as $image)
                             <div class="col-md-6 mb-3">
-                                <img src="{{ asset('/umalo/umalo-labverse/source_code/public/'.$image->gambar) }}" alt="Gambar Produk" class="img-fluid rounded shadow-sm">
+                                <img src="{{ asset($image->gambar) }}" alt="Gambar Produk" class="img-fluid rounded shadow-sm">
                             </div>
                         @endforeach
                     </div>
@@ -215,33 +226,23 @@
 
 
 <script>
-    document.querySelectorAll('input[name="status"]').forEach(function(radio) {
-        radio.addEventListener('change', function() {
-            var status = this.value;
-            var productId = "{{ $produk->id }}";  // Pass the product ID to use in the request
-
-            fetch(`/produk/update-status/${productId}`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                },
-                body: JSON.stringify({status: status})
-            })
-            .then(response => response.json())
-            .then(data => {
-                if(data.success) {
-                    alert('Status berhasil diperbarui');
-                } else {
-                    alert('Gagal memperbarui status');
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert('Terjadi kesalahan saat memperbarui status');
-            });
+    function confirmStatusChange(status) {
+        Swal.fire({
+            title: 'Are you sure?',
+            text: `You are about to change the status to ${status}.`,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Yes, change it!',
+            cancelButtonText: 'No, cancel!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                document.querySelector('input[name="status"][value="' + status + '"]').checked = true;
+                document.getElementById('statusForm').submit();
+            } else {
+                document.querySelector('input[name="status"][value="' + status + '"]').checked = false;
+            }
         });
-    });
+    }
 </script>
 
 @endsection
