@@ -8,7 +8,7 @@
                 <h2>Edit Transaksi ID: {{ $order->id }}</h2>
             </div>
             <div class="card-body">
-                <form action="{{ route('transaksi.update', $order->id) }}" method="POST">
+                <form id="statusForm" action="{{ route('transaksi.updateEdit', $order->id) }}" method="POST">
                     @csrf
                     @method('PUT')
 
@@ -42,6 +42,15 @@
                         @endif
                     </div>
 
+                    <!-- Tracking Number Input -->
+                    <div class="form-group" id="tracking-number-group" style="display: none;">
+                        <label for="nomor_resi">Nomor Resi (Tracking Number)</label>
+                        <input type="text" name="nomor_resi" id="nomor_resi" class="form-control" value="{{ old('nomor_resi', $order->nomor_resi) }}">
+                        @if ($errors->has('nomor_resi'))
+                            <small class="text-danger">{{ $errors->first('nomor_resi') }}</small>
+                        @endif
+                    </div>
+
                     <!-- Input WhatsApp Number -->
                     <div class="form-group" id="whatsapp-number-group" style="display: none;">
                         <label for="whatsapp_number">Nomor WhatsApp</label>
@@ -49,6 +58,11 @@
                         @if ($errors->has('whatsapp_number'))
                             <small class="text-danger">{{ $errors->first('whatsapp_number') }}</small>
                         @endif
+                    </div>
+
+                    <div class="form-group" id="subtotalGroup" style="display: none;">
+                        <label for="subtotal">Ubah Harga Total Setelah Negosiasi</label>
+                        <input type="number" name="subtotal" id="subtotal" class="form-control" value="{{ $order->harga_setelah_nego ?? $order->harga_total }}">
                     </div>
 
                     <button type="submit" class="btn btn-success">Update Transaksi</button>
@@ -82,7 +96,14 @@
                                     <td>{{ $item->produk->nama }}</td>
                                     <td>{{ $item->jumlah }}</td>
                                     <td>{{ 'Rp ' . number_format($item->harga, 0, ',', '.') }}</td>
-                                    <td>{{ 'Rp ' . number_format($item->jumlah * $item->harga, 0, ',', '.') }}</td>
+                                    <td>
+                                        @if($order->harga_setelah_nego)
+                                            <span style="text-decoration: line-through;">Rp {{ number_format($item->jumlah * $item->harga, 0, ',', '.') }}</span><br>
+                                            <span>Rp {{ number_format($item->jumlah * ($order->harga_setelah_nego / $order->orderItems->sum('jumlah')), 0, ',', '.') }}</span>
+                                        @else
+                                            Rp {{ number_format($item->jumlah * $item->harga, 0, ',', '.') }}
+                                        @endif
+                                    </td>
                                 </tr>
                             @endforeach
                         </tbody>
@@ -95,24 +116,65 @@
     </div>
 </div>
 
+<!-- Bukti Pembayaran -->
+@if($order->bukti_pembayaran)
+<div class="card mt-4">
+    <div class="card-header">
+        <h5>Bukti Pembayaran</h5>
+    </div>
+    <div class="card-body">
+        <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#buktiPembayaranModal">
+            Lihat Bukti Pembayaran
+        </button>
+
+        <div class="modal fade" id="buktiPembayaranModal" tabindex="-1" aria-labelledby="buktiPembayaranModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="buktiPembayaranModalLabel">Bukti Pembayaran</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <img src="{{ asset('uploads/bukti_pembayaran/' . $order->bukti_pembayaran) }}" class="img-fluid" alt="Bukti Pembayaran" style="max-width: 100%;">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@endif
+
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         const statusSelect = document.getElementById('status');
+        const trackingNumberGroup = document.getElementById('tracking-number-group');
         const whatsappNumberGroup = document.getElementById('whatsapp-number-group');
+        const subtotalGroup = document.getElementById('subtotalGroup');
 
-        function toggleWhatsAppField() {
+        function toggleFields() {
             if (statusSelect.value === 'Negosiasi') {
                 whatsappNumberGroup.style.display = 'block';
+                subtotalGroup.style.display = 'block';
             } else {
                 whatsappNumberGroup.style.display = 'none';
+                subtotalGroup.style.display = 'none';
+            }
+
+            if (statusSelect.value === 'Pengiriman') {
+                trackingNumberGroup.style.display = 'block';
+            } else {
+                trackingNumberGroup.style.display = 'none';
             }
         }
 
-        // Initial check in case the status is already set to Negosiasi
-        toggleWhatsAppField();
+        // Initial check to display correct fields
+        toggleFields();
 
         // Listen for changes on the status select field
-        statusSelect.addEventListener('change', toggleWhatsAppField);
+        statusSelect.addEventListener('change', toggleFields);
     });
 </script>
 @endsection

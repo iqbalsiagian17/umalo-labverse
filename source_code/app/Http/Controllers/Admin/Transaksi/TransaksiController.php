@@ -114,6 +114,68 @@ class TransaksiController extends Controller
         $order->seen_by_users()->syncWithoutDetaching([Auth::id()]);
         return redirect()->back();
     }
+    public function updateEdit(Request $request, $id)
+    {
+        $order = Order::findOrFail($id);
+    
+        // Validation rules based on the status
+        $rules = [
+            'status' => 'required|string',
+            'harga_total' => 'required|numeric',
+        ];
+    
+        // Add validation for tracking number if the status is Pengiriman
+        if ($request->status == 'Pengiriman') {
+            $rules['nomor_resi'] = 'required|string';
+        }
+    
+        if ($request->status == 'Negosiasi') {
+            $rules['whatsapp_number'] = 'required|string';
+        }
+    
+        $validated = $request->validate($rules);
+    
+        // Block if status is Packing without proof of payment
+        if ($request->status == 'Packing' && !$order->bukti_pembayaran) {
+            return redirect()->back()->withErrors(['message' => 'Pelanggan belum mengunggah bukti pembayaran, status tidak dapat diubah menjadi Packing.']);
+        }
+    
+        // Handle the negotiated price (subtotal) update
+        if ($request->has('subtotal')) {
+            foreach ($order->orderItems as $item) {
+                if ($item->produk->nego == 'ya') {
+                    $order->harga_setelah_nego = $request->input('subtotal');
+                } else {
+                    $order->harga_setelah_nego = null;
+                }
+            }
+        }
+    
+        // Handle status updates and other logic
+        if ($request->status == 'Pengiriman') {
+            $order->nomor_resi = $request->input('nomor_resi');
+        }
+    
+        if ($request->status == 'Negosiasi') {
+            $order->whatsapp_number = $request->input('whatsapp_number');
+        }
+    
+        // Update the order status and other fields
+        $order->status = $request->status;
+        $order->harga_total = $request->input('harga_total');
+    
+        // Save the updated order
+        $order->save();
+    
+        // Log the status change with any additional info
+        $order->statusHistories()->create([
+            'status' => $request->status,
+            'extra_info' => $request->status == 'Pengiriman' ? $order->nomor_resi : null,
+            'created_at' => now(),
+        ]);
+    
+        return redirect()->route('transaksi.index')->with('success', 'Status updated successfully!');
+    }
     
 
     
