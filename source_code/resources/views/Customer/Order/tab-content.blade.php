@@ -29,7 +29,7 @@
                 <div class="d-flex mb-3">
                     <div style="flex: 1;">
                         @if($item->produk->images->isNotEmpty())
-                            <img src="{{ asset('/umalo/umalo-labverse/source_code/public/' .$item->produk->images->first()->gambar) }}" alt="{{ $item->produk->nama }}" style="width: 250px;" class="rounded">
+                            <img src="{{ asset($item->produk->images->first()->gambar) }}" alt="{{ $item->produk->nama }}" style="width: 250px;" class="rounded">
                         @else
                             <img src="https://via.placeholder.com/150" class="img-fluid mb-2" alt="{{ $item->produk->nama }}" style="width: 250px;" class="rounded">
                         @endif
