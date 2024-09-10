@@ -88,22 +88,38 @@
                         <li><b>{{ __('messages.commodity') }}</b> <span>{{ $produk->komoditas ? $produk->komoditas->nama : 'N/A' }}</span></li>
                         <li><b>{{ __('messages.category') }}</b> <span>{{ $produk->kategori ? $produk->kategori->nama : 'N/A' }}</span></li>
                         <li><b>{{ __('messages.sub_category') }}</b> <span>{{ $produk->subKategori ? $produk->subKategori->nama : 'N/A' }}</span></li>
-                        <li><b>{{ __('messages.ecatalog') }}</b> 
+                        <li><b>{{ __('messages.ecatalog') }}</b>
                             <span>
                                 @if ($produk->link_ekatalog)
                                     @php
                                         $url = $produk->link_ekatalog;
-                                        if (!preg_match("~^(?:f|ht)tps?://~i", $url)) {
-                                            $url = "http://" . $url;
+                                        if (!preg_match('~^(?:f|ht)tps?://~i', $url)) {
+                                            $url = 'http://' . $url;
                                         }
                                     @endphp
-
-                                <a href="{{ $url }}" target="_blank">{{ Str::limit($produk->link_ekatalog, 50) }}</a>
+                        
+                                    <a href="{{ $url }}" target="_blank" class="ecatalog-link">{{ Str::limit($produk->link_ekatalog, 50) }}</a>
                                 @else
                                     N/A
                                 @endif
                             </span>
                         </li>
+
+                        <style>
+                            .ecatalog-link {
+    color: #007bff;
+    text-decoration: none;
+    transition: color 0.3s ease, text-decoration 0.3s ease;
+}
+
+.ecatalog-link:hover {
+    color: #ff0000;
+    text-decoration: underline;
+}
+
+                        </style>
+
+
                         <li><b>{{ __('messages.average_rating') }}</b> 
                             <span>
                                 @if ($averageRating && $totalRatings)
@@ -272,18 +288,6 @@
                                             <tr>
                                                 <th scope="row"><strong>Ramah Lingkungan:</strong></th>
                                                 <td>{{ $produk->ramah_lingkungan ? 'Ya' : 'Tidak' }}</td>
-                                            </tr>
-                                        @endif
-                                        @if($produk->harga_diskon)
-                                            <tr>
-                                                <th scope="row"><strong>Harga Diskon:</strong></th>
-                                                <td>{{ $produk->harga_diskon }}</td>
-                                            </tr>
-                                        @endif
-                                        @if($produk->harga_tayang)
-                                            <tr>
-                                                <th scope="row"><strong>Harga Tayang:</strong></th>
-                                                <td>{{ $produk->harga_tayang }}</td>
                                             </tr>
                                         @endif
                                         @if($produk->kategori && $produk->kategori->nama)

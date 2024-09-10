@@ -44,7 +44,6 @@
                                 <td>{{ $order->status }}</td>
                                 <td>
                                     <a href="{{ route('transaksi.show', $order->id) }}" class="btn btn-info">Lihat</a>
-                                    <a href="{{ route('transaksi.edit', $order->id) }}" class="btn btn-warning">Edit</a>
                                     <form action="{{ route('transaksi.destroy', $order->id) }}" method="POST" style="display:inline-block;">
                                         @csrf
                                         @method('DELETE')
