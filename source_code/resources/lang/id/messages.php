@@ -1,8 +1,8 @@
 <?php
 
 return [
-    'slider_title' => 'Tingkatkan Output Anda dengan Labverse',
-    'slider_desc' => 'Segala sesuatu yang Anda butuhkan untuk mengoptimalkan output Anda guna memberikan hasil yang lebih efektif, efisien, berkualitas, dan memiliki nilai tambah. Kami menyediakan solusi melalui inovasi dengan produk atau layanan teknologi baru atau menyampaikan produk atau layanan teknologi yang sudah ada dengan cara baru.',
+    'slider_title' => 'Revolusi Kinerja dengan Teknologi Labverse',
+    'slider_desc' => 'Labverse menghadirkan inovasi untuk meningkatkan produktivitas dan efisiensi Anda. Temukan solusi yang dirancang khusus untuk memberikan hasil maksimal dengan teknologi terbaru yang memadukan keunggulan kualitas, kecepatan, dan nilai tambah yang tak tertandingi.',
     'shop_now' => 'BELANJA SEKARANG',
     'shop' => 'BELANJA',
     'bisa_nego' => 'Bisa Nego',
@@ -24,7 +24,7 @@ return [
     'oldest' => 'Terlama',
     'produk_ditemukan' => 'Produk Ditemukan',
 
-    //header 
+    //header
     'login' => 'Masuk',
     'register' => 'Daftar',
     'my_account' => 'Akun Saya',
@@ -34,7 +34,7 @@ return [
     'language' => 'Bahasa',
     'settings' => 'Pengaturan',
     'purchase' => 'Pembelian Saya',
-    
+
 
 
     //footer

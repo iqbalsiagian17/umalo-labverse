@@ -1,8 +1,8 @@
 <?php
 
 return [
-    'slider_title' => 'Level Up Your Output With Labverse',
-    'slider_desc' => 'Everything you need to optimize your output to provide results that are more effective, efficient, of quality, and have added value.We deliver the solution through innovation by new technology products or services or deliver existing technology products or services in new ways.',
+    'slider_title' => 'Revolutionize Performance with Labverse Technology',
+    'slider_desc' => 'Labverse delivers innovations to improve your productivity and efficiency. Discover tailored solutions to deliver maximum results with the latest technologies that combine unparalleled quality, speed, and value-added advantages.',
     'shop_now' => 'Shop Now',
     'shop' => 'SHOP',
     'bisa_nego' => 'Negotiable',
@@ -25,7 +25,7 @@ return [
     'produk_ditemukan' => 'Products Found',
     'review' => 'Review',
 
-    //header 
+    //header
     'login' => 'Login',
     'register' => 'Register',
     'search' => 'Search',
@@ -37,8 +37,8 @@ return [
     'settings' => 'settings',
     'purchase' => 'My purchases',
 
-        
-    
+
+
 
     //footer
     'contact_info' => 'Contact Info',

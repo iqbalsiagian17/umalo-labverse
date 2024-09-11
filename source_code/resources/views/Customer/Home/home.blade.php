@@ -14,30 +14,26 @@
                 </div>
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" style="background: none; border: none; color: #856404; font-size: 1.5rem; opacity: 0.8;">&times;</button>
             </div>
-            
-            
             @endforeach
         @endif
-        
+
             <div class="row">
                 <div class="col-lg-12">
                     <div id="heroCarousel" class="carousel slide" data-ride="carousel">
                         <div class="carousel-inner">
-
                             @if ($slider->isEmpty())
                                 <!-- If no sliders are available, show a default image -->
                                 <div class="carousel-item active">
                                     <div class="hero__item set-bg rounded"
-                                        data-setbg="{{ asset('assets/images/slider.png') }}">
+                                        data-setbg="{{ asset('assets/images/slider.jpg') }}">
                                         <div class="hero__text">
                                             <span></span>
-                                            <h2 class="text-white">{{ __('messages.slider_title') }}</h2>
+                                            <h2 class="text-white">{{ __('messages.slider_title') }}</h2><br>
                                             @php
                                             $text = __('messages.slider_desc');
                                             $formattedText = wordwrap($text, 100, "<br>\n", true);
                                         @endphp
-                                        
-                                        <p class="text-white">{!! $formattedText !!}</p><a href="{{ route('shop') }}" class="primary-btn rounded">{{ __('messages.shop_now') }}</a>
+                                        <p class="text-white" style="border-radius: 30px;">{!! $formattedText !!}</p><a href="{{ route('shop') }}" class="primary-btn rounded">{{ __('messages.shop_now') }}</a>
                                         </div>
                                     </div>
                                 </div>
@@ -54,51 +50,50 @@
                                 @endforeach
                             @endif
                         </div>
-
                         <style>
                             .carousel-inner .hero__text h2 {
                                 font-size: 48px; /* Default size */
                             }
-                        
+
                             .carousel-inner .hero__text p {
                                 font-size: 18px; /* Default size */
                             }
-                        
+
                             .carousel-inner .primary-btn {
                                 font-size: 16px; /* Default size */
                             }
-                        
+
                             /* Media Query for smaller devices (e.g., mobile phones) */
                             @media (max-width: 767px) {
                                 .carousel-inner .hero__text h2 {
                                     font-size: 28px; /* Smaller font size for mobile */
                                 }
-                        
+
                                 .carousel-inner .hero__text p {
                                     font-size: 14px; /* Smaller font size for mobile */
                                 }
-                        
+
                                 .carousel-inner .primary-btn {
                                     font-size: 14px; /* Smaller font size for mobile */
                                 }
                             }
-                        
+
                             /* Media Query for medium-sized devices (e.g., tablets) */
                             @media (min-width: 768px) and (max-width: 991px) {
                                 .carousel-inner .hero__text h2 {
                                     font-size: 36px; /* Medium font size */
                                 }
-                        
+
                                 .carousel-inner .hero__text p {
                                     font-size: 16px; /* Medium font size */
                                 }
-                        
+
                                 .carousel-inner .primary-btn {
                                     font-size: 15px; /* Medium font size */
                                 }
                             }
                         </style>
-                        
+
 
                         @if ($slider->count() > 1)
                             <a class="carousel-control-prev" href="#heroCarousel" role="button" data-slide="prev">
@@ -166,7 +161,7 @@
                                     </div>
                                 </section>
                                 <!-- Exclusive deal end -->
-        
+
                                 <!-- Product list start -->
                                 <div class="row featured__filter mt-5" id="MixItUpD27635">
                                     @foreach ($bigSale->produk as $product)
@@ -185,7 +180,7 @@
                                                     <ul class="featured__item__pic__hover">
                                                         <li><a href="{{ route('produk_customer.user.show', $product->id) }}"><i
                                                                     class="fa fa-info-circle"></i></a></li>
-        
+
                                                         @auth
                                                             <!-- Jika pengguna sudah login -->
                                                             <li><a href="#" class="add-to-cart-btn"
@@ -198,7 +193,7 @@
                                                         @endauth
                                                     </ul>
                                                 </div>
-        
+
                                                 <div class="featured__item__text">
                                                     <h6><a
                                                             href="{{ route('produk_customer.user.show', $product->id) }}">{{ $product->nama }}</a>
@@ -215,11 +210,11 @@
                                         </div>
                                     @endforeach
                                 </div>
-        
-        
+
+
                                 <hr>
                                 <!-- Product list end -->
-        
+
                                 <script>
                                     function startCountdown(endTime) {
                                         let statusUpdated = false; // Add a flag to prevent multiple updates
@@ -301,7 +296,7 @@
                             </div>
                         </div>
                     </div>
-            
+
                     <div class="row featured__filter" id="MixItUpD27635">
                         @foreach ($topSellingProducts as $item)
                             @php
@@ -319,7 +314,7 @@
                                         <ul class="featured__item__pic__hover">
                                             <li><a href="{{ route('produk_customer.user.show', $item->id) }}"><i
                                                         class="fa fa-info-circle"></i></a></li>
-            
+
                                             @auth
                                                 <!-- Jika pengguna sudah login -->
                                                 <li><a href="#" class="add-to-cart-btn" data-id="{{ $item->id }}"><i
@@ -330,7 +325,7 @@
                                             @endauth
                                         </ul>
                                     </div>
-            
+
                                     <div class="featured__item__text">
                                         <h6><a href="#">{{ $item->nama }}</a></h6>
                                         <h5>
@@ -346,7 +341,7 @@
                                                 @if ($item->harga_ditampilkan === 'ya')
                                                     Rp{{ number_format($item->harga_tayang, 0, ',', '.') }}
                                                 @else
-                                                    {{ __('messages.hubungi_admin') }}                                            
+                                                    {{ __('messages.hubungi_admin') }}
                                                 @endif
                                             @endif
 
@@ -359,7 +354,7 @@
                 </div>
             </section>
             @endif
-            
+
 
         <hr>
 
@@ -420,7 +415,7 @@
                                                 @if ($item->harga_ditampilkan === 'ya')
                                                     Rp{{ number_format($item->harga_tayang, 0, ',', '.') }}
                                                 @else
-                                                    {{ __('messages.hubungi_admin') }}                                            
+                                                    {{ __('messages.hubungi_admin') }}
                                                 @endif
                                             @endif
                                 </h5>
