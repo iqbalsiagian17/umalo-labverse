@@ -19,14 +19,8 @@
 
         <div class="row">
             <div class="card">
-                <div class="card-header d-flex justify-content-between align-items-center">
+                <div class="card-header">
                     <div class="card-title">Edit Produk</div>
-                    <div class="d-flex align-items-center">
-                        <div class="selectgroup w-auto mr-3">
-                    </div>
-                    @if ($errors->has('status'))
-                        <small class="text-danger">{{ $errors->first('status') }}</small>
-                    @endif
                 </div>
                 
                 <div class="card-body">
@@ -34,9 +28,6 @@
                         <ul class="nav nav-tabs" id="productFormTabs" role="tablist">
                             <li class="nav-item">
                                 <a class="nav-link active" id="general-tab" data-toggle="tab" href="#general" role="tab" aria-controls="general" aria-selected="true">General Information</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" id="categories-tab" data-toggle="tab" href="#categories" role="tab" aria-controls="categories" aria-selected="false">Categories</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" id="details-tab" data-toggle="tab" href="#details" role="tab" aria-controls="details" aria-selected="false">Details</a>
@@ -184,6 +175,56 @@
                             </div>
                         </div>
 
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="komoditas_id">Komoditas:</label>
+                                    <select name="komoditas_id" class="form-control" required>
+                                        @foreach($komoditas as $k)
+                                            <option value="{{ $k->id }}" {{ $produk->komoditas_id == $k->id ? 'selected' : '' }}>{{ $k->nama }}</option>
+                                        @endforeach
+                                    </select>
+                                    @if ($errors->has('komoditas_id'))
+                                        <small class="text-danger">{{ $errors->first('komoditas_id') }}</small>
+                                    @endif
+                                </div>
+                            </div>
+
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="kategori_id">Kategori:</label>
+                                    <select name="kategori_id" id="kategori_id" class="form-control" required>
+                                        <option value="">Pilih Kategori</option>
+                                        @foreach($kategoris as $kategori)
+                                            <option value="{{ $kategori->id }}" {{ $produk->kategori_id == $kategori->id ? 'selected' : '' }}>{{ $kategori->nama }}</option>
+                                        @endforeach
+                                    </select>
+                                    @if ($errors->has('kategori_id'))
+                                        <small class="text-danger">{{ $errors->first('kategori_id') }}</small>
+                                    @endif
+                                </div>
+                            </div>
+
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="sub_kategori_id">Sub Kategori:</label>
+                                    <select name="sub_kategori_id" id="sub_kategori_id" class="form-control" required>
+                                        <option value="">Pilih Sub Kategori</option>
+                                        @foreach($kategoris as $kategori)
+                                            @foreach($kategori->subKategori as $subKategori)
+                                                <option value="{{ $subKategori->id }}" data-kategori-id="{{ $kategori->id }}" {{ old('sub_kategori_id', $produk->sub_kategori_id) == $subKategori->id ? 'selected' : '' }}>
+                                                    {{ $subKategori->nama }}
+                                                </option>
+                                            @endforeach
+                                        @endforeach
+                                    </select>
+                                    @if ($errors->has('sub_kategori_id'))
+                                        <small class="text-danger">{{ $errors->first('sub_kategori_id') }}</small>
+                                    @endif
+                                </div>
+                            </div>
+                        </div>
+
                         <div class="form-group">
                             <label for="gambar">Gambar Produk:</label>
                             <input type="file" name="gambar[]" id="gambar[]" class="form-control" multiple>
@@ -206,55 +247,7 @@
 
                         <!-- Categories Tab -->
                         <div class="tab-pane fade" id="categories" role="tabpanel" aria-labelledby="categories-tab">
-                            <div class="row">
-                                <div class="col-md-4">
-                                    <div class="form-group">
-                                        <label for="komoditas_id">Komoditas:</label>
-                                        <select name="komoditas_id" class="form-control" required>
-                                            @foreach($komoditas as $k)
-                                                <option value="{{ $k->id }}" {{ $produk->komoditas_id == $k->id ? 'selected' : '' }}>{{ $k->nama }}</option>
-                                            @endforeach
-                                        </select>
-                                        @if ($errors->has('komoditas_id'))
-                                            <small class="text-danger">{{ $errors->first('komoditas_id') }}</small>
-                                        @endif
-                                    </div>
-                                </div>
-
-                                <div class="col-md-4">
-                                    <div class="form-group">
-                                        <label for="kategori_id">Kategori:</label>
-                                        <select name="kategori_id" id="kategori_id" class="form-control" required>
-                                            <option value="">Pilih Kategori</option>
-                                            @foreach($kategoris as $kategori)
-                                                <option value="{{ $kategori->id }}" {{ $produk->kategori_id == $kategori->id ? 'selected' : '' }}>{{ $kategori->nama }}</option>
-                                            @endforeach
-                                        </select>
-                                        @if ($errors->has('kategori_id'))
-                                            <small class="text-danger">{{ $errors->first('kategori_id') }}</small>
-                                        @endif
-                                    </div>
-                                </div>
-
-                                <div class="col-md-4">
-                                    <div class="form-group">
-                                        <label for="sub_kategori_id">Sub Kategori:</label>
-                                        <select name="sub_kategori_id" id="sub_kategori_id" class="form-control" required>
-                                            <option value="">Pilih Sub Kategori</option>
-                                            @foreach($kategoris as $kategori)
-                                                @foreach($kategori->subKategori as $subKategori)
-                                                    <option value="{{ $subKategori->id }}" data-kategori-id="{{ $kategori->id }}" {{ old('sub_kategori_id', $produk->sub_kategori_id) == $subKategori->id ? 'selected' : '' }}>
-                                                        {{ $subKategori->nama }}
-                                                    </option>
-                                                @endforeach
-                                            @endforeach
-                                        </select>
-                                        @if ($errors->has('sub_kategori_id'))
-                                            <small class="text-danger">{{ $errors->first('sub_kategori_id') }}</small>
-                                        @endif
-                                    </div>
-                                </div>
-                            </div>
+                            
                             <button type="submit" class="btn btn-primary mt-3">Simpan</button>  
                         </div>
 

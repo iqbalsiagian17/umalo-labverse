@@ -542,9 +542,6 @@
                         <div class="featured__item">
                             <div class="featured__item__pic"
                                 style="background-image: url('{{ asset($imagePath) }}'); background-size: cover; background-position: center; border-radius: 10px;">
-                                @if ($item->nego === 'ya')
-                                <span class="nego-badge">{{ __('messages.negotiable') }}</span>
-                            @endif
                             @if ($bigSaleItem && $bigSaleItem->status === 'aktif')
                                 <span class="nego-badge badge-primary">Big Sale</span>
                             @endif

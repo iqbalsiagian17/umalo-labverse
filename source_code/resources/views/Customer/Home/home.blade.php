@@ -17,6 +17,19 @@
             @endforeach
         @endif
 
+        @if ($rejectOrders->isNotEmpty())
+            @foreach ($rejectOrders as $order)
+                <div class="alert alert-warning alert-dismissible fade show d-flex align-items-center mb-3" role="alert" style="border-radius: 10px; box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); background-color: #fff3cd; padding: 1rem 1.5rem;">
+                    <i class="fas fa-exclamation-triangle" style="font-size: 1.8rem; color: #856404; margin-right: 1.5rem;"></i>
+                    <div style="flex-grow: 1; font-size: 1rem; color: #856404;">
+                        <strong>Pesanan Anda #{{ $order->id }}</strong> telah ditolak untuk negosiasi dan berlanjut ke pembelian reguler.
+                        <a href="{{ route('order.detail', $order->id) }}" class="alert-link" style="font-weight: bold; text-decoration: underline; color: #856404;">Klik di sini</a> untuk melihat detail pesanan.
+                    </div>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" style="background: none; border: none; color: #856404; font-size: 1.5rem; opacity: 0.8;">&times;</button>
+                </div>
+            @endforeach
+        @endif
+        
             <div class="row">
                 <div class="col-lg-12">
                     <div id="heroCarousel" class="carousel slide" data-ride="carousel">
@@ -174,9 +187,6 @@
                                             <div class="featured__item">
                                                 <div class="featured__item__pic"
                                                     style="position: relative; background-image: url('{{ asset($imagePath) }}'); background-size: cover; background-position: center; border-radius: 10px;">
-                                                    @if ($product->nego === 'ya')
-                                                        <span class="nego-badge">Bisa Nego</span>
-                                                    @endif
                                                     <ul class="featured__item__pic__hover">
                                                         <li><a href="{{ route('produk_customer.user.show', $product->id) }}"><i
                                                                     class="fa fa-info-circle"></i></a></li>
@@ -308,9 +318,6 @@
                                 <div class="featured__item">
                                     <div class="featured__item__pic"
                                         style="background-image: url('{{ asset($imagePath) }}'); background-size: cover; background-position: center; border-radius: 10px;">
-                                        @if ($item->nego === 'ya')
-                                            <span class="nego-badge">{{ __('messages.bisa_nego') }}</span>
-                                        @endif
                                         <ul class="featured__item__pic__hover">
                                             <li><a href="{{ route('produk_customer.user.show', $item->id) }}"><i
                                                         class="fa fa-info-circle"></i></a></li>
@@ -382,8 +389,6 @@
                                 style="background-image: url('{{ asset($imagePath) }}'); background-size: cover; background-position: center; border-radius: 10px;">
                                 @if ($item->harga_potongan)
                                     <span class="nego-badge bg-danger">{{ __('Diskon!!') }}</span>
-                                @elseif ($item->nego === 'ya')
-                                    <span class="nego-badge">{{ __('messages.bisa_nego') }}</span>
                                 @endif
 
                                 <ul class="featured__item__pic__hover">

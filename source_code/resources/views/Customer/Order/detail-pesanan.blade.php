@@ -59,6 +59,12 @@
                                 <i class="fas fa-file-download"></i> {{ __('messages.download_invoice') }}
                             </a>
                         @endif
+                        @if($order->user_message)
+                            <div class="alert alert-info">
+                                {{ $order->user_message }}
+                            </div>
+                        @endif
+
                     </div>
                 </div>
 

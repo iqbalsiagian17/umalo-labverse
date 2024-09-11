@@ -86,7 +86,17 @@ class HomeController extends Controller
     $user = User::find(auth()->id());
     $pendingOrders = $user ? $user->orders()->where('status', 'Diterima')->whereNull('bukti_pembayaran')->get() : collect();
 
-    return view('customer.home.home', compact('produk', 'bigSale', 'slider','topSellingProducts','pendingOrders' ));
+    
+    $rejectOrders = $user ? $user->orders()
+        ->where('status', 'Diterima') // Status 'Diterima' means the negotiation has been rejected
+        ->whereHas('orderItems', function($query) {
+            $query->whereHas('produk', function($query) {
+                $query->where('nego', 'ya'); // Product was previously negotiable
+            });
+        })
+        ->whereNull('bukti_pembayaran') // Orders where payment has not been made yet
+        ->get() : collect();
+    return view('customer.home.home', compact('produk', 'bigSale', 'slider','topSellingProducts','pendingOrders','rejectOrders' ));
 }
 
 

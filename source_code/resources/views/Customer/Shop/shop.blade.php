@@ -117,9 +117,6 @@
                                     @endphp
                                     <div class="product__item__pic"
                                         style="background-image: url('{{ asset($imagePath) }}');">
-                                        @if ($product->nego === 'ya')
-                                            <span class="nego-badge">{{ __('messages.bisa_nego') }}</span>
-                                        @endif
                                         <ul class="product__item__pic__hover">
                                             <li><a href="{{ route('produk_customer.user.show', $product->id) }}"><i
                                                         class="fa fa-info-circle"></i></a></li>

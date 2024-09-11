@@ -60,6 +60,24 @@ class TransaksiController extends Controller
         }
     }
 
+
+    if ($request->status == 'Negosiasi' && $request->has('negotiation_rejected')) {
+        $order->status = 'Diterima';
+        $order->status = 'Negosiasi Ditolak, Orderan Berlanjut Ke Order Reguler'; // Set message to be displayed to the user
+    } else if ($request->status == 'Packing' && !$order->bukti_pembayaran) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Pelanggan belum mengunggah bukti pembayaran, status tidak dapat diubah menjadi Packing.'
+        ], 400);
+    } else {
+        $order->status = $request->status;
+    }
+
+    if ($request->status == 'Negosiasi' && $request->has('negotiation_rejected')) {
+        $order->status = 'Diterima';
+        $order->user_message = 'Negosiasi Ditolak, Orderan Berlanjut Ke Order Reguler';
+    }
+    
     if ($request->status == 'Packing' && !$order->bukti_pembayaran) {
         return response()->json([
             'success' => false,

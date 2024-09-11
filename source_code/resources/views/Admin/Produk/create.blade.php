@@ -39,7 +39,7 @@
                     </div>
                 </div>
     
-                <form id="produkForm" action="{{ route('produk.store') }}" method="POST" enctype="multipart/form-data">
+                <form action="{{ route('produk.store') }}" method="POST" enctype="multipart/form-data">
                     @csrf
     
                     <div class="tab-content" id="productFormContent">
@@ -52,18 +52,6 @@
                                     <small class="text-danger">{{ $errors->first('nama') }}</small>
                                 @endif
                             </div>
-                            <div class="form-group">
-                                <label for="nego"><span class="text-danger">*</span> Bisa Nego:</label>
-                                <select name="nego" id="nego" class="form-control" required>
-                                    <option value="" disabled {{ old('nego') ? '' : 'selected' }}>Pilih opsi</option>
-                                    <option value="ya" {{ old('nego') == 'ya' ? 'selected' : '' }}>Ya</option>
-                                    <option value="tidak" {{ old('nego') == 'tidak' ? 'selected' : '' }}>Tidak</option>
-                                </select>
-                                @if ($errors->has('nego'))
-                                    <small class="text-danger">{{ $errors->first('nego') }}</small>
-                                @endif
-                            </div>
-                            
                             <div class="form-group">
                                 <label for="harga_ditampilkan"> <span class="text-danger">*</span> Harga Ditampilkan:</label>
                                 <select name="harga_ditampilkan" id="harga_ditampilkan" class="form-control" required>
@@ -83,6 +71,7 @@
                                     <small class="text-danger">{{ $errors->first('harga_tayang') }}</small>
                                 @endif
                             </div>
+
                             <div class="form-group">
                                 <label for="spesifikasi_produk"><span class="text-danger">*</span> Spesifikasi Produk:</label>
                                 <textarea name="spesifikasi_produk" id="spesifikasi_produk" class="form-control" required>{{ old('spesifikasi_produk') }}
@@ -164,13 +153,11 @@
     
                                 <div class="col-md-4">
                                     <div class="form-group">
-                                        <label for="kategori_id">Kategori:</label>
+                                        <label for="kategori_id"><span class="text-danger">*</span> Kategori:</label>
                                         <select name="kategori_id" id="kategori_id" class="form-control" required>
                                             <option value="">Pilih Kategori</option>
                                             @foreach($kategoris as $kategori)
-                                                <option value="{{ $kategori->id }}" {{ old('kategori_id', isset($produk) ? $produk->kategori_id : '') == $kategori->id ? 'selected' : '' }}>
-                                                    {{ $kategori->nama }}
-                                                </option>
+                                                <option value="{{ $kategori->id }}" {{ old('kategori_id') == $kategori->id ? 'selected' : '' }}>{{ $kategori->nama }}</option>
                                             @endforeach
                                         </select>
                                         @if ($errors->has('kategori_id'))
@@ -178,26 +165,19 @@
                                         @endif
                                     </div>
                                 </div>
-                                
+    
                                 <div class="col-md-4">
                                     <div class="form-group">
-                                        <label for="sub_kategori_id">Sub Kategori:</label>
+                                        <label for="sub_kategori_id"><span class="text-danger">*</span> Sub Kategori:</label>
                                         <select name="sub_kategori_id" id="sub_kategori_id" class="form-control" required>
                                             <option value="">Pilih Sub Kategori</option>
-                                            @foreach($kategoris as $kategori)
-                                                @foreach($kategori->subKategori as $subKategori)
-                                                    <option value="{{ $subKategori->id }}" data-kategori-id="{{ $kategori->id }}" {{ old('sub_kategori_id', isset($produk) ? $produk->sub_kategori_id : '') == $subKategori->id ? 'selected' : '' }}>
-                                                        {{ $subKategori->nama }}
-                                                    </option>
-                                                @endforeach
-                                            @endforeach
                                         </select>
                                         @if ($errors->has('sub_kategori_id'))
                                             <small class="text-danger">{{ $errors->first('sub_kategori_id') }}</small>
                                         @endif
                                     </div>
                                 </div>
-                                
+                            </div>
 
                             <div class="form-group">
                                 <label for="gambar"><span class="text-danger">*</span> Gambar Produk:</label>
@@ -420,7 +400,7 @@
                                 </table>
                                 <button type="button" class="btn btn-secondary mt-3" id="add-detail">Tambah Detail</button>
                             </div>
-                            <button type="button" id="saveButton" class="btn btn-primary mt-3">Simpan</button>
+                            <button type="submit" id="saveButton" class="btn btn-primary mt-3" >Simpan</button>
                         </div>
                     </div>
     
@@ -484,40 +464,26 @@
         });
         </script>
 
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-const kategoriSelect = document.getElementById('kategori_id');
-const subKategoriSelect = document.getElementById('sub_kategori_id');
+    <script>
+        document.getElementById('kategori_id').addEventListener('change', function() {
+            var kategoriId = this.value;
+            var subKategoriSelect = document.getElementById('sub_kategori_id');
 
-function filterSubKategoris() {
-    const selectedKategoriId = kategoriSelect.value;
+            subKategoriSelect.innerHTML = '<option value="">Memuat...</option>';
 
-    // Sembunyikan semua subkategori
-    Array.from(subKategoriSelect.options).forEach(option => {
-        option.style.display = 'none';
-        option.disabled = true;
-    });
-
-    // Tampilkan hanya subkategori yang sesuai
-    Array.from(subKategoriSelect.options).forEach(option => {
-        if (option.getAttribute('data-kategori-id') === selectedKategoriId) {
-            option.style.display = 'block';
-            option.disabled = false;
-        }
-    });
-
-    // Set subkategori ke opsi pertama yang sesuai
-    subKategoriSelect.value = '';
-}
-
-// Filter subkategori saat halaman pertama kali dimuat
-filterSubKategoris();
-
-// Tambahkan event listener untuk filter ulang saat kategori berubah
-kategoriSelect.addEventListener('change', filterSubKategoris);
-});
-
-</script>
+            fetch(`/admin/produk/getSubKategori/${kategoriId}`)
+                .then(response => response.json())
+                .then(data => {
+                    subKategoriSelect.innerHTML = '<option value="">Pilih Sub Kategori</option>';
+                    data.forEach(function(subKategori) {
+                        var option = document.createElement('option');
+                        option.value = subKategori.id;
+                        option.textContent = subKategori.nama;
+                        subKategoriSelect.appendChild(option);
+                    });
+                });
+        });
+    </script>
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
@@ -607,26 +573,6 @@ kategoriSelect.addEventListener('change', filterSubKategoris);
     }
 });
 
-</script>
-<script>
-    document.getElementById('saveButton').addEventListener('click', function(event) {
-        event.preventDefault(); // Prevent form submission
-
-        Swal.fire({
-            title: 'Are you sure?',
-            text: "Make sure all the data is correct before saving.",
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonText: 'Yes, save it!',
-            cancelButtonText: 'No, cancel!',
-            reverseButtons: true
-        }).then((result) => {
-            if (result.isConfirmed) {
-                // If confirmed, submit the form
-                document.getElementById('produkForm').submit();
-            }
-        });
-    });
 </script>
 
 @endsection
