@@ -110,7 +110,7 @@
                                 @foreach($products as $product)
                                     <div class="col-md-2 col-sm-4 mb-4 product-item" data-category="{{ $product->kategori_id }}">
                                         <div class="card h-100">
-                                            <img src="{{ asset('/umalo/umalo-labverse/source_code/public/' . $product->images->first()->gambar ?? 'path/to/default/image.jpg') }}" class="card-img-top" alt="{{ $product->nama }}" style="height: 100px; object-fit: cover; border-radius: 10px;">
+                                            <img src="{{ asset($product->images->first()->gambar ?? 'path/to/default/image.jpg') }}" class="card-img-top" alt="{{ $product->nama }}" style="height: 100px; object-fit: cover; border-radius: 10px;">
                                             <div class="card-body p-2">
                                                 <div class="d-flex align-items-start">
                                                     <input type="checkbox" class="form-check-input" id="product-{{ $product->id }}" name="products[{{ $product->id }}]" value="{{ $product->id }}" {{ $bigSale->produk->contains($product->id) ? 'checked' : '' }}>

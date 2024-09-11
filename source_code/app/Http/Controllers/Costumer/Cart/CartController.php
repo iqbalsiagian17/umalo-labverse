@@ -78,7 +78,12 @@ class CartController extends Controller
 
 public function add(Request $request, $id)
 {
-    $product = Produk::find($id);
+    // Fetch the product along with any active big sales
+    $product = Produk::with(['bigSales' => function ($query) {
+        $query->where('status', 'aktif')
+              ->whereDate('mulai', '<=', now())
+              ->whereDate('berakhir', '>=', now());
+    }])->find($id);
 
     if (!$product) {
         return response()->json(['success' => false, 'message' => 'Produk tidak ditemukan!'], 404);
@@ -86,38 +91,57 @@ public function add(Request $request, $id)
 
     $quantity = $request->input('quantity', 1);
 
-    // Cek apakah kuantitas melebihi stok
+    // Check if quantity exceeds available stock
     if ($quantity > $product->stok) {
         return response()->json(['success' => false, 'message' => 'Kuantitas melebihi stok yang tersedia!'], 400);
     }
 
-    $harga = $product->harga_potongan ?: $product->harga_tayang;
+    // Initialize harga_diskon
+    $harga_diskon = null;
 
+    // Check if the product is part of an active Big Sale and apply harga_diskon
+    if ($product->bigSales->isNotEmpty()) {
+        // Get the first active Big Sale (there should only be one active Big Sale at a time)
+        $bigSale = $product->bigSales->first();
+        $harga_diskon = $bigSale->pivot->harga_diskon ?? null;
+    }
+
+    // Determine which price to use: harga_diskon, harga_potongan, or harga_tayang
+    $harga = $harga_diskon ?: ($product->harga_potongan ?: $product->harga_tayang);
+
+    // Fetch the cart from the session (or initialize it if empty)
     $cart = session()->get('cart', []);
 
+    // If product is already in the cart, update its quantity
     if (isset($cart[$id])) {
         $cart[$id]['quantity'] += $quantity;
 
-        // Cek apakah kuantitas total melebihi stok setelah penambahan
+        // Check if total quantity exceeds stock after the update
         if ($cart[$id]['quantity'] > $product->stok) {
             return response()->json(['success' => false, 'message' => 'Kuantitas total dalam keranjang melebihi stok yang tersedia!'], 400);
         }
     } else {
+        // Add the product to the cart
         $cart[$id] = [
             "name" => $product->nama,
             "quantity" => $quantity,
             "harga_tayang" => $product->harga_tayang,
             "harga_potongan" => $product->harga_potongan,
+            "harga_diskon" => $harga_diskon,  // Save harga_diskon if available
             "image" => $product->images->first()->gambar ?? 'default.png'
         ];
     }
 
+    // Save the updated cart back to the session
     session()->put('cart', $cart);
 
+    // Calculate total quantity in the cart
     $totalQuantity = array_sum(array_column($cart, 'quantity'));
 
     return response()->json(['success' => true, 'totalQuantity' => $totalQuantity]);
 }
+
+
 
     
 
