@@ -205,4 +205,14 @@ return [
 
     'all_kategori' => 'All Categories',
     'search_empty' => 'Please enter the name of the product you want to search for before continuing the search. Thank You.',
+
+    'subkategori' => 'Subcategory',
+    'price_lowest' => 'Price Lowest',
+    'price_highest' => 'Price Highest',
+
+        'price_range' => 'Price Range',
+        'min_price' => 'Minimum Price',
+        'max_price' => 'Maximum Price',
+        'apply_filter' => 'Apply Filter',
+        'refresh' => 'Refresh',
 ];

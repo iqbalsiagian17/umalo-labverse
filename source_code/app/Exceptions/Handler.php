@@ -25,15 +25,15 @@ class Handler extends ExceptionHandler
     ];
 
     //Jika Dalam Develop
-/*     public function register(): void
+     public function register(): void
     {
         $this->reportable(function (Throwable $e) {
             // Customize reporting logic here
         });
-    } */
+    } 
 
     //Jika Server Dinaikkan
-    public function register()
+/*     public function register()
     {
         $this->reportable(function (Throwable $e) {
             // Logika untuk melaporkan exception
@@ -43,7 +43,7 @@ class Handler extends ExceptionHandler
             return response()->view('errors.generic_error', ['exception' => $e], 500);
         });
     }
-
+ */
     public function render($request, Throwable $exception)
     {
         if ($exception instanceof HttpExceptionInterface) {

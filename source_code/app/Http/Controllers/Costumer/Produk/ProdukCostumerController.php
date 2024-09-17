@@ -8,7 +8,7 @@ use App\Models\Komoditas;
 use App\Models\Produk;
 use Illuminate\Http\Request;
 use App\Models\Order;
-
+use App\Models\SubKategori;
 
 class ProdukCostumerController extends Controller
 {
@@ -51,22 +51,38 @@ class ProdukCostumerController extends Controller
 public function search(Request $request)
 {
     $query = $request->input('query');
+    $sort = $request->get('sort'); // Get the sort parameter from the request
 
-    $komoditas = Komoditas::all();
+    $subkategori = SubKategori::all();
     $kategori = Kategori::all();
 
-    // Search products by name, specifications, or brand
-    $produk = Produk::where('nama', 'LIKE', "%{$query}%")
-        ->orderByRaw("CASE WHEN nama LIKE ? THEN 1 ELSE 2 END", ["%{$query}%"])
-        ->orWhere('merk', 'LIKE', "%{$query}%")
-        ->get();
+    // Start the query for searching products
+    $produk = Produk::where(function ($q) use ($query) {
+            $q->where('nama', 'LIKE', "%{$query}%")
+                ->orWhere('merk', 'LIKE', "%{$query}%");
+        });
+
+    // Apply sorting logic
+    if ($sort == 'newest') {
+        $produk->orderBy('created_at', 'desc');
+    } elseif ($sort == 'oldest') {
+        $produk->orderBy('created_at', 'asc');
+    } elseif ($sort == 'price_lowest') {
+        $produk->orderBy('harga_tayang', 'asc'); // Sort by price lowest to highest
+    } elseif ($sort == 'price_highest') {
+        $produk->orderBy('harga_tayang', 'desc'); // Sort by price highest to lowest
+    }
+
+    // Execute the query and paginate the results
+    $produk = $produk->paginate(9);
 
     // Count the number of products found
-    $productCount = $produk->count();
+    $productCount = $produk->total();
 
     // Return the search results to a view
-    return view('customer.search.index', compact('produk', 'query', 'komoditas', 'kategori', 'productCount'));
+    return view('Customer.Search.index', compact('produk', 'query', 'subkategori', 'kategori', 'productCount'));
 }
+
 
 
 
