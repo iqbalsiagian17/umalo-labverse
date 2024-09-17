@@ -158,25 +158,7 @@
                                     <button type="submit" class="site-btn rounded">{{ __('messages.search') }}</button>
                                 </form>
                             </div>
-                            <div id="searchError" style="color: red; display: none;">
-                                {{ __('messages.search_empty') }}
-                            </div>
-                        </div>
-                        
-                        <script>
-                            document.getElementById('searchForm').addEventListener('submit', function (e) {
-                                let queryInput = document.getElementById('searchQuery').value.trim();
-                        
-                                // Jika input kosong, cegah form dari pengiriman
-                                if (queryInput === '') {
-                                    e.preventDefault(); // Mencegah pengiriman form
-                                    document.getElementById('searchError').style.display = 'block'; // Tampilkan pesan error
-                                } else {
-                                    document.getElementById('searchError').style.display = 'none'; // Sembunyikan pesan error
-                                }
-                            });
-                        </script>
-                        
+                        </div>                        
                     </div>
                     <div class="col-lg-3">
                         <div class="header__cart mb-3">

@@ -138,7 +138,7 @@
                                         @endfor
                                     </span>
                                 @else
-                                    Null
+                                    Belum Ada Penilaian
                                 @endif
                             </span>
                         </li>

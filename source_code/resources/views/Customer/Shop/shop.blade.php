@@ -77,30 +77,16 @@
                             </div>
 
                             <script>
-document.getElementById('grid-view').addEventListener('click', function() {
-    var productList = document.getElementById('product-list');
-    var notification = document.getElementById('notification');
-
-    productList.classList.remove('list-view');
-    productList.classList.add('grid-view');
-    notification.style.display = 'none'; // Hide notification when in grid view
-});
-
-document.getElementById('list-view').addEventListener('click', function() {
-    var productList = document.getElementById('product-list');
-    var notification = document.getElementById('notification');
-
-    productList.classList.remove('grid-view');
-    productList.classList.add('list-view');
-    notification.style.display = 'block'; // Show notification for list view
-
-    // Hide the notification after 5 seconds
-    setTimeout(function() {
-        notification.style.display = 'none';
-    }, 5000);
-});
-
+                                function sortProducts() {
+                                    var sortBy = document.getElementById('sort-by').value;
+                                    var url = new URL(window.location.href);
+                                    url.searchParams.set('sort', sortBy); // Set the 'sort' parameter in the URL
+                            
+                                    // Redirect to the new URL with the selected sort option
+                                    window.location.href = url.toString();
+                                }
                             </script>
+                            
 
                             <div class="col-lg-4 col-md-4">
                                 <div class="filter__found">
@@ -223,7 +209,7 @@ document.getElementById('list-view').addEventListener('click', function() {
                     <div class="row" id="product-list">
                         @foreach ($produk as $product)
                             <div class="col-lg-4 col-md-6 col-sm-6 product__item-container">
-                                <div class="product__item">
+                                <div class="product__item" data-href="{{ route('produk_customer.user.show', $product->id) }}">
                                     @php
                                         $imagePath = $product->images->isNotEmpty()
                                             ? $product->images->first()->gambar
@@ -232,11 +218,9 @@ document.getElementById('list-view').addEventListener('click', function() {
                                     <div class="product__item__pic"
                                         style="background-image: url('{{ asset($imagePath) }}');">
                                         <ul class="product__item__pic__hover">
-                                            <li><a href="{{ route('produk_customer.user.show', $product->id) }}"><i
-                                                        class="fa fa-info-circle"></i></a></li>
+                                            <li><a href="{{ route('produk_customer.user.show', $product->id) }}"><i class="fa fa-info-circle"></i></a></li>
                                             @auth
-                                                <li><a href="#" class="add-to-cart-btn" data-id="{{ $product->id }}"><i
-                                                            class="fa fa-shopping-cart"></i></a></li>
+                                                <li><a href="#" class="add-to-cart-btn" data-id="{{ $product->id }}"><i class="fa fa-shopping-cart"></i></a></li>
                                             @else
                                                 <li><a href="{{ route('login') }}"><i class="fa fa-shopping-cart"></i></a></li>
                                             @endauth
@@ -250,6 +234,50 @@ document.getElementById('list-view').addEventListener('click', function() {
                             </div>
                         @endforeach
                     </div>
+                    
+                    <script>
+                        document.addEventListener('DOMContentLoaded', function () {
+                            document.querySelectorAll('.product__item').forEach(function (item) {
+                                item.addEventListener('click', function () {
+                                    window.location.href = this.getAttribute('data-href');
+                                });
+                            });
+                        });
+                    </script>
+                    
+
+                    <style>
+                        .product__item {
+                            position: relative;
+                            cursor: pointer;
+                        }
+
+                        .product__item__pic__hover {
+                            position: absolute;
+                            bottom: 10px;
+                            left: 83%;
+                            transform: translateX(-50%);
+                            display: none;
+                            z-index: 10;
+                        }
+
+                        .product__item:hover .product__item__pic__hover {
+                            display: flex;
+                        }
+
+                        .product__item__pic {
+                            background-size: cover;
+                            background-position: center;
+                            width: 100%;
+                            height: 300px; /* Atur tinggi sesuai kebutuhan */
+                        }
+
+                        .product__item__text {
+                            text-align: center;
+                            padding: 10px;
+                        }
+
+                    </style>
                     
                     
                     <div class="product__pagination text-center">
