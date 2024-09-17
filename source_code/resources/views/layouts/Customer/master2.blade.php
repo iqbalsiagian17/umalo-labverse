@@ -1,6 +1,6 @@
-@include('layouts.customer.header')
+@include('layouts.Customer.header')
 
 
-@include('layouts.customer.content')
+@include('layouts.Customer.content')
 
-@include('layouts.customer.footer')
+@include('layouts.Customer.footer')

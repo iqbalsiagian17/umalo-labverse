@@ -14,7 +14,7 @@ class TransaksiController extends Controller
     {
         // Ambil input pencarian
         $search = $request->input('search');
-    
+
         // Query order dengan filter nama user jika ada pencarian
         $orders = Order::with(['orderItems', 'user.userdetail'])
             ->when($search, function ($query, $search) {
@@ -27,41 +27,41 @@ class TransaksiController extends Controller
             if ($search && $orders->isEmpty()) {
                 session()->flash('no_results', 'Tidak ada hasil untuk pencarian: ' . $search);
             }
-    
+
         // Lihat transaksi yang sudah dilihat
         $seenOrders = Session::get('seen_orders', []);
-    
+
         foreach ($orders as $order) {
             if (!in_array($order->id, $seenOrders)) {
                 $seenOrders[] = $order->id;
             }
         }
-    
+
         Session::put('seen_orders', $seenOrders);
-    
-        return view('admin.transaksi.index', compact('orders'));
+
+        return view('Admin.Transaksi.index', compact('orders'));
     }
-    
+
 
 
     public function show($id)
     {
         $order = Order::with('orderItems')->findOrFail($id);
         $this->markAsSeen($order);
-        return view('admin.transaksi.show', compact('order'));
+        return view('Admin.Transaksi.show', compact('order'));
     }
-    
+
 
     public function edit($id)
     {
         $order = Order::with('orderItems')->findOrFail($id);
-        return view('admin.transaksi.edit', compact('order'));
+        return view('Admin.Transaksi.edit', compact('order'));
     }
 
     public function update(Request $request, $id)
     {
         $order = Order::findOrFail($id);
-    
+
         // Check if the subtotal (negotiated price) is being updated
     if ($request->has('subtotal')) {
         // Loop through each order item
@@ -93,14 +93,14 @@ class TransaksiController extends Controller
         $order->status = 'Diterima';
         $order->user_message = 'Negosiasi Ditolak, Orderan Berlanjut Ke Order Reguler';
     }
-    
+
     if ($request->status == 'Packing' && !$order->bukti_pembayaran) {
         return response()->json([
             'success' => false,
             'message' => 'Pelanggan belum mengunggah bukti pembayaran, sehingga status tidak dapat diubah menjadi Packing.'
         ], 400);
     }
-    
+
         // Handle status updates and other logic
         if ($request->status == 'Pengiriman') {
             $request->validate([
@@ -108,14 +108,14 @@ class TransaksiController extends Controller
             ]);
             $order->nomor_resi = $request->nomor_resi;
         }
-    
+
         if ($request->status == 'Negosiasi') {
             $request->validate([
                 'whatsapp_number' => 'required|string',
             ]);
             $order->whatsapp_number = $request->whatsapp_number;
         }
-    
+
         $order->status = $request->status;
 
         if ($request->status == 'Packing' && $request->has('nomor_resi')) {
@@ -123,17 +123,17 @@ class TransaksiController extends Controller
         }
 
         $order->save();
-    
+
         // Log the status change with any additional info
         $order->statusHistories()->create([
             'status' => $request->status,
             'extra_info' => $request->status == 'Pengiriman' ? $order->nomor_resi : null,
             'created_at' => now(),
         ]);
-    
+
         return response()->json(['success' => true, 'message' => 'Status updated successfully!']);
     }
-    
+
 
     public function destroy($id)
     {
@@ -151,29 +151,29 @@ class TransaksiController extends Controller
     public function updateEdit(Request $request, $id)
     {
         $order = Order::findOrFail($id);
-    
+
         // Validation rules based on the status
         $rules = [
             'status' => 'required|string',
             'harga_total' => 'required|numeric',
         ];
-    
+
         // Add validation for tracking number if the status is Pengiriman
         if ($request->status == 'Pengiriman') {
             $rules['nomor_resi'] = 'required|string';
         }
-    
+
         if ($request->status == 'Negosiasi') {
             $rules['whatsapp_number'] = 'required|string';
         }
-    
+
         $validated = $request->validate($rules);
-    
+
         // Block if status is Packing without proof of payment
         if ($request->status == 'Packing' && !$order->bukti_pembayaran) {
             return redirect()->back()->withErrors(['message' => 'Pelanggan belum mengunggah bukti pembayaran, status tidak dapat diubah menjadi Packing.']);
         }
-    
+
         // Handle the negotiated price (subtotal) update
         if ($request->has('subtotal')) {
             foreach ($order->orderItems as $item) {
@@ -184,33 +184,33 @@ class TransaksiController extends Controller
                 }
             }
         }
-    
+
         // Handle status updates and other logic
         if ($request->status == 'Pengiriman') {
             $order->nomor_resi = $request->input('nomor_resi');
         }
-    
+
         if ($request->status == 'Negosiasi') {
             $order->whatsapp_number = $request->input('whatsapp_number');
         }
-    
+
         // Update the order status and other fields
         $order->status = $request->status;
         $order->harga_total = $request->input('harga_total');
-    
+
         // Save the updated order
         $order->save();
-    
+
         // Log the status change with any additional info
         $order->statusHistories()->create([
             'status' => $request->status,
             'extra_info' => $request->status == 'Pengiriman' ? $order->nomor_resi : null,
             'created_at' => now(),
         ]);
-    
+
         return redirect()->route('transaksi.index')->with('success', 'Status updated successfully!');
     }
-    
 
-    
+
+
 }

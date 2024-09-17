@@ -14,12 +14,12 @@ class UserController extends Controller
     public function index()
     {
         $users = User::with('userDetail')->where('role', 0)->paginate(10);
-        return view('admin.users.index', compact('users'));
+        return view('Admin.Users.index', compact('users'));
     }
 
     public function create()
     {
-        return view('admin.users.create');
+        return view('Admin.Users.create');
     }
 
     public function store(Request $request)
@@ -30,10 +30,10 @@ class UserController extends Controller
             'password' => 'required|string|min:8|confirmed',
             'role' => 'required|in:0,1', // 0 for customer, 1 for admin
         ]);
-    
+
         // Hash the password
         $validatedData['password'] = bcrypt($validatedData['password']);
-    
+
         $user = User::create($validatedData);
         UserDetail::create([
             'user_id' => $user->id,
@@ -53,27 +53,27 @@ class UserController extends Controller
             'tambahan' => $request->tambahan,
 
         ]);
-    
+
         return redirect()->route('users.index')->with('success', 'User created successfully.');
     }
 
     public function show($id)
     {
         $user = User::findOrFail($id);
-    
+
         // Mark the user as seen by the current admin
         if(!$user->seenByAdmins()->where('admin_id', Auth::id())->exists()) {
             $user->seenByAdmins()->attach(Auth::id());
         }
-    
-        return view('admin.users.show', compact('user'));
+
+        return view('Admin.Users.show', compact('user'));
     }
-    
+
 
     public function edit($id)
     {
         $user = User::with('userDetail')->findOrFail($id);
-        return view('admin.users.edit', compact('user'));
+        return view('Admin.Users.edit', compact('user'));
     }
 
     public function update(Request $request, $id)
@@ -84,19 +84,19 @@ class UserController extends Controller
             'password' => 'nullable|string|min:8|confirmed', // Password is optional in update
             'role' => 'required|in:0,1', // 0 for customer, 1 for admin
         ]);
-    
+
         $user = User::findOrFail($id);
-    
+
         // If password is provided, hash it; otherwise, keep the existing password
         if ($request->filled('password')) {
             $validatedData['password'] = bcrypt($validatedData['password']);
         } else {
             unset($validatedData['password']); // Remove password from $validatedData if not provided
         }
-    
+
         // Update the user data
         $user->update($validatedData);
-    
+
         // Update user details
         $user->userDetail->update([
             'no_telepone' => $request->no_telepone,
@@ -104,7 +104,7 @@ class UserController extends Controller
             'lahir' => $request->lahir,
             'jenis_kelamin' => $request->jenis_kelamin,
         ]);
-    
+
         // Update or create user address
         $user->addresses()->updateOrCreate(
             ['user_id' => $user->id], // Criteria for matching the existing record
@@ -116,10 +116,10 @@ class UserController extends Controller
                 'tambahan' => $request->tambahan,
             ]
         );
-    
+
         return redirect()->route('users.index')->with('success', 'User updated successfully.');
     }
-    
+
 
 
 

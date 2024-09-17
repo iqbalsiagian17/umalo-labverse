@@ -16,7 +16,7 @@ class ProdukCostumerController extends Controller
 {
     $produk = Produk::with(['images', 'kategori', 'subKategori', 'komoditas', 'bigSales', 'reviews.user'])->findOrFail($id);
     $images = $produk->images;
-    
+
     $bigSale = $produk->bigSales->first();
     $bigSaleItem = $produk->bigSales()->where('status', 'aktif')->first();
     $averageRating = $produk->reviews()->avg('rating');
@@ -39,14 +39,14 @@ class ProdukCostumerController extends Controller
                   ->where('status', 'Selesai')
                   ->latest()
                   ->first();
-    
-    return view('customer.produk.show', compact('produk', 'images', 'produK', 'bigSale','bigSaleItem', 'order','averageRating','totalRatings'));
+
+    return view('Customer.Produk.show', compact('produk', 'images', 'produK', 'bigSale','bigSaleItem', 'order','averageRating','totalRatings'));
 }
-    
-    
-    
-    
-    
+
+
+
+
+
 
 public function search(Request $request)
 {
@@ -69,6 +69,6 @@ public function search(Request $request)
 }
 
 
-    
-    
+
+
 }

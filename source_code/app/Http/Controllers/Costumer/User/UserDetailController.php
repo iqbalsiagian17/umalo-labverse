@@ -18,21 +18,21 @@ class UserDetailController extends Controller
         $user = Auth::user();
         $userDetail = $user->userDetail;
         $userAddresses = $user->addresses; // This should return a collection, not null
-    
+
         if (!$userDetail) {
             return redirect()->route('user.create')
                 ->with('warning', 'Please complete your details.');
         }
-    
-        return view('customer.user.show', compact('userDetail', 'user', 'userAddresses'));
+
+        return view('Customer.User.show', compact('userDetail', 'user', 'userAddresses'));
     }
-    
+
 
     public function create()
     {
-        return view('customer.user.create'); // Pastikan "Customer" dan "User" menggunakan huruf besar pada "C" dan "U"
+        return view('Customer.User.create'); // Pastikan "Customer" dan "User" menggunakan huruf besar pada "C" dan "U"
     }
-    
+
 
     public function store(Request $request)
     {
@@ -74,13 +74,13 @@ class UserDetailController extends Controller
     {
         $userDetail = Auth::user()->userDetail;
         $userAddress = Auth::user()->addresses->where('status', 'aktif')->first(); // Get the first active address
-    
+
         if (!$userDetail) {
             return redirect()->route('user.create') // Menggunakan nama rute yang benar
                 ->with('warning', 'Please complete your details.');
         }
-    
-        return view('customer.user.edit', compact('userDetail','userAddress'));
+
+        return view('Customer.User.edit', compact('userDetail','userAddress'));
     }
 
     public function update(Request $request)
@@ -145,7 +145,7 @@ class UserDetailController extends Controller
         } else {
             dd('User is not an instance of User model');
         }
-        
+
         return redirect()->route('user.show')->with('success', 'Password has been created successfully.');
     }
 
@@ -225,7 +225,7 @@ public function uploadProfilePhoto(Request $request)
                 ->with('warning', 'Please add your address details first.');
         }
 
-        return view('customer.user.edit_address', compact('userAddress'));
+        return view('Customer.User.edit_address', compact('userAddress'));
     }
 
     public function updateAddress(Request $request)
@@ -260,7 +260,7 @@ public function uploadProfilePhoto(Request $request)
     public function toggleAddressStatus($id)
 {
     $user = Auth::user();
-    
+
     // Deactivate all addresses for the user
     UserAddress::where('user_id', $user->id)->update(['status' => 'tidak aktif']);
 
@@ -275,7 +275,7 @@ public function uploadProfilePhoto(Request $request)
 
 public function createAddress()
 {
-    return view('customer.user.create_address');
+    return view('Customer.User.create_address');
 }
 
 public function storeAddress(Request $request)
@@ -307,6 +307,6 @@ public function storeAddress(Request $request)
 
 
 
-    
+
 
 }

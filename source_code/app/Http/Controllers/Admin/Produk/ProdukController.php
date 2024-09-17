@@ -20,30 +20,30 @@ class ProdukController extends Controller
     public function index(Request $request)
     {
         $query = Produk::query();
-    
+
         if ($request->filled('search')) {
             $search = $request->input('search');
-    
+
             // Order by exact match first, then by closest match
             $query->where('nama', 'like', '%' . $search . '%')
-                  ->orderByRaw("CASE 
-                                    WHEN nama LIKE ? THEN 1 
-                                    WHEN nama LIKE ? THEN 2 
-                                    ELSE 3 
+                  ->orderByRaw("CASE
+                                    WHEN nama LIKE ? THEN 1
+                                    WHEN nama LIKE ? THEN 2
+                                    ELSE 3
                                 END", ["$search", "$search%"]);
         }
-    
+
         $produks = $query->orderBy('created_at', 'asc')->paginate(5);
-    
+
         if ($request->ajax()) {
-            return view('admin.produk.partials._produk_table', compact('produks'))->render();
+            return view('Admin.Produk.partials._produk_table', compact('produks'))->render();
         }
-    
-        return view('admin.produk.index', compact('produks'));
+
+        return view('Admin.Produk.index', compact('produks'));
     }
-    
-    
-    
+
+
+
 
 
 
@@ -54,7 +54,7 @@ class ProdukController extends Controller
 {
     $komoditas = Komoditas::all();
     $kategoris = Kategori::with('subKategori')->get(); // Mengambil kategori beserta subkategori
-    return view('admin.produk.create', compact('komoditas', 'kategoris'));
+    return view('Admin.Produk.create', compact('komoditas', 'kategoris'));
 }
 
     /**
@@ -128,7 +128,7 @@ class ProdukController extends Controller
     return redirect()->route('produk.index')->with('success', 'Produk created successfully.');
 }
 
-    
+
 
 
     /**
@@ -137,7 +137,7 @@ class ProdukController extends Controller
     public function show(string $id)
     {
         $produk = Produk::with('produkList', 'komoditas', 'kategori', 'subkategori', 'images')->findOrFail($id);
-        return view('admin.produk.show', compact('produk'));
+        return view('Admin.Produk.show', compact('produk'));
     }
 
     /**
@@ -150,10 +150,10 @@ class ProdukController extends Controller
          $komoditas = Komoditas::all();
          $kategoris = Kategori::with('subKategori')->get(); // Mengambil kategori beserta subkategori
          $images = ProdukImage::where('produk_id', $id)->get();
-     
-         return view('admin.produk.edit', compact('produk', 'komoditas', 'kategoris', 'images'));
+
+         return view('Admin.Produk.edit', compact('produk', 'komoditas', 'kategoris', 'images'));
      }
-     
+
     /**
      * Update the specified resource in storage.
      */
@@ -189,17 +189,17 @@ class ProdukController extends Controller
             'sub_kategori_id' => 'required|exists:sub_kategori,id',
             'gambar.*' => 'sometimes|image|mimes:jpeg,png,jpg,gif|max:15000',
         ]);
-    
+
         // Check if the 'allow_discount' checkbox is checked
         if (!$request->has('allow_discount')) {
             // If not checked, remove 'harga_diskon' from the validated data
             unset($validatedData['harga_potongan']);
         }
-    
+
         // Find the product by ID and update with the validated data
         $produk = Produk::findOrFail($id);
         $produk->update($validatedData);
-    
+
         // Handle image uploads
         if ($request->deleted_images) {
             $deletedImages = explode(',', $request->deleted_images);
@@ -215,20 +215,20 @@ class ProdukController extends Controller
                 }
             }
         }
-    
+
         if ($request->hasFile('gambar')) {
             foreach ($request->file('gambar') as $imgProduk) {
                 $slug = Str::slug(pathinfo($imgProduk->getClientOriginalName(), PATHINFO_FILENAME));
                 $newImageName = time() . '_' . $slug . '.' . $imgProduk->getClientOriginalExtension();
                 $imgProduk->move('uploads/produk/', $newImageName);
-    
+
                 $produkImage = new ProdukImage;
                 $produkImage->produk_id = $produk->id;
                 $produkImage->gambar = 'uploads/produk/' . $newImageName;
                 $produkImage->save();
             }
         }
-    
+
         // Handle detail updates
         if ($request->input('detail')) {
             ProdukList::where('produk_id', $produk->id)->delete();
@@ -246,10 +246,10 @@ class ProdukController extends Controller
                 ProdukList::create($data2);
             }
         }
-    
+
         return redirect()->route('produk.index')->with('success', 'Produk updated successfully.');
     }
-    
+
 
 
 
@@ -260,7 +260,7 @@ class ProdukController extends Controller
     {
         // Find the product by its ID
         $produk = Produk::findOrFail($id);
-    
+
         // Delete associated images
         $images = ProdukImage::where('produk_id', $produk->id)->get();
         foreach ($images as $image) {
@@ -269,17 +269,17 @@ class ProdukController extends Controller
             }
             $image->delete();
         }
-    
+
         // Delete associated details
         ProdukList::where('produk_id', $produk->id)->delete();
-    
+
         // Delete the product
         $produk->delete();
-    
+
         // Redirect back with a success message
         return redirect()->route('produk.index')->with('success', 'Produk deleted successfully.');
     }
-    
+
 
     public function getSubKategori($kategoriId)
     {
@@ -292,17 +292,17 @@ class ProdukController extends Controller
         $request->validate([
             'status' => 'required|in:arsip,publish',
         ]);
-    
+
         try {
             $produk = Produk::findOrFail($id);
             $produk->status = $request->input('status');
             $produk->save();
-    
+
             return redirect()->route('produk.show', $produk->id)->with('success', 'Status berhasil diperbarui');
         } catch (\Exception $e) {
             return redirect()->route('produk.show', $produk->id)->with('error', 'Terjadi kesalahan saat memperbarui status: ' . $e->getMessage());
         }
     }
-    
+
 
 }

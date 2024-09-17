@@ -20,7 +20,7 @@ class BigSaleCustomerController extends Controller
         ->first();
 
     // If there is an active Big Sale, get the products
-    $products = $bigSale ? $bigSale->produk : collect(); 
+    $products = $bigSale ? $bigSale->produk : collect();
 
     $komoditas = Komoditas::all();
 
@@ -46,9 +46,9 @@ class BigSaleCustomerController extends Controller
     }
 
     // Dapatkan jumlah produk setelah menerapkan filter dan sorting
-    $productCount = $products->count(); 
+    $productCount = $products->count();
 
-    return view('customer.bigsale.index', compact('bigSale','products', 'komoditas', 'kategori', 'productCount'));
+    return view('Customer.Bigsale.index', compact('bigSale','products', 'komoditas', 'kategori', 'productCount'));
 }
 
 public function updateStatus($id)
