@@ -52,7 +52,7 @@
 {{--                                 <li><a href="/company">{{ __('messages.about_us') }}</a></li>
                                 <li><a href="/company">{{ __('messages.our_brand') }}</a></li>
                                 <li><a href="/company">{{ __('messages.contact_us') }}</a></li>
- --}}                                <li><a href="/faq">{{ __('messages.qna') }}</a></li>
+ --}}                                <li><a href="{{ route('faq') }}">{{ __('messages.qna') }}</a></li>
                             </ul>
                         </div>
                     </div>
@@ -82,9 +82,7 @@
                             document.write(new Date().getFullYear());
                         </script> {{ __('messages.created_by') }} PT Arkamaya Guna Saharsa
                     </div>
-                    <div class="footer__copyright__payment mt-2">
-                        <img src="img/payment-item.png" alt="">
-                    </div>
+                    
                 </div>
             </div>
         </div>
@@ -114,9 +112,9 @@
 
        var Tawk_LoadStart = new Date();
        (function(){
-           var s1 = document.createElement("script"), s0 = document.getElementsByTagName("script")[0];
+        var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
            s1.async = true;
-           s1.src = 'https://embed.tawk.to/66d1440fea492f34bc0b9a5e/1i6gn3nr5';
+           s1.src = 'https://embed.tawk.to/66d166adea492f34bc0ba27f/1i6gvi641';
            s1.charset = 'UTF-8';
            s1.setAttribute('crossorigin', '*');
            s0.parentNode.insertBefore(s1, s0);
@@ -126,11 +124,63 @@
 @endif
 
 
+<style>
+    @media (max-width: 768px) {
+    #tawkchat-container {
+        top: 10px !important; /* Mengatur widget berada di atas */
+        right: 10px !important; /* Mengatur widget di sebelah kanan */
+        left: auto !important; /* Pastikan posisi kiri tidak diatur */
+        bottom: auto !important; /* Pastikan posisi bawah tidak diatur */
+    }
+
+    #tawkchat-status {
+        top: 0 !important; /* Status bar di atas */
+        right: 0 !important;
+    }
+
+    /* Tambahkan padding atau margin jika perlu */
+}
+
+</style>
+
+
+
+<script>
+    // Mencegah penggunaan Ctrl + U dan beberapa kombinasi lainnya
+    document.addEventListener('keydown', function(event) {
+        // Cegah kombinasi Ctrl + U, Ctrl + Shift + I, Ctrl + Shift + J, Ctrl + S, F12
+        if (event.ctrlKey && (event.keyCode === 85 || event.keyCode === 73 || event.keyCode === 74 || event.keyCode === 83) || event.keyCode === 123) {
+            event.preventDefault();
+            alert('Viewing source code is disabled!');
+        }
+    });
+
+    // Mencegah klik kanan (context menu)
+    document.addEventListener('contextmenu', function(event) {
+        event.preventDefault();
+        alert('Right-click is disabled!');
+    });
+
+    // Mencegah double-click untuk mencegah pemilihan elemen secara tidak sengaja
+    document.addEventListener('dblclick', function(event) {
+        event.preventDefault();
+    });
+
+    // Mencegah fungsi Inspect Element melalui klik kanan
+    document.addEventListener('mousedown', function(event) {
+        if (event.button == 2 || event.button == 1) { // Klik kanan atau klik tengah
+            event.preventDefault();
+        }
+    });
+</script>
+
+
+
 
 
     <!-- Js Plugins -->
     <script src="{{ asset('ogani/js/jquery-3.3.1.min.js') }}"></script>
-    <script src="{{ asset('ogani/js/bootstrap.bundle.min.js') }}"></script> <!-- Use bootstrap.bundle.min.js for Bootstrap 5 -->
+    <script src="{{ asset('ogani/js/bootstrap.bundle.min.js') }}"></script> 
     <script src="{{ asset('ogani/js/bootstrap.min.js') }}"></script>
     <script src="{{ asset('ogani/js/jquery.nice-select.min.js') }}"></script>
     <script src="{{ asset('ogani/js/jquery-ui.min.js') }}"></script>
@@ -138,8 +188,7 @@
     <script src="{{ asset('ogani/js/mixitup.min.js') }}"></script>
     <script src="{{ asset('ogani/js/owl.carousel.min.js') }}"></script>
     <script src="{{ asset('ogani/js/main.js') }}"></script>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+    <script src="{{ asset('ogani/js/popper.min.js') }}"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     </body>

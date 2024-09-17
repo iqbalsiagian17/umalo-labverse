@@ -201,14 +201,19 @@
                                 <h5 class="mb-0">{{ __('messages.upload_payment_proof') }}</h5>
                             </div>
                             <div class="card-body">
-                                <form action="{{ route('order.upload_bukti_pembayaran', $order->id) }}" method="POST"
-                                    enctype="multipart/form-data">
+                                <!-- Alert for payment amount requirement -->
+                                <div class="alert alert-info">
+                                    <strong>Penting!</strong> Mohon pastikan bahwa nominal yang Anda transfer sesuai dengan total yang tercantum pada invoice.
+                                    Kepatuhan Anda dalam hal ini sangat kami hargai dan membantu proses verifikasi pembayaran berjalan dengan lancar.
+                                    Perhatikan bahwa pembayaran yang tidak sesuai—baik lebih maupun kurang—dari jumlah yang tertera pada invoice akan mengakibatkan penundaan atau pembatalan proses order Anda.
+                                    Kami tidak akan melanjutkan proses order sampai pembayaran yang benar telah kami terima. 
+                                    Kami mengucapkan terima kasih atas kerjasama dan perhatian Anda.
+                                </div>
+                                <form action="{{ route('order.upload_bukti_pembayaran', $order->id) }}" method="POST" enctype="multipart/form-data">
                                     @csrf
                                     <div class="form-group">
-                                        <label for="bukti_pembayaran"
-                                            class="form-label">{{ __('messages.select_payment_proof_file') }}</label>
-                                        <input type="file" name="bukti_pembayaran" id="bukti_pembayaran"
-                                            class="form-control" required>
+                                        <label for="bukti_pembayaran" class="form-label">{{ __('messages.select_payment_proof_file') }}</label>
+                                        <input type="file" name="bukti_pembayaran" id="bukti_pembayaran" class="form-control" required>
                                         @if ($errors->has('bukti_pembayaran'))
                                             <small class="text-danger">{{ $errors->first('bukti_pembayaran') }}</small>
                                         @endif
@@ -222,12 +227,12 @@
                                         </p>
                                     </div>
 
-                                    <button type="submit" class="btn mt-2 w-100 text-white"
-                                        style="background-color: #416bbf;">{{ __('messages.upload') }}</button>
+                                    <button type="submit" class="btn mt-2 w-100 text-white" style="background-color: #416bbf;">{{ __('messages.upload') }}</button>
                                 </form>
                             </div>
                         </div>
                     @endif
+
 
 
                     @if ($order->bukti_pembayaran)

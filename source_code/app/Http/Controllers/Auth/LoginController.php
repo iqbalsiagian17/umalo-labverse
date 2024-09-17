@@ -7,6 +7,8 @@ use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Cache;
+use Carbon\Carbon;
 
 class LoginController extends Controller
 {
@@ -42,38 +44,74 @@ class LoginController extends Controller
     }
 
     public function login(Request $request)
-    {
-        // Validate the incoming request data
-        $this->validate($request, [
-            'email' => 'required|email',
-            'password' => 'required',
-        ]);
-    
-        // Prepare the credentials
-        $credentials = $request->only('email', 'password');
-    
-        // Attempt to log in with the credentials and remember me option
-        if (Auth::attempt($credentials, $request->filled('remember'))) {
-            // Authentication was successful
-            $user = Auth::user();
-    
-            // Update the last login time
-            DB::table('users')
-                ->where('id', $user->id)
-                ->update(['last_login_at' => now()]);
-    
-            // Redirect based on user role
-            if ($user->role == 'admin') {
-                return redirect()->route('dashboard');
-            } elseif ($user->role == 'costumer') {
-                return redirect()->route('home');
+{
+    // Validate the incoming request data
+    $this->validate($request, [
+        'email' => 'required|email',
+        'password' => 'required',
+    ]);
+
+    $email = $request->input('email');
+    $maxAttempts = 5;
+    $lockoutTime = 60; // In minutes (1 hour)
+
+    // Check if the user is currently locked out
+    if (Cache::has('login_attempts_' . $email)) {
+        $attemptData = Cache::get('login_attempts_' . $email);
+        
+        if ($attemptData['attempts'] >= $maxAttempts) {
+            $lockoutUntil = Carbon::parse($attemptData['lockout_time']);
+            if (Carbon::now()->lessThan($lockoutUntil)) {
+                $remainingMinutes = Carbon::now()->diffInMinutes($lockoutUntil);
+                return redirect()->route('login')->with('error', __('Too many login attempts. Please try again in ') . $remainingMinutes . __(' minutes.'));
             }
-        } 
-    
-        // Authentication failed, redirect back with an error message
-        return redirect()->route('login')
-            ->with('error', __('Email-Address And Password Are Wrong.'));
+        }
     }
+
+    // Prepare the credentials
+    $credentials = $request->only('email', 'password');
+
+    // Attempt to log in with the credentials and remember me option
+    if (Auth::attempt($credentials, $request->filled('remember'))) {
+        // Login successful, clear login attempts
+        Cache::forget('login_attempts_' . $email);
+
+        // Update the last login time
+        $user = Auth::user();
+        DB::table('users')
+            ->where('id', $user->id)
+            ->update(['last_login_at' => now()]);
+
+        // Redirect based on user role
+        if ($user->role == 'admin') {
+            return redirect()->route('dashboard');
+        } elseif ($user->role == 'costumer') {
+            return redirect()->route('home');
+        }
+    }
+
+    // Authentication failed, record the failed attempt
+    $attempts = 0;
+    $lockoutTime = Carbon::now()->addMinutes($lockoutTime);
+
+    if (Cache::has('login_attempts_' . $email)) {
+        $attemptData = Cache::get('login_attempts_' . $email);
+        $attempts = $attemptData['attempts'] + 1;
+    } else {
+        $attempts = 1;
+    }
+
+    if ($attempts >= $maxAttempts) {
+        Cache::put('login_attempts_' . $email, ['attempts' => $attempts, 'lockout_time' => $lockoutTime], $lockoutTime);
+        return redirect()->route('login')->with('error', __('Too many login attempts. Please try again in 1 hour.'));
+    }
+
+    Cache::put('login_attempts_' . $email, ['attempts' => $attempts, 'lockout_time' => $lockoutTime], $lockoutTime);
+
+    // Authentication failed, redirect back with an error message
+    return redirect()->route('login')
+        ->with('error', __('Email-Address and Password are wrong. Attempts remaining: ') . ($maxAttempts - $attempts));
+}
     
 
 

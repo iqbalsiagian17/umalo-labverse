@@ -79,8 +79,6 @@
 
                 @if ($bigSale && $bigSale->status === 'aktif')
                     <span class="nego-badge">Big Sale</span>
-                    @elseif ($produk->nego === 'ya')
-                    <span class="nego-badge">{{ __('messages.negotiable') }}</span>
                     @endif
 
                     <ul>
@@ -107,15 +105,15 @@
 
                         <style>
                             .ecatalog-link {
-    color: #007bff;
-    text-decoration: none;
-    transition: color 0.3s ease, text-decoration 0.3s ease;
-}
+                                color: #007bff;
+                                text-decoration: none;
+                                transition: color 0.3s ease, text-decoration 0.3s ease;
+                            }
 
-.ecatalog-link:hover {
-    color: #ff0000;
-    text-decoration: underline;
-}
+                            .ecatalog-link:hover {
+                                color: #ff0000;
+                                text-decoration: underline;
+                            }
 
                         </style>
 

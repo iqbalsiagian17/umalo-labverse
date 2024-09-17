@@ -145,13 +145,15 @@ class ProdukController extends Controller
      */
 
      public function edit($id)
-{
-    $produk = Produk::find($id);
-    $komoditas = Komoditas::all();
-    $kategoris = Kategori::with('subKategori')->get(); // Mengambil kategori beserta subkategori
-    $images = ProdukImage::where('produk_id', $id)->get();
-    return view('admin.produk.edit', compact('produk', 'komoditas', 'kategoris', 'images'));
-}
+     {
+         $produk = Produk::findOrFail($id);
+         $komoditas = Komoditas::all();
+         $kategoris = Kategori::with('subKategori')->get(); // Mengambil kategori beserta subkategori
+         $images = ProdukImage::where('produk_id', $id)->get();
+     
+         return view('admin.produk.edit', compact('produk', 'komoditas', 'kategoris', 'images'));
+     }
+     
     /**
      * Update the specified resource in storage.
      */

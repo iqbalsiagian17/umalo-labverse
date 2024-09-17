@@ -153,15 +153,30 @@
                     <div class="col-lg-6">
                         <div class="hero__search mb-3">
                             <div class="hero__search__form">
-                                <form action="{{ route('produk.search') }}" method="GET">
-                                    <input type="text" name="query"
-                                        placeholder="{{ __('messages.search_product') }}"
-                                        value="{{ request('query') }}">
-                                    <button type="submit"
-                                        class="site-btn rounded">{{ __('messages.search') }}</button>
+                                <form id="searchForm" action="{{ route('produk.search') }}" method="GET">
+                                    <input type="text" name="query" id="searchQuery" placeholder="{{ __('messages.search_product') }}" value="{{ request('query') }}">
+                                    <button type="submit" class="site-btn rounded">{{ __('messages.search') }}</button>
                                 </form>
                             </div>
+                            <div id="searchError" style="color: red; display: none;">
+                                {{ __('messages.search_empty') }}
+                            </div>
                         </div>
+                        
+                        <script>
+                            document.getElementById('searchForm').addEventListener('submit', function (e) {
+                                let queryInput = document.getElementById('searchQuery').value.trim();
+                        
+                                // Jika input kosong, cegah form dari pengiriman
+                                if (queryInput === '') {
+                                    e.preventDefault(); // Mencegah pengiriman form
+                                    document.getElementById('searchError').style.display = 'block'; // Tampilkan pesan error
+                                } else {
+                                    document.getElementById('searchError').style.display = 'none'; // Sembunyikan pesan error
+                                }
+                            });
+                        </script>
+                        
                     </div>
                     <div class="col-lg-3">
                         <div class="header__cart mb-3">
@@ -191,7 +206,7 @@
                                                 aria-expanded="false" style="text-decoration: none; color: inherit;">
                                                 <!-- Avatar Gambar -->
                                                 @if (Auth::check())
-                                                    <img src="{{ Auth::user()->foto_profile ? asset(Auth::user()->foto_profile) : asset('assets/images/logo.png') }}"
+                                                    <img src="{{ Auth::user()->foto_profile ? asset(Auth::user()->foto_profile) : asset('assets/images/logo-nobg.png') }}"
                                                         alt="Avatar"
                                                         style="width: 50px; height: 50px; border-radius: 50%; object-fit: cover; margin-right: 8px; border: 2px solid #ccc;">
                                                 @else
@@ -300,7 +315,7 @@
                 <!-- Dropup menu for profile -->
                 <div class="dropdown-menu" aria-labelledby="dropdownMenuProfile">
                     @auth
-                        <a class="dropdown-item" href="/personal">{{ __('messages.settings') }}</a>
+                        <a class="dropdown-item" href="{{ route('user.show') }}">{{ __('messages.settings') }}</a>
                         <div class="dropdown-divider"></div>
                         <a class="dropdown-item" href="{{ route('logout') }}"
                             onclick="event.preventDefault(); document.getElementById('logout-form').submit();">

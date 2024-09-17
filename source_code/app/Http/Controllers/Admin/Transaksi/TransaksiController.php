@@ -10,22 +10,38 @@ use Illuminate\Support\Facades\Auth;
 
 class TransaksiController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-    $orders = Order::with('orderItems')->get();
-    $seenOrders = Session::get('seen_orders', []);
+        // Ambil input pencarian
+        $search = $request->input('search');
+    
+        // Query order dengan filter nama user jika ada pencarian
+        $orders = Order::with(['orderItems', 'user.userdetail'])
+            ->when($search, function ($query, $search) {
+                return $query->whereHas('user', function ($query) use ($search) {
+                    $query->where('name', 'like', '%' . $search . '%');
+                });
+            })
+            ->paginate(10); // Menampilkan 10 transaksi per halaman
 
-    // Perbarui session dengan transaksi yang baru saja dilihat
-    foreach ($orders as $order) {
-        if (!in_array($order->id, $seenOrders)) {
-            $seenOrders[] = $order->id;
+            if ($search && $orders->isEmpty()) {
+                session()->flash('no_results', 'Tidak ada hasil untuk pencarian: ' . $search);
+            }
+    
+        // Lihat transaksi yang sudah dilihat
+        $seenOrders = Session::get('seen_orders', []);
+    
+        foreach ($orders as $order) {
+            if (!in_array($order->id, $seenOrders)) {
+                $seenOrders[] = $order->id;
+            }
         }
+    
+        Session::put('seen_orders', $seenOrders);
+    
+        return view('admin.transaksi.index', compact('orders'));
     }
-
-    Session::put('seen_orders', $seenOrders);
-
-    return view('admin.transaksi.index', compact('orders'));
-    }
+    
 
 
     public function show($id)

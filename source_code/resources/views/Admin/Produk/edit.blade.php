@@ -84,7 +84,9 @@
                                 @if ($errors->has('harga_potongan'))
                                     <small class="text-danger">{{ $errors->first('harga_potongan') }}</small>
                                 @endif
+                                <small class="form-text text-muted">Jika Anda ingin mematikan harga potongan, cukup ubah jadi 0,00.</small>
                             </div>
+                            
                             
                             <div class="form-group form-check">
                                 <input type="checkbox" class="form-check-input" id="allow_discount" name="allow_discount"

@@ -8,19 +8,18 @@
             <div class="row">
                 <div class="col-lg-3 col-md-5">
                     <div class="sidebar__item">
-                        <h4 style="color: #416bbf;">{{ __('messages.komoditas') }}</h4>
+                        <h4 style="color: #42378C;">{{ __('messages.komoditas') }}</h4>
                         <ul>
-                            <li><a href="{{ url('/shop') }}">All Komoditas</a></li> <!-- Default link to shop -->
                             @foreach ($komoditas as $komoditasi)
-                                <li><a href="#">{{ $komoditasi->nama }}</a></li>
+                                <li><p>{{ $komoditasi->nama }}</p></li>
                             @endforeach
                         </ul>
                     </div>
                     
                     <div class="sidebar__item">
-                        <h4 style="color:#416bbf;">{{ __('messages.kategori') }}</h4>
+                        <h4 style="color:#42378C;">{{ __('messages.kategori') }}</h4>
                         <ul>
-                            <li><a href="{{ url('/shop') }}">All Categories</a></li> <!-- Default link to shop -->
+                            <li><a href="{{ url('/shop') }}">{{ __('messages.all_kategori') }}</a></li> <!-- Default link to shop -->
                             @foreach ($kategori as $kategoris)
                                 <li><a href="{{ route('shop.category', $kategoris->id) }}">{{ \Illuminate\Support\Str::limit($kategoris->nama, 25, '...') }}</a></li>
                             @endforeach
@@ -89,7 +88,7 @@
                                                 : 'path/to/default/image.jpg';
                                         @endphp
                                         <div class="product__item__pic"
-                                            style="background-image: url('{{ asset('/umalo/umalo-labverse/source_code/public/'.$imagePath) }}');">
+                                            style="background-image: url('{{ asset($imagePath) }}');">
                                             <ul class="product__item__pic__hover">
                                                 <li><a href="{{ route('produk_customer.user.show', $product->id) }}"><i
                                                             class="fa fa-info-circle"></i></a></li>

@@ -58,11 +58,6 @@
                                 <input type="checkbox" class="form-check-input" name="remember" id="formCheck" {{ old('remember') ? 'checked' : '' }}>
                                 <label for="formCheck" class="form-check-label text-secondary"><small>{{ __('messages.remember_me') }}</small></label>
                             </div>                                                    
-                            <div class="forgot">
-                                @if (Route::has('password.request'))
-                                    <small><a href="{{ route('password.request') }}" style="color: #42378C;">{{ __('messages.forgot_password') }}</a></small>
-                                @endif
-                            </div>
                         </div>
 
                         <!-- Sign In Button -->

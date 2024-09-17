@@ -11,7 +11,7 @@
                             <h4 style="color: #42378C;">{{ __('messages.komoditas') }}</h4>
                             <ul>
                                 @foreach ($komoditas as $komoditasi)
-                                    <li><a href="#">{{ $komoditasi->nama }}</a></li>
+                                    <li><p>{{ $komoditasi->nama }}</p></li>
                                 @endforeach
                             </ul>
                         </div>
@@ -77,19 +77,29 @@
                             </div>
 
                             <script>
-                                function sortProducts() {
-                                    var sortBy = document.getElementById('sort-by').value;
-                                    var url = new URL(window.location.href);
-                                    url.searchParams.set('sort', sortBy);
-                                    window.location.href = url.toString();
-                                }
+document.getElementById('grid-view').addEventListener('click', function() {
+    var productList = document.getElementById('product-list');
+    var notification = document.getElementById('notification');
 
-                                // Optional: Menyimpan pilihan sebelumnya setelah reload
-                                document.addEventListener('DOMContentLoaded', function() {
-                                    var urlParams = new URLSearchParams(window.location.search);
-                                    var sortBy = urlParams.get('sort') || 'default';
-                                    document.getElementById('sort-by').value = sortBy;
-                                });
+    productList.classList.remove('list-view');
+    productList.classList.add('grid-view');
+    notification.style.display = 'none'; // Hide notification when in grid view
+});
+
+document.getElementById('list-view').addEventListener('click', function() {
+    var productList = document.getElementById('product-list');
+    var notification = document.getElementById('notification');
+
+    productList.classList.remove('grid-view');
+    productList.classList.add('list-view');
+    notification.style.display = 'block'; // Show notification for list view
+
+    // Hide the notification after 5 seconds
+    setTimeout(function() {
+        notification.style.display = 'none';
+    }, 5000);
+});
+
                             </script>
 
                             <div class="col-lg-4 col-md-4">
@@ -100,15 +110,119 @@
 
                             <div class="col-lg-4 col-md-3">
                                 <div class="filter__option">
-                                    <span class="icon_grid-2x2"></span>
-                                    <span class="icon_ul"></span>
+                                    <span class="icon_grid-2x2" id="grid-view"></span>
+                                    <span class="icon_ul" id="list-view"></span>
                                 </div>
                             </div>
+                            
+                            <script>
+                             document.getElementById('grid-view').addEventListener('click', function() {
+    document.getElementById('product-list').classList.remove('list-view');
+    document.getElementById('product-list').classList.add('grid-view');
+    document.getElementById('notification').style.display = 'none'; // Ensure notification is hidden in grid view
+    console.log('Grid view activated, notification hidden.');
+});
+
+document.getElementById('list-view').addEventListener('click', function() {
+    document.getElementById('product-list').classList.remove('grid-view');
+    document.getElementById('product-list').classList.add('list-view');
+    document.getElementById('notification').style.display = 'block'; // Show notification for list view
+    console.log('List view activated, notification shown.');
+});
+
+
+                            </script>
+
+<style>
+/* Grid View */
+.grid-view .product__item {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+    width: 100%; /* Default grid width */
+}
+
+.grid-view .product__item__pic {
+    height: 250px;
+    background-size: cover;
+}
+
+/* List View */
+.list-view .product__item {
+    display: flex;
+    flex-direction: row;
+    width: 100%; /* Full width for list view */
+}
+
+.list-view .product__item__pic {
+    flex: 1;
+    height: 150px;
+    background-size: cover;
+    background-position: center;
+}
+
+.list-view .product__item__text {
+    flex: 2;
+    padding-left: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+
+/* List View */
+.list-view .product__item-container {
+    width: 100%; /* Full width for each product */
+}
+
+.list-view .product__item {
+    display: flex;
+    flex-direction: row;
+    align-items: center; /* Align items vertically in the center */
+    padding: 10px; /* Padding for some space inside each product */
+    border-bottom: 1px solid #ccc; /* Optional: Adds a separator line between items */
+}
+
+.list-view .product__item__pic {
+    width: 50%; /* Width of the picture */
+    flex: none; /* Do not grow or shrink */
+    height: 120px; /* Fixed height for image */
+    background-size: contain; /* Contain the background image within the div */
+    background-repeat: no-repeat; /* No repeat of the background image */
+    margin-right: 20px; /* Space between the image and the text */
+}
+
+.list-view .product__item__text {
+    flex-grow: 1; /* Let the text take the remaining space */
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* Center content vertically */
+}
+
+.list-view .product__item__text h6, 
+.list-view .product__item__text h5 {
+    margin: 0; /* Remove margin for headings */
+}
+
+
+#notification {
+    display: none;
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background-color: #f44336;
+    color: white;
+    padding: 10px;
+    border-radius: 5px;
+    z-index: 1000;
+}
+
+</style>
                         </div>
                     </div>
-                    <div class="row">
+                    <div class="row" id="product-list">
                         @foreach ($produk as $product)
-                            <div class="col-lg-4 col-md-6 col-sm-6">
+                            <div class="col-lg-4 col-md-6 col-sm-6 product__item-container">
                                 <div class="product__item">
                                     @php
                                         $imagePath = $product->images->isNotEmpty()
@@ -121,25 +235,23 @@
                                             <li><a href="{{ route('produk_customer.user.show', $product->id) }}"><i
                                                         class="fa fa-info-circle"></i></a></li>
                                             @auth
-                                                <!-- Jika pengguna sudah login -->
                                                 <li><a href="#" class="add-to-cart-btn" data-id="{{ $product->id }}"><i
                                                             class="fa fa-shopping-cart"></i></a></li>
                                             @else
-                                                <!-- Jika pengguna belum login -->
                                                 <li><a href="{{ route('login') }}"><i class="fa fa-shopping-cart"></i></a></li>
                                             @endauth
                                         </ul>
                                     </div>
                                     <div class="product__item__text">
-                                        <h6><a href="{{ route('produk_customer.user.show', $product->id) }}">{{ \Illuminate\Support\Str::limit($product->nama, 20, '...') }}</a>
-                                        </h6>
+                                        <h6><a href="{{ route('produk_customer.user.show', $product->id) }}">{{ \Illuminate\Support\Str::limit($product->nama, 20, '...') }}</a></h6>
                                         <h5>Rp{{ number_format($product->harga_tayang, 2) }}</h5>
                                     </div>
                                 </div>
                             </div>
                         @endforeach
-
                     </div>
+                    
+                    
                     <div class="product__pagination text-center">
                         <!-- Pagination Elements -->
                         @for ($i = 1; $i <= $produk->lastPage(); $i++)
@@ -182,6 +294,11 @@
             <div class="notification-text">{{ __('messages.added_to_cart') }}</div>
         </div>
     </div>
+
+    <div id="notification" style="display: none; position: fixed; top: 20px; right: 20px; background-color: #f44336; color: white; padding: 10px; border-radius: 5px; z-index: 1000;">
+        Not recommended: This view mode is still under development.
+    </div>
+    
 
     <!-- CSS untuk Notifikasi -->
     <style>

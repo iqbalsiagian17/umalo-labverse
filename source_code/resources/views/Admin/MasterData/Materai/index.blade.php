@@ -16,6 +16,7 @@
                     </div>
                 @endif
 
+                <div class="table-responsive">
                 <table class="table table-bordered table-hover">
                     <thead class="thead-dark">
                         <tr>
@@ -46,6 +47,7 @@
                         @endforelse
                     </tbody>
                 </table>
+                </div>
 
                 <!-- Pagination -->
             </div>

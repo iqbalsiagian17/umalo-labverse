@@ -202,4 +202,7 @@ return [
     'full_name' => 'Full Name',
     'register_with_google' => 'Register with Google Account',
     'already_have_account' => 'Already have an account?',
+
+    'all_kategori' => 'All Categories',
+    'search_empty' => 'Please enter the name of the product you want to search for before continuing the search. Thank You.',
 ];

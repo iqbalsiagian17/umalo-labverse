@@ -45,8 +45,11 @@
                                             @php
                                             $text = __('messages.slider_desc');
                                             $formattedText = wordwrap($text, 100, "<br>\n", true);
-                                        @endphp
-                                        <p class="text-white" style="border-radius: 30px;">{!! $formattedText !!}</p><a href="{{ route('shop') }}" class="primary-btn rounded">{{ __('messages.shop_now') }}</a>
+                                            $truncatedText = strlen($formattedText) > 40 ? substr($formattedText, 0, 40) . '...' : $formattedText;
+                                            @endphp
+                                            <p class="text-white full-text" style="border-radius: 30px;">{!! $formattedText !!}</p>
+                                            <p class="text-white truncated-text" style="border-radius: 30px; display: none;">{!! $truncatedText !!}</p>
+                                        <a href="{{ route('shop') }}" class="primary-btn rounded">{{ __('messages.shop_now') }}</a>
                                         </div>
                                     </div>
                                 </div>
@@ -78,18 +81,24 @@
 
                             /* Media Query for smaller devices (e.g., mobile phones) */
                             @media (max-width: 767px) {
-                                .carousel-inner .hero__text h2 {
-                                    font-size: 28px; /* Smaller font size for mobile */
+                                .full-text {
+                                    display: none; /* Hide full text on mobile */
                                 }
 
-                                .carousel-inner .hero__text p {
-                                    font-size: 14px; /* Smaller font size for mobile */
+                                .truncated-text {
+                                    display: block; /* Show truncated text on mobile */
+                                }
+
+                                .carousel-inner .hero__text h2 {
+                                    font-size: 28px; /* Smaller font size for mobile */
                                 }
 
                                 .carousel-inner .primary-btn {
                                     font-size: 14px; /* Smaller font size for mobile */
                                 }
                             }
+
+
 
                             /* Media Query for medium-sized devices (e.g., tablets) */
                             @media (min-width: 768px) and (max-width: 991px) {
@@ -133,7 +142,7 @@
                                 <section class="exclusive-deal-area">
                                     <div class="container-fluid">
                                         <div class="row justify-content-center align-items-center rounded"
-                                            style="background: url('{{ asset('umalo/umalo-labverse/source_code/public/'.$bigSale->image) }}') no-repeat center center/cover; position: relative;">
+                                            style="background: url('{{ asset($bigSale->image) }}') no-repeat center center/cover; position: relative;">
                                             <div
                                                 style="position: absxolute; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.7);">
                                             </div>

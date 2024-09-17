@@ -72,15 +72,17 @@
                         <div class="form-group mb-3">
                             <label for="diskon_persen"><span class="text-danger">*</span> Diskon Persen</label>
                             <div class="input-group">
-                                <input type="number" class="form-control" id="diskon_persen" name="diskon_persen" value="{{ old('diskon_persen') }}" placeholder="Masukkan Persentase Diskon">
+                                <input type="number" class="form-control" id="diskon_persen" name="diskon_persen" value="{{ old('diskon_persen') }}" placeholder="Masukkan Persentase Diskon" min="2" max="99">
                                 <div class="input-group-append">
                                     <span class="input-group-text">%</span>
                                 </div>
                             </div>
+                            <small class="text-muted">Minimal 2% dan maksimal 99%</small> <!-- Span untuk menunjukkan batas -->
                             @if ($errors->has('diskon_persen'))
                                 <small class="text-danger">{{ $errors->first('diskon_persen') }}</small>
                             @endif
                         </div>
+                                                
 
                         <div class="form-group mb-3">
                             <label for="searchInput">Cari Produk</label>
@@ -133,67 +135,85 @@
 </div>
 
 <script>
-    document.getElementById('nextStep').addEventListener('click', function() {
-        document.getElementById('step1').style.display = 'none';
-        document.getElementById('step2').style.display = 'block';
+ // Navigasi antara step 1 dan step 2
+document.getElementById('nextStep').addEventListener('click', function() {
+    document.getElementById('step1').style.display = 'none';
+    document.getElementById('step2').style.display = 'block';
+});
+
+document.getElementById('prevStep').addEventListener('click', function() {
+    document.getElementById('step2').style.display = 'none';
+    document.getElementById('step1').style.display = 'block';
+});
+
+// Mengaktifkan input harga diskon hanya untuk produk yang dicentang
+document.querySelectorAll('.form-check-input').forEach(function(checkbox) {
+    checkbox.addEventListener('change', function() {
+        let hargaDiskonInput = this.closest('.product-item').querySelector('.harga-diskon');
+        if (this.checked) {
+            hargaDiskonInput.removeAttribute('disabled');
+        } else {
+            hargaDiskonInput.setAttribute('disabled', 'disabled');
+            hargaDiskonInput.value = ''; // Reset nilai diskon saat produk tidak dipilih
+        }
     });
 
-    document.getElementById('prevStep').addEventListener('click', function() {
-        document.getElementById('step2').style.display = 'none';
-        document.getElementById('step1').style.display = 'block';
-    });
-
-    // Mengaktifkan/menonaktifkan input harga diskon berdasarkan checkbox
-    document.querySelectorAll('.form-check-input').forEach(function(checkbox) {
-        checkbox.addEventListener('change', function() {
-            let hargaDiskonInput = this.closest('.product-item').querySelector('.harga-diskon');
-            if (this.checked) {
-                hargaDiskonInput.removeAttribute('disabled');
-            } else {
-                hargaDiskonInput.setAttribute('disabled', 'disabled');
-                hargaDiskonInput.value = '';
-            }
-        });
-    });
-
-    // Pencarian dan filter kategori
-    function filterProducts() {
-        let filterText = document.getElementById('searchInput').value.toLowerCase();
-        let selectedCategory = document.getElementById('categoryFilter').value;
-        let productItems = document.querySelectorAll('#productsList .product-item');
-
-        productItems.forEach(function(item) {
-            let productName = item.querySelector('.form-check-label').textContent.toLowerCase();
-            let productCategory = item.getAttribute('data-category');
-
-            let matchesName = productName.includes(filterText);
-            let matchesCategory = selectedCategory === '' || selectedCategory === productCategory;
-
-            if (matchesName && matchesCategory) {
-                item.style.display = '';
-            } else {
-                item.style.display = 'none';
-            }
-        });
+    // Pada halaman edit, pastikan input harga diskon diaktifkan jika produk sudah dipilih sebelumnya
+    if (checkbox.checked) {
+        let hargaDiskonInput = checkbox.closest('.product-item').querySelector('.harga-diskon');
+        hargaDiskonInput.removeAttribute('disabled');
     }
+});
 
-    document.getElementById('searchInput').addEventListener('keyup', filterProducts);
-    document.getElementById('categoryFilter').addEventListener('change', filterProducts);
-
-    document.getElementById('diskon_persen').addEventListener('input', function() {
-        var diskonPersen = this.value;
-        var hargaDiskonFields = document.querySelectorAll('.harga-diskon');
-
-        hargaDiskonFields.forEach(function(field) {
-            var hargaTayang = parseFloat(field.getAttribute('data-harga-tayang'));
-            if (diskonPersen) {
-                var hargaDiskon = hargaTayang - (hargaTayang * (diskonPersen / 100));
-                field.value = hargaDiskon.toFixed(2);
-            } else {
-                field.value = '';
-            }
-        });
+// Mengaktifkan input harga diskon sebelum form disubmit
+document.getElementById('bigsaleForm').addEventListener('submit', function() {
+    document.querySelectorAll('.form-check-input:checked').forEach(function(checkbox) {
+        let hargaDiskonInput = checkbox.closest('.product-item').querySelector('.harga-diskon');
+        hargaDiskonInput.removeAttribute('disabled'); // Aktifkan input harga diskon yang terpilih sebelum submit
     });
+});
+
+// Pencarian dan filter produk berdasarkan kategori dan nama produk
+function filterProducts() {
+    let filterText = document.getElementById('searchInput').value.toLowerCase();
+    let selectedCategory = document.getElementById('categoryFilter').value;
+    let productItems = document.querySelectorAll('#productsList .product-item');
+
+    productItems.forEach(function(item) {
+        let productName = item.querySelector('.form-check-label').textContent.toLowerCase();
+        let productCategory = item.getAttribute('data-category');
+
+        let matchesName = productName.includes(filterText);
+        let matchesCategory = selectedCategory === '' || selectedCategory === productCategory;
+
+        if (matchesName && matchesCategory) {
+            item.style.display = '';
+        } else {
+            item.style.display = 'none';
+        }
+    });
+}
+
+document.getElementById('searchInput').addEventListener('keyup', filterProducts);
+document.getElementById('categoryFilter').addEventListener('change', filterProducts);
+
+// Update input harga diskon berdasarkan persentase diskon yang dimasukkan
+document.getElementById('diskon_persen').addEventListener('input', function() {
+    var diskonPersen = this.value;
+    var hargaDiskonFields = document.querySelectorAll('.harga-diskon');
+
+    hargaDiskonFields.forEach(function(field) {
+        var hargaTayang = parseFloat(field.getAttribute('data-harga-tayang'));
+        if (diskonPersen) {
+            var hargaDiskon = hargaTayang - (hargaTayang * (diskonPersen / 100));
+            field.value = hargaDiskon.toFixed(2);
+        } else {
+            field.value = '';
+        }
+    });
+});
+
 </script>
+
 
 @endsection

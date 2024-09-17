@@ -76,7 +76,7 @@
                         <div class="form-group mb-3">
                             <label for="diskon_persen">Diskon Persen</label>
                             <div class="input-group">
-                                <input type="number" class="form-control" id="diskon_persen" name="diskon_persen" value="{{ old('diskon_persen') }}" placeholder="Masukkan Persentase Diskon">
+                                <input type="number" class="form-control" id="diskon_persen" name="diskon_persen" value="{{ old('diskon_persen') }}" placeholder="Masukkan Persentase Diskon" min="2" max="99">
                                 <div class="input-group-append">
                                     <span class="input-group-text">%</span>
                                 </div>

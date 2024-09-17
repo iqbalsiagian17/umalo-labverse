@@ -2,17 +2,13 @@
 <html lang="en">
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <title>Admin</title>
+    <title>Admin Labverse</title>
     <meta
       content="width=device-width, initial-scale=1.0, shrink-to-fit=no"
       name="viewport"
     />
-    <link
-      rel="icon"
-      href="{{asset('kaiadmin-lite-1.2.0/assets/img/kaiadmin/favicon.ico')}}"
+    <link rel="icon" href="{{ asset('assets/images/logo-nobg.png') }}" type="image/png">
 
-      type="image/x-icon"
-    />
 
     <!-- Bootstrap CSS -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.18/summernote.min.css" rel="stylesheet">

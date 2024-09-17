@@ -5,9 +5,25 @@
 <div class="row">
     <div class="col-md-12">
         <div class="card">
-            <div class="card-header">
-                <div class="card-title"><h1>Transaksi</h1></div>
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h1 class="card-title mb-0">Transaksi</h1>
+                <form action="{{ route('transaksi.index') }}" method="GET" class="form-inline">
+                    <div class="input-group">
+                        <input type="text" name="search" class="form-control" placeholder="Cari Nama User" value="{{ request('search') }}">
+                        <div class="input-group-append">
+                            <button type="submit" class="btn btn-primary">Cari</button>
+                        </div>
+                    </div>
+                </form>
             </div>
+            
+            <!-- Notifikasi jika hasil pencarian kosong -->
+            @if(session('no_results'))
+            <div class="alert alert-warning mt-3">
+                {{ session('no_results') }}
+            </div>
+            @endif
+            
             @if (session('success'))
             <div class="alert alert-success">
                 {{ session('success') }}
@@ -16,7 +32,8 @@
 
             <div class="card-body">
                 <div class="row">
-                    <table class="table table-striped table-responsive table-hover">
+                    <div class="table-responsive">
+                    <table class="table table-striped table-hover">
                         <thead class="thead-dark">
                             <tr>
                                 <th>No</th>
@@ -55,11 +72,19 @@
                         </tbody>
                     </table>
                 </div>
+                    <!-- Link Pagination -->
+                    <div class="d-flex justify-content-center">
+                        {{ $orders->links('pagination::bootstrap-5') }}
+                    </div>
+
+                    </div>
+                </div>
             </div>
 
         </div>
     </div>
 </div>
+
 
 <!-- Include SweetAlert2 JS -->
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>

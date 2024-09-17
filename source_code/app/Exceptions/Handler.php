@@ -5,6 +5,7 @@ namespace App\Exceptions;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Throwable;
 use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
+use ErrorException;
 
 
 class Handler extends ExceptionHandler
@@ -23,10 +24,23 @@ class Handler extends ExceptionHandler
         'password_confirmation',
     ];
 
-    public function register(): void
+    //Jika Dalam Develop
+/*     public function register(): void
     {
         $this->reportable(function (Throwable $e) {
             // Customize reporting logic here
+        });
+    } */
+
+    //Jika Server Dinaikkan
+    public function register()
+    {
+        $this->reportable(function (Throwable $e) {
+            // Logika untuk melaporkan exception
+        });
+    
+        $this->renderable(function (ErrorException $e, $request) {
+            return response()->view('errors.generic_error', ['exception' => $e], 500);
         });
     }
 

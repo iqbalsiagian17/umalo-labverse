@@ -182,14 +182,14 @@
                       <div class="col-md-6">
                           <!-- Tawk.to Account Information -->
                           <h5 class="text-muted">Tawk.to Account</h5>
-                          <p class="mb-1 text-start"><strong>Email:</strong> <a href="mailto:labserveags@gmail.com">labtekags@gmail.com</a></p>
+                          <p class="mb-1 text-start"><strong>Email:</strong> <a href="mailto:labserveags@gmail.com">labverseags@gmail.com</a></p>
                           <p class="mb-3 text-start"><strong>Password:</strong> <span class="text-danger">ags123.</span></p>
                                                 </div>
                       <div class="col-md-6">
                           <!-- Google Account Information -->
                           <h5 class="text-muted">Google Account</h5>
-                          <p class="mb-1 text-start"><strong>Email:</strong> <a href="mailto:labserveags@gmail.com">labtekeags@gmail.com</a></p>
-                          <p class="mb-3 text-start"><strong>Password:</strong> <span class="text-danger">labtek123</span></p>
+                          <p class="mb-1 text-start"><strong>Email:</strong> <a href="mailto:labserveags@gmail.com">labverseags@gmail.com</a></p>
+                          <p class="mb-3 text-start"><strong>Password:</strong> <span class="text-danger">labverse123123</span></p>
                       </div>
                   </div>
                   <!-- Button to Tawk.to Dashboard -->

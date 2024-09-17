@@ -16,6 +16,7 @@
 
     <div class="card-body">
         <div class="row">
+            <div class="table-responsive">
     <table class="table table-striped table-responsive table-hover">
         <thead class="thead-dark">
             <tr>
@@ -46,6 +47,7 @@
             @endforeach
         </tbody>
     </table>
+            </div>
     <div class="d-flex justify-content-center">
         {{ $qas->links('pagination::bootstrap-5') }}
     </div>

@@ -11,7 +11,7 @@
                             <h4 style="color: #416bbf;">Komoditas</h4>
                             <ul>
                                 @foreach ($komoditas as $komoditasi)
-                                    <li><a href="#">{{ $komoditasi->nama }}</a></li>
+                                    <li><p>{{ $komoditasi->nama }}</p></li>
                                 @endforeach
                             </ul>
                         </div>
@@ -81,10 +81,7 @@
                                             : 'path/to/default/image.jpg';
                                     @endphp
                                     <div class="product__item__pic"
-                                        style="background-image: url('{{ asset('/umalo/umalo-labverse/source_code/public/'.$imagePath) }}');">
-                                        @if ($product->nego === 'ya')
-                                            <span class="nego-badge">Bisa Nego</span>
-                                        @endif
+                                        style="background-image: url('{{ asset($imagePath) }}');">
                                         <ul class="product__item__pic__hover">
                                             <li><a href="{{ route('produk_customer.user.show', $product->id) }}"><i
                                                         class="fa fa-info-circle"></i></a></li>

@@ -39,7 +39,7 @@
                     @foreach($bigSale->produk as $product)
                         <div class="col-md-4">
                             <div class="card mb-4">
-                                <img src="{{ asset('/umalo/umalo-labverse/source_code/public/' .$product->images->first()->gambar ?? 'path/to/default/image.jpg') }}" class="card-img-top" alt="{{ $product->nama }}" style="height: 150px; object-fit: cover;">
+                                <img src="{{ asset($product->images->first()->gambar ?? 'path/to/default/image.jpg') }}" class="card-img-top" alt="{{ $product->nama }}" style="height: 150px; object-fit: cover;">
                                 <div class="card-body">
                                     <h5 class="card-title">{{ $product->nama }}</h5>
                                     <p class="card-text">Harga Diskon: <strong>Rp{{ number_format($product->pivot->harga_diskon, 0, ',', '.') }}</strong></p>

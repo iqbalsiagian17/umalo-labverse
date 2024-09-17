@@ -14,7 +14,7 @@
     <td>{{ $produk->status }}</td>
     <td style="max-width: 200px;">
         @if ($produk->images->isNotEmpty())
-            <img src="{{ asset('/umalo/umalo-labverse/source_code/public/' .$produk->images->first()->gambar) }}" alt="Gambar Produk" class="img-fluid" style="border-radius: initial; width: 100%; height: auto; max-width: 100%; margin-bottom: 10px;">
+            <img src="{{ asset($produk->images->first()->gambar) }}" alt="Gambar Produk" class="img-fluid" style="border-radius: initial; width: 100%; height: auto; max-width: 100%; margin-bottom: 10px;">
         @else
             <p>No Image</p>
         @endif

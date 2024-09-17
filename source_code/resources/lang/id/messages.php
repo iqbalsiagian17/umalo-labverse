@@ -197,4 +197,7 @@ return [
     'full_name' => 'Nama Lengkap',
     'register_with_google' => 'Daftar dengan Akun Google',
     'already_have_account' => 'Sudah Punya Akun?',
+
+    'all_kategori' => 'Semua Kategori',
+    'search_empty' => 'Silakan masukkan nama produk yang ingin Anda cari sebelum melanjutkan pencarian. Terima kasih.'
 ];

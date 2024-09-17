@@ -40,10 +40,20 @@ class BigsaleController extends Controller
         $request->validate([
             'judul' => 'required|string',
             'mulai' => 'required|date',
-            'berakhir' => 'required|date',
+            'berakhir' => 'required|date|after:mulai', // Pastikan berakhir setelah mulai
             'status' => 'required|in:aktif,tidak aktif',
             'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048', // Image is required during creation
         ]);
+
+            // Cek apakah ada BigSale lain yang berlangsung selama periode yang sama
+            $existingBigSale = BigSale::where(function($query) use ($request) {
+                $query->where('mulai', '<=', $request->berakhir)
+                    ->where('berakhir', '>=', $request->mulai);
+            })->where('status', 'aktif')->exists();
+
+            if ($existingBigSale) {
+                return redirect()->back()->withErrors('Sudah ada Big Sale aktif di periode waktu yang dipilih.');
+            }
     
         $image = $request->file('image');
         $slug = Str::slug(pathinfo($image->getClientOriginalName(), PATHINFO_FILENAME));
@@ -112,12 +122,24 @@ class BigsaleController extends Controller
         $request->validate([
             'judul' => 'required|string',
             'mulai' => 'required|date',
-            'berakhir' => 'required|date',
+            'berakhir' => 'required|date|after:mulai', // Pastikan berakhir setelah mulai
             'status' => 'required|in:aktif,tidak aktif',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
     
         $bigSale = BigSale::findOrFail($id);
+
+         // Cek apakah ada BigSale lain yang berlangsung selama periode yang sama, kecuali yang sedang diupdate
+        $existingBigSale = BigSale::where(function($query) use ($request) {
+            $query->where('mulai', '<=', $request->berakhir)
+                ->where('berakhir', '>=', $request->mulai);
+        })->where('status', 'aktif')
+        ->where('id', '!=', $id) // Mengecualikan BigSale yang sedang diupdate
+        ->exists();
+
+        if ($existingBigSale) {
+            return redirect()->back()->withErrors('Sudah ada Big Sale aktif di periode waktu yang dipilih.');
+        }
     
         $data = $request->only('judul', 'mulai', 'berakhir', 'status');
     
