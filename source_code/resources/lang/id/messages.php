@@ -199,5 +199,15 @@ return [
     'already_have_account' => 'Sudah Punya Akun?',
 
     'all_kategori' => 'Semua Kategori',
-    'search_empty' => 'Silakan masukkan nama produk yang ingin Anda cari sebelum melanjutkan pencarian. Terima kasih.'
+    'search_empty' => 'Silakan masukkan nama produk yang ingin Anda cari sebelum melanjutkan pencarian. Terima kasih.',
+
+    'subkategori' => 'Sub Kategori',
+    'price_lowest' => 'Harga Terendah',
+    'price_highest' => 'Harga Tertinggi',
+
+    'price_range' => 'Rentang Harga',
+    'min_price' => 'Harga Minimum',
+    'max_price' => 'Harga Maksimum',
+    'apply_filter' => 'Terapkan Filter',
+    'refresh' => 'Segarkan',
 ];

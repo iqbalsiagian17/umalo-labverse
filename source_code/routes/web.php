@@ -44,6 +44,8 @@ Auth::routes();
 Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 Route::get('/shop', [App\Http\Controllers\Costumer\Shop\ShopController::class, 'shop'])->name('shop');
 Route::get('/shop/category/{id}', [App\Http\Controllers\Costumer\Shop\ShopController::class, 'filterByCategory'])->name('shop.category');
+Route::get('/shop/subcategory/{id}', [ShopController::class, 'filterBySubcategory'])->name('shop.subcategory');
+Route::get('/shop/price-range', [ShopController::class, 'filterByPriceRange'])->name('shop.priceRange');
 Route::get('produk_customer/{id}', [ProdukCostumerController::class, 'userShow'])->name('produk_customer.user.show');
 Route::get('/search', [ProdukCostumerController::class, 'search'])->name('produk.search');
 Route::get('/product/{id}', [ProdukCostumerController::class, 'userShow'])->name('product.show');

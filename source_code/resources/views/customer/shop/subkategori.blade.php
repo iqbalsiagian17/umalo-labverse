@@ -18,7 +18,6 @@
                             @endforeach
                         </ul>
                     </div>
-
                     <div class="sidebar__item">
                         <h4 style="color:#42378C;">{{ __('messages.subkategori') }}</h4>
                         <ul>
@@ -28,6 +27,7 @@
                             @endforeach
                         </ul>
                     </div>
+                    
                     </div>
                     
                 </div>
@@ -71,8 +71,8 @@
 
                             <div class="col-lg-4 col-md-3">
                                 <div class="filter__option">
-                                    @if (isset($currentCategory))
-                                        <span style="font-size: 10px;">{{ __('messages.kategori') }}: <b>{{ $currentCategory->nama }}</b></span>
+                                    @if (isset($currentSubcategory))
+                                        <span style="font-size: 10px;">{{ __('messages.subkategori') }}: <b>{{ $currentSubcategory->nama }}</b></span>
                                 </div>
                             </div>
                         </div>
