@@ -1,7 +1,7 @@
-@include('layouts.Customer.header')
+@include('layouts.customer.header')
 
-@include('layouts.Customer.navbar')
+@include('layouts.customer.navbar')
 
-@include('layouts.Customer.content')
+@include('layouts.customer.content')
 
-@include('layouts.Customer.footer')
+@include('layouts.customer.footer')

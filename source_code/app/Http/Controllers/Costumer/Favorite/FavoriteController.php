@@ -26,7 +26,7 @@ class FavoriteController extends Controller
         }
         
     
-        return view('Customer.Favorite.show', compact('favorites'));
+        return view('customer.favorite.show', compact('favorites'));
     }
     
 

@@ -47,7 +47,7 @@ class ProdukCostumerController extends Controller
                                   ->where('produk_id', $id)
                                   ->exists();
 
-    return view('Customer.Produk.show', compact('produk', 'images', 'produK', 'bigSale','bigSaleItem', 'order','averageRating','totalRatings' ,'isFavorite'));
+    return view('customer.produk.show', compact('produk', 'images', 'produK', 'bigSale','bigSaleItem', 'order','averageRating','totalRatings' ,'isFavorite'));
 }
 
 

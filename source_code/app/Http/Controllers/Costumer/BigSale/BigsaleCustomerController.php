@@ -48,7 +48,7 @@ class BigSaleCustomerController extends Controller
     // Dapatkan jumlah produk setelah menerapkan filter dan sorting
     $productCount = $products->count();
 
-    return view('Customer.Bigsale.index', compact('bigSale','products', 'komoditas', 'kategori', 'productCount'));
+    return view('customer.bigsale.index', compact('bigSale','products', 'komoditas', 'kategori', 'productCount'));
 }
 
 public function updateStatus($id)

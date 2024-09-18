@@ -24,13 +24,13 @@ class UserDetailController extends Controller
                 ->with('warning', 'Please complete your details.');
         }
 
-        return view('Customer.User.show', compact('userDetail', 'user', 'userAddresses'));
+        return view('customer.user.show', compact('userDetail', 'user', 'userAddresses'));
     }
 
 
     public function create()
     {
-        return view('Customer.User.create'); // Pastikan "Customer" dan "User" menggunakan huruf besar pada "C" dan "U"
+        return view('customer.user.create'); // Pastikan "Customer" dan "User" menggunakan huruf besar pada "C" dan "U"
     }
 
 
@@ -80,7 +80,7 @@ class UserDetailController extends Controller
                 ->with('warning', 'Please complete your details.');
         }
 
-        return view('Customer.User.edit', compact('userDetail','userAddress'));
+        return view('customer.user.edit', compact('userDetail','userAddress'));
     }
 
     public function update(Request $request)
@@ -225,7 +225,7 @@ public function uploadProfilePhoto(Request $request)
                 ->with('warning', 'Please add your address details first.');
         }
 
-        return view('Customer.User.edit_address', compact('userAddress'));
+        return view('customer.user.edit_address', compact('userAddress'));
     }
 
     public function updateAddress(Request $request)
@@ -275,7 +275,7 @@ public function uploadProfilePhoto(Request $request)
 
 public function createAddress()
 {
-    return view('Customer.User.create_address');
+    return view('customer.user.create_address');
 }
 
 public function storeAddress(Request $request)

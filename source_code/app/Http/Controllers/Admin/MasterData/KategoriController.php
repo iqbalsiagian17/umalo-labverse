@@ -10,12 +10,12 @@ class KategoriController extends Controller
     public function index()
     {
         $kategoris = Kategori::where('flag', 'yes')->get();
-        return view('Admin.MasterData.Kategori.index', compact('kategoris'));
+        return view('admin.masterdata.kategori.index', compact('kategoris'));
     }
 
     public function create()
     {
-        return view('Admin.MasterData.Kategori.create');
+        return view('admin.masterdata.kategori.create');
     }
 
     public function store(Request $request)
@@ -26,7 +26,7 @@ class KategoriController extends Controller
 
         Kategori::create($request->all());
 
-        return redirect()->route('Admin.MasterData.Kategori.index')->with('success', 'Kategori berhasil dibuat.');
+        return redirect()->route('admin.masterdata.kategori.index')->with('success', 'Kategori berhasil dibuat.');
     }
 
     public function show(Kategori $kategori)
@@ -36,7 +36,7 @@ class KategoriController extends Controller
 
     public function edit(Kategori $kategori)
     {
-        return view('Admin.MasterData.Kategori.edit', compact('kategori'));
+        return view('admin.masterdata.kategori.edit', compact('kategori'));
     }
 
     public function update(Request $request, Kategori $kategori)
@@ -47,13 +47,13 @@ class KategoriController extends Controller
 
         $kategori->update($request->all());
 
-        return redirect()->route('Admin.MasterData.Kategori.index')->with('success', 'Kategori berhasil diperbarui.');
+        return redirect()->route('admin.masterdata.kategori.index')->with('success', 'Kategori berhasil diperbarui.');
     }
 
     public function destroy(Kategori $kategori)
     {
         $kategori->update(['flag' => 'no']);
 
-        return redirect()->route('Admin.MasterData.Kategori.index')->with('success', 'Kategori berhasil dihapus.');
+        return redirect()->route('admin.masterdata.kategori.index')->with('success', 'Kategori berhasil dihapus.');
     }
 }

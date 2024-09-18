@@ -24,14 +24,14 @@ class OrderController extends Controller
     public function show($id)
     {
         $order = Order::with('orderItems.produk')->findOrFail($id);
-        return view('Customer.Order.detail-pesanan', compact('order'));
+        return view('customer.order.detail-pesanan', compact('order'));
     }
 
     public function contract($id)
     {
         $order = Order::with('orderItems.produk')->findOrFail($id);
 
-        return view('Customer.Order.contract', compact('order'));
+        return view('customer.order.contract', compact('order'));
     }
     public function history()
     {
@@ -39,14 +39,14 @@ class OrderController extends Controller
             ->orderBy('created_at', 'desc')
             ->get();
 
-        return view('Customer.Order.riwayat-pesanan', compact('orders'));
+        return view('customer.order.riwayat-pesanan', compact('orders'));
     }
 
 
     public function detail($id)
     {
         $order = Order::findOrFail($id);
-        return view('Customer.Order.detail-pesanan', compact('order'));
+        return view('customer.order.detail-pesanan', compact('order'));
     }
     public function cancel($id)
     {
@@ -164,7 +164,7 @@ $romanMonth = $this->getRomanMonth($order->created_at->month);
         }
 
         // Pass all the images to the view along with other data
-        $pdf = PDF::loadView('Customer.Order.pdf', compact('order', 'ppn', 'materaiImages', 'totalPriceWithPPN', 'userDetail', 'userAddresses', 'agsLogo', 'mapsIcon', 'emailIcon', 'phoneIcon', 'invoiceNumber','companyAbbreviation', 'romanMonth'));
+        $pdf = PDF::loadView('customer.order.pdf', compact('order', 'ppn', 'materaiImages', 'totalPriceWithPPN', 'userDetail', 'userAddresses', 'agsLogo', 'mapsIcon', 'emailIcon', 'phoneIcon', 'invoiceNumber','companyAbbreviation', 'romanMonth'));
 
 
         // Sanitize the company name to create a valid filename
@@ -266,7 +266,7 @@ $romanMonth = $this->getRomanMonth($order->created_at->month);
     {
         $order = Order::with('statusHistories')->findOrFail($id);
 
-        return view('Customer.Order.transaction_history', compact('order'));
+        return view('customer.order.transaction_history', compact('order'));
     }
     public function uploadBuktiPembayaran(Request $request, $id)
     {

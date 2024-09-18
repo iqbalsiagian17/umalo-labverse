@@ -14,7 +14,7 @@ class QaController extends Controller
     public function index()
     {
         $qas = Qa::paginate(10);
-        return view('Admin.QnA.index', compact('qas'));
+        return view('admin.QnA.index', compact('qas'));
     }
 
     /**
@@ -22,7 +22,7 @@ class QaController extends Controller
      */
     public function create()
     {
-        return view('Admin.QnA.create');
+        return view('admin.QnA.create');
     }
 
     /**
@@ -46,7 +46,7 @@ class QaController extends Controller
     public function show(Qa $qa)
     {
         $qa = Qa::findOrFail($qa->id);
-        return view('Admin.QnA.show', compact('qa'));
+        return view('admin.QnA.show', compact('qa'));
     }
 
 
@@ -55,7 +55,7 @@ class QaController extends Controller
      */
     public function edit(Qa $qa)
     {
-        return view('Admin.Qna.edit', compact('qa'));
+        return view('admin.QnA.edit', compact('qa'));
     }
 
     /**

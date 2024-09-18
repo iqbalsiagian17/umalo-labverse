@@ -14,12 +14,12 @@ class UserController extends Controller
     public function index()
     {
         $users = User::with('userDetail')->where('role', 0)->paginate(10);
-        return view('Admin.Users.index', compact('users'));
+        return view('admin.users.index', compact('users'));
     }
 
     public function create()
     {
-        return view('Admin.Users.create');
+        return view('admin.users.create');
     }
 
     public function store(Request $request)
@@ -66,14 +66,14 @@ class UserController extends Controller
             $user->seenByAdmins()->attach(Auth::id());
         }
 
-        return view('Admin.Users.show', compact('user'));
+        return view('admin.users.show', compact('user'));
     }
 
 
     public function edit($id)
     {
         $user = User::with('userDetail')->findOrFail($id);
-        return view('Admin.Users.edit', compact('user'));
+        return view('admin.users.edit', compact('user'));
     }
 
     public function update(Request $request, $id)

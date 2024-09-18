@@ -11,6 +11,6 @@ class QnaController extends Controller
     public function index()
     {
         $qna = Qa::all();
-        return view('Customer.Produk.index', compact('qna'));
+        return view('customer.produk.index', compact('qna'));
     }
 }

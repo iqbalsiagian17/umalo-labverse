@@ -96,7 +96,7 @@ class HomeController extends Controller
         })
         ->whereNull('bukti_pembayaran') // Orders where payment has not been made yet
         ->get() : collect();
-    return view('Customer.Home.home', compact('produk', 'bigSale', 'slider','topSellingProducts','pendingOrders','rejectOrders' ));
+    return view('customer.home.home', compact('produk', 'bigSale', 'slider','topSellingProducts','pendingOrders','rejectOrders' ));
 }
 
 

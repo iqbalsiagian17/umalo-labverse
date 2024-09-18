@@ -36,10 +36,10 @@ class ProdukController extends Controller
         $produks = $query->orderBy('created_at', 'asc')->paginate(5);
 
         if ($request->ajax()) {
-            return view('Admin.Produk.partials._produk_table', compact('produks'))->render();
+            return view('admin.produk.partials._produk_table', compact('produks'))->render();
         }
 
-        return view('Admin.Produk.index', compact('produks'));
+        return view('admin.produk.index', compact('produks'));
     }
 
 
@@ -54,7 +54,7 @@ class ProdukController extends Controller
 {
     $komoditas = Komoditas::all();
     $kategoris = Kategori::with('subKategori')->get(); // Mengambil kategori beserta subkategori
-    return view('Admin.Produk.create', compact('komoditas', 'kategoris'));
+    return view('admin.produk.create', compact('komoditas', 'kategoris'));
 }
 
     /**
@@ -137,7 +137,7 @@ class ProdukController extends Controller
     public function show(string $id)
     {
         $produk = Produk::with('produkList', 'komoditas', 'kategori', 'subkategori', 'images')->findOrFail($id);
-        return view('Admin.Produk.show', compact('produk'));
+        return view('admin.produk.show', compact('produk'));
     }
 
     /**
@@ -151,7 +151,7 @@ class ProdukController extends Controller
          $kategoris = Kategori::with('subKategori')->get(); // Mengambil kategori beserta subkategori
          $images = ProdukImage::where('produk_id', $id)->get();
 
-         return view('Admin.Produk.edit', compact('produk', 'komoditas', 'kategoris', 'images'));
+         return view('admin.produk.edit', compact('produk', 'komoditas', 'kategoris', 'images'));
      }
 
     /**

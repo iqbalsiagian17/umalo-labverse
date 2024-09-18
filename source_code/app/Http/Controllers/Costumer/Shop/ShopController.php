@@ -49,7 +49,7 @@ class ShopController extends Controller
             // Dapatkan produk setelah menerapkan filter dan sorting
             $productCount = $produk->total();
 
-            return view('Customer.Shop.shop', compact('produk', 'kategori', 'subkategori', 'productCount'));
+            return view('customer.shop.shop', compact('produk', 'kategori', 'subkategori', 'productCount'));
         }
 
 
@@ -101,7 +101,7 @@ class ShopController extends Controller
         $produk = $query->paginate(9);
 
         // Pastikan untuk mengirimkan variabel $productCount ke view
-        return view('Customer.Shop.kategori', compact('produk', 'kategori', 'currentCategory', 'subkategori', 'productCount'));
+        return view('customer.shop.kategori', compact('produk', 'kategori', 'currentCategory', 'subkategori', 'productCount'));
     }
 
     public function filterBySubcategory(Request $request, $id)
@@ -151,7 +151,7 @@ class ShopController extends Controller
         $produk = $query->paginate(9);
     
         // Pastikan untuk mengirimkan variabel $productCount ke view
-        return view('Customer.Shop.subkategori', compact('produk', 'kategori', 'currentSubcategory', 'subkategori', 'productCount'));
+        return view('customer.shop.subkategori', compact('produk', 'kategori', 'currentSubcategory', 'subkategori', 'productCount'));
     }
     
 
@@ -203,7 +203,7 @@ public function filterByRating($rating)
     // Get the total count of filtered products
     $productCount = $produk->total();
 
-    return view('Customer.Shop.shop', compact('produk', 'subkategori', 'kategori', 'productCount'));
+    return view('customer.shop.shop', compact('produk', 'subkategori', 'kategori', 'productCount'));
 }
 
 
@@ -237,7 +237,7 @@ public function filterByPriceRange(Request $request)
     // Count the number of products found
     $productCount = $produk->total();
 
-    return view('Customer.Shop.shop', compact('produk', 'kategori', 'subkategori', 'productCount'));
+    return view('customer.shop.shop', compact('produk', 'kategori', 'subkategori', 'productCount'));
 }
 
 

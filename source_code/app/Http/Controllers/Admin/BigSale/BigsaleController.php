@@ -18,7 +18,7 @@ class BigsaleController extends Controller
     public function index()
     {
         $bigSales = BigSale::with('produk')->orderBy('created_at', 'asc')->paginate(10);
-        return view('Admin.Bigsale.index', compact('bigSales'));
+        return view('admin.bigsale.index', compact('bigSales'));
     }
 
     /**
@@ -29,7 +29,7 @@ class BigsaleController extends Controller
         $products = Produk::all();
         $categories = Kategori::all();
 
-        return view('Admin.Bigsale.create', compact('products','categories'));
+        return view('admin.bigsale.create', compact('products','categories'));
     }
 
     /**
@@ -97,7 +97,7 @@ class BigsaleController extends Controller
     public function show(string $id)
     {
         $bigSale = BigSale::with('produk')->findOrFail($id);
-        return view('Admin.Bigsale.show', compact('bigSale'));
+        return view('admin.bigsale.show', compact('bigSale'));
     }
 
     /**
@@ -110,7 +110,7 @@ class BigsaleController extends Controller
         $bigSale->berakhir = \Carbon\Carbon::parse($bigSale->berakhir);
         $products = Produk::all();
         $categories = Kategori::all();
-        return view('Admin.Bigsale.edit', compact('bigSale', 'products','categories'));
+        return view('admin.bigsale.edit', compact('bigSale', 'products','categories'));
     }
 
 

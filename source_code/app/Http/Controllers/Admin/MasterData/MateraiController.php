@@ -16,7 +16,7 @@ class MateraiController extends Controller
     public function index()
     {
         $materai = Materai::all();
-        return view('Admin.MasterData.Materai.index', compact('materai'));
+        return view('admin.masterdata.materai.index', compact('materai'));
     }
 
     /**
@@ -24,7 +24,7 @@ class MateraiController extends Controller
      */
     public function create()
     {
-        return view('Admin.MasterData.Materai.create');
+        return view('admin.masterdata.materai.create');
     }
 
     /**
@@ -55,7 +55,7 @@ class MateraiController extends Controller
             'image' => $imagePath,
         ]);
 
-        return redirect()->route('Admin.MasterData.Materai.index')->with('success', 'Materai created successfully.');
+        return redirect()->route('admin.masterdata.materai.index')->with('success', 'Materai created successfully.');
     }
 
     /**
@@ -63,7 +63,7 @@ class MateraiController extends Controller
      */
     public function show(Materai $materai)
     {
-        return view('Admin.MasterData.Materai.show', compact('materai'));
+        return view('admin.masterdata.materai.show', compact('materai'));
     }
 
     /**
@@ -71,7 +71,7 @@ class MateraiController extends Controller
      */
     public function edit(Materai $materai)
     {
-        return view('Admin.MasterData.Materai.edit', compact('materai'));
+        return view('admin.masterdata.materai.edit', compact('materai'));
     }
 
     /**
@@ -94,7 +94,7 @@ class MateraiController extends Controller
             $materai->update(['image' => $image]);
         }
 
-        return redirect()->route('Admin.MasterData.Materai.index')
+        return redirect()->route('admin.masterdata.materai.index')
             ->with('success', 'Materai updated successfully.');
     }
 
@@ -109,7 +109,7 @@ class MateraiController extends Controller
 
         $materai->delete();
 
-        return redirect()->route('Admin.MasterData.Materai.index')
+        return redirect()->route('admin.masterdata.materai.index')
             ->with('success', 'Materai deleted successfully.');
     }
 }

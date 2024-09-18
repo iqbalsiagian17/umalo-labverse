@@ -15,7 +15,7 @@ class SliderController extends Controller
     public function index()
     {
         $sliders = Slider::paginate(10);
-        return view('Admin.Slider.index', compact('sliders'));
+        return view('admin.slider.index', compact('sliders'));
     }
 
     /**
@@ -23,7 +23,7 @@ class SliderController extends Controller
      */
     public function create()
     {
-        return view('Admin.Slider.create');
+        return view('admin.slider.create');
     }
 
     /**
@@ -69,7 +69,7 @@ class SliderController extends Controller
     public function show($id)
     {
         $slider = Slider::findOrFail($id);
-        return view('Admin.Slider.show', compact('slider'));
+        return view('admin.slider.show', compact('slider'));
     }
 
     /**
@@ -78,7 +78,7 @@ class SliderController extends Controller
     public function edit($id)
     {
         $slider = Slider::findOrFail($id);
-        return view('Admin.Slider.edit', compact('slider'));
+        return view('admin.slider.edit', compact('slider'));
     }
 
     /**

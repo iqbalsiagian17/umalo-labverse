@@ -39,7 +39,7 @@ class TransaksiController extends Controller
 
         Session::put('seen_orders', $seenOrders);
 
-        return view('Admin.Transaksi.index', compact('orders'));
+        return view('admin.transaksi.index', compact('orders'));
     }
 
 
@@ -48,14 +48,14 @@ class TransaksiController extends Controller
     {
         $order = Order::with('orderItems')->findOrFail($id);
         $this->markAsSeen($order);
-        return view('Admin.Transaksi.show', compact('order'));
+        return view('admin.transaksi.show', compact('order'));
     }
 
 
     public function edit($id)
     {
         $order = Order::with('orderItems')->findOrFail($id);
-        return view('Admin.Transaksi.edit', compact('order'));
+        return view('admin.transaksi.edit', compact('order'));
     }
 
     public function update(Request $request, $id)
