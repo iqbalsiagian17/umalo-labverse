@@ -17,7 +17,7 @@ return [
 
     'name' => env('APP_NAME', 'Laravel'),
 
-    
+
 
     /*
     |--------------------------------------------------------------------------
@@ -56,11 +56,11 @@ return [
     |
     */
 
-    'url' => env('APP_URL', 'http://localhost:8889/umalo-labverse/source_code/public'),
+    'url' => env('APP_URL', 'http://localhost/umalo-labverse/source_code/public'),
 
-    //'asset_url' => env('ASSET_URL', '/'),
-    'asset' => env('APP_URL', 'http://localhost:8889/umalo-labverse/source_code/public/'),
-    
+    'asset_url' => env('ASSET_URL', '/'),
+ //'asset' => env('APP_URL', 'http://localhost/umalo-labverse/source_code/public/'),
+
 
     /*
     |--------------------------------------------------------------------------
