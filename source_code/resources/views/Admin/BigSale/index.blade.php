@@ -1,4 +1,4 @@
-@extends('layouts.admin.master')
+@extends('layouts.Admin.master')
 
 @section('content')
 <div class="row">
@@ -16,7 +16,7 @@
                                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                                 </div>
                             @endif
-            
+
                             <!-- Error Message -->
                             @if(session('error'))
                                 <div class="alert alert-danger alert-dismissible fade show" role="alert">

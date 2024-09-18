@@ -1,4 +1,4 @@
-@extends('layouts.customer.master2')
+@extends('layouts.Customer.master2')
 
 @section('content')
     <!----------------------- Main Container -------------------------->
@@ -57,7 +57,7 @@
                             <div class="form-check">
                                 <input type="checkbox" class="form-check-input" name="remember" id="formCheck" {{ old('remember') ? 'checked' : '' }}>
                                 <label for="formCheck" class="form-check-label text-secondary"><small>{{ __('messages.remember_me') }}</small></label>
-                            </div>                                                    
+                            </div>
                         </div>
 
                         <!-- Sign In Button -->
@@ -72,7 +72,7 @@
                                 <small>{{ __('messages.sign_in_with_google') }}</small>
                             </a>
                         </div>
-                        
+
                         <!-- Sign Up Link -->
                         <div class="input-group">
                             <small>{{ __('messages.dont_have_account') }} <a href="{{ route('register') }}">{{ __('messages.register') }}</a></small>

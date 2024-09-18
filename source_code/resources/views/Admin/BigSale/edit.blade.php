@@ -1,4 +1,4 @@
-@extends('layouts.admin.master')
+@extends('layouts.Admin.master')
 
 @section('content')
 <div class="row">
@@ -66,7 +66,7 @@
                                 <small class="text-danger">{{ $errors->first('image') }}</small>
                             @endif
                         </div>
-                        
+
                         <!-- Next Button -->
                         <button type="button" class="btn btn-primary" id="nextStep">Next</button>
                     </div>

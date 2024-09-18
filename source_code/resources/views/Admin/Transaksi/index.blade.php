@@ -1,4 +1,4 @@
-@extends('layouts.admin.master')
+@extends('layouts.Admin.master')
 
 @section('content')
 
@@ -16,14 +16,14 @@
                     </div>
                 </form>
             </div>
-            
+
             <!-- Notifikasi jika hasil pencarian kosong -->
             @if(session('no_results'))
             <div class="alert alert-warning mt-3">
                 {{ session('no_results') }}
             </div>
             @endif
-            
+
             @if (session('success'))
             <div class="alert alert-success">
                 {{ session('success') }}
@@ -49,7 +49,7 @@
                             <tr>
                                 <td>{{ $index + 1 }}</td>
                                 <td>{{ $order->id }}</td>
-                                <td>{{ $order->user->name }}</td> 
+                                <td>{{ $order->user->name }}</td>
                                 <td>
                                     @if($order->harga_setelah_nego)
                                         <span style="text-decoration: line-through;">Rp {{ number_format($order->harga_total, 0, ',', '.') }}</span><br>
@@ -94,7 +94,7 @@
         // SweetAlert confirmation for deletion
         $('.delete-button').on('click', function(e) {
             e.preventDefault(); // Prevent form submission
-            
+
             var form = $(this).closest('form'); // Get the form
             Swal.fire({
                 title: 'Are you sure?',

@@ -1,4 +1,4 @@
-@extends('layouts.customer.master')
+@extends('layouts.Customer.master')
 
 @section('content')
 <section class="product spad">
@@ -18,11 +18,11 @@
                             @endforeach
                         </ul>
                     </div>
-                    
+
                 </div>
             </div>
             <div class="col-lg-9 col-md-7">
-                
+
                 <!-- Countdown Timer Begin -->
                 @if($bigSale)
                 <div class="countdown__timer">

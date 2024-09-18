@@ -1,4 +1,4 @@
-@extends('layouts.admin.master')
+@extends('layouts.Admin.master')
 
 @section('content')
 <div class="row">
@@ -39,13 +39,13 @@
                             <tr>
                                 <td>{{ $produks->firstItem() + $index }}</td>
                                 <td>
-                                    {{ $produk->nama }} 
+                                    {{ $produk->nama }}
                                     @if($produk->nego === 'ya')
                                         <span class="badge badge-success">Bisa Nego</span>
                                     @else
                                         <span class="badge badge-danger">Tidak Bisa Nego</span>
                                     @endif
-                                </td>                
+                                </td>
                                 <td>{{ $produk->stok }}</td>
                                 <td>{{ formatRupiah($produk->harga_tayang) }}</td>
                                 <td>{{ $produk->status }}</td>
@@ -55,7 +55,7 @@
                                     @else
                                         <p>No Image</p>
                                     @endif
-                                </td>                
+                                </td>
                                 <td>
                                     <a href="{{ route('produk.show', $produk->id) }}" class="btn btn-info btn-sm">Lihat</a>
                                     <a href="{{ route('produk.edit', $produk->id) }}" class="btn btn-warning btn-sm">Edit</a>
@@ -91,7 +91,7 @@
         // SweetAlert confirmation for deletion
         $('.delete-button').on('click', function(e) {
             e.preventDefault(); // Prevent form submission
-            
+
             var form = $(this).closest('form'); // Get the form
             Swal.fire({
                 title: 'Are you sure?',

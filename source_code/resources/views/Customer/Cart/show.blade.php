@@ -1,4 +1,4 @@
-@extends('layouts.customer.master')
+@extends('layouts.Customer.master')
 
 @section('content')
 
@@ -59,28 +59,28 @@
                                         Rp {{ number_format($details['harga_tayang'] ?? 0, 0, ',', '.') }}
                                     @endif
                                 </td>
-                                
-                                
-                                
-                                                 
+
+
+
+
                                 <td class="shoping__cart__quantity align-middle text-center">
                                     <input type="number" name="quantity" value="{{ $details['quantity'] }}" class="form-control quantity" data-id="{{ $id }}" min="1" style="width: 70px; padding: 8px; text-align: center; margin: 0 auto; border-radius: 8px; border: 1px solid #ced4da; box-shadow: 0px 2px 5px rgba(0,0,0,0.1);">
                                 </td>
-                                
+
                                 <td class="shoping__cart__total subtotal align-middle text-center" data-id="{{ $id }}">
                                     @php
-                                        $price = isset($details['harga_diskon']) && $details['harga_diskon'] > 0 ? $details['harga_diskon'] : 
-                                                (isset($details['harga_potongan']) && $details['harga_potongan'] > 0 ? $details['harga_potongan'] : 
+                                        $price = isset($details['harga_diskon']) && $details['harga_diskon'] > 0 ? $details['harga_diskon'] :
+                                                (isset($details['harga_potongan']) && $details['harga_potongan'] > 0 ? $details['harga_potongan'] :
                                                 ($details['harga_tayang'] ?? 0));
                                         $subtotal = $price * $details['quantity'];
                                     @endphp
                                     Rp {{ number_format($subtotal, 0, ',', '.') }}
                                 </td>
-                                
-                                
-                                
-                                
-                                
+
+
+
+
+
                                 <td>
                                     <form action="{{ route('cart.remove', $id) }}" method="POST">
                                         @csrf
@@ -89,7 +89,7 @@
                                     </form>
                                 </td>
                             </tr>
-                            
+
                             @php $total += $subtotal; @endphp
                             @endforeach
                         </tbody>
@@ -102,7 +102,7 @@
                                 <ul>
                                     <li>{{ __('messages.total') }} <span id="total">Rp {{ number_format($total, 0, ',', '.') }}</li>
                                 </ul>
-        
+
                                 @if(auth()->user()->userDetail)
                                     <form action="{{ route('cart.checkout') }}" method="POST">
                                         @csrf

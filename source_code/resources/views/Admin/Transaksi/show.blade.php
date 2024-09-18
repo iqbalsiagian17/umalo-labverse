@@ -1,4 +1,4 @@
-@extends('layouts.admin.master')
+@extends('layouts.Admin.master')
 
 @section('content')
 <div class="row">
@@ -190,7 +190,7 @@
                 </div>
             </div>
         </div>
-        
+
     </div>
 </div>
 @endif
@@ -212,7 +212,7 @@
         submitForm(function() {
             // After form submission and status update
             alert('Status updated to Negosiasi successfully.');
-            
+
             // Show the subtotal input form after the alert
             $('#subtotalGroup').show();
             $('#whatsappGroup').hide();
@@ -232,11 +232,11 @@
 
     // Submit the form with the updated status
     submitForm(function() {
-        let message = isRejected 
+        let message = isRejected
             ? 'Negosiasi Ditolak, Orderan Berlanjut Ke Order Reguler. Status updated to Diterima successfully.'
             : 'Status updated to Negosiasi successfully.';
         alert(message);
-        
+
         if (isRejected) {
             // If rejected, hide WhatsApp group, subtotal input, and update button to 'Diterima'
             $('#whatsappGroup').hide();
@@ -275,7 +275,7 @@ function rejectNegotiation() {
     function cancelOrder() {
         // Set status to Cancelled
         $('#statusInput').val('Cancelled');
-        
+
         // Submit the form with the updated status
         submitForm(function() {
             alert('Order has been cancelled successfully.');

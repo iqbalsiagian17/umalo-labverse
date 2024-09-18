@@ -1,4 +1,4 @@
-@extends('layouts.admin.master')
+@extends('layouts.Admin.master')
 
 @section('content')
     <div class="row">
@@ -35,7 +35,7 @@
                   <p class="card-category">Income</p>
                   <h4 class="card-title">Rp {{ number_format($totalSales, 2) }}</h4>
               </div>
-          </div>          
+          </div>
           </div>
         </div>
       </div>
@@ -94,7 +94,7 @@
           </div>
       </div>
   </div>
-  
+
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script>
       document.addEventListener('DOMContentLoaded', function() {
@@ -141,7 +141,7 @@
           });
       });
   </script>
-  
+
 
     <!-- Statistik Pengunjung Hari Ini dan Waktu Kunjungan Rata-rata Hari Ini stacked vertically -->
     <div class="col-md-4">
@@ -199,7 +199,7 @@
                       </button>
                   </div>
               </div>
-              
+
             </div>
         </div>
     </div>

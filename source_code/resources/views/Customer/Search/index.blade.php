@@ -1,4 +1,4 @@
-@extends('layouts.customer.master')
+@extends('layouts.Customer.master')
 
 @section('content')
     <!-- Product Section Begin -->
@@ -30,7 +30,7 @@
                                 </div>
                             </form>
                         </div>
-                        
+
                         <script>
                             function formatInput(input) {
                                 let value = input.value;
@@ -38,16 +38,16 @@
                                 let formatted = numericValue.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
                                 input.value = formatted;
                             }
-                        
+
                             function resetFields() {
                                 document.getElementById('min_price').value = '';
                                 document.getElementById('max_price').value = '';
                                 window.location.href = '{{ route('shop.priceRange') }}'; // Redirect to the price range URL without parameters
                             }
                         </script>
-                        
-                        
-                        
+
+
+
                         <style>
                             .sidebar__item {
                                 padding: 20px;
@@ -56,17 +56,17 @@
                                 box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
                                 margin-bottom: 20px;
                             }
-                        
+
                             .sidebar__item h4 {
                                 font-size: 18px;
                                 margin-bottom: 15px;
                                 font-weight: bold;
                             }
-                        
+
                             .price-range1 .form-group {
                                 margin-bottom: 15px;
                             }
-                        
+
                             .price-range1 input {
                                 width: 100%;
                                 padding: 10px;
@@ -76,20 +76,20 @@
                                 background-color: #fff;
                                 transition: border-color 0.3s ease-in-out;
                             }
-                        
+
                             .price-range1 input:focus {
                                 border-color: #42378C;
                                 outline: none;
                                 box-shadow: 0 0 5px rgba(66, 55, 140, 0.3);
                             }
-                        
+
                             .price-range1 label {
                                 font-size: 14px;
                                 font-weight: 600;
                                 color: #555;
                                 margin-bottom: 5px;
                             }
-                        
+
                             .btn-primary {
                                 background-color: #42378C;
                                 border-color: #42378C;
@@ -99,16 +99,16 @@
                                 border-radius: 5px;
                                 transition: background-color 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
                             }
-                        
+
                             .btn-primary:hover {
                                 background-color: #2d2777;
                                 box-shadow: 0 4px 10px rgba(66, 55, 140, 0.3);
                             }
-                        
+
                             .btn-block {
                                 width: 100%;
                             }
-                        
+
                             /* Add some padding between sections */
                             .sidebar__item + .sidebar__item {
                                 margin-top: 20px;
@@ -168,22 +168,22 @@
                                     color: #ffc107; /* Bootstrap yellow color for stars */
                                     margin-right: 2px; /* Optional: space between stars */
                                 }
-                            
+
                                 .rating-link {
                                     text-decoration: none; /* Remove underline from links */
                                     color: #333; /* Default text color */
                                 }
-                            
+
                                 .rating-link:hover .star-colored {
                                     color: #ff9800; /* Darker yellow on hover */
                                 }
-                            
+
                                 .rating-link:hover {
                                     color: #000; /* Darker text color on hover */
                                 }
                             </style>
                         </div>
-                        
+
                     </div>
                 </div>
                 <div class="col-lg-9 col-md-7">
@@ -208,7 +208,7 @@
                                     </select>
                                 </div>
                             </div>
-                            
+
                             <script>
                                 function sortProducts() {
                                     var sortBy = document.getElementById('sort-by').value;
@@ -280,7 +280,7 @@
                             document.addEventListener('DOMContentLoaded', function() {
                                 // Get all product items
                                 const productItems = document.querySelectorAll('.product__item');
-                        
+
                                 // Add a click event listener to each product card
                                 productItems.forEach(item => {
                                     item.addEventListener('click', function(e) {
@@ -293,13 +293,13 @@
                                 });
                             });
                         </script>
-                        
+
                         <style>
                             /* Change cursor to pointer for the whole product item */
                             .product__item {
                                 cursor: pointer;
                             }
-                        
+
                             /* Ensure buttons like Add to Cart and Info Icon are not affected by the card click */
                             .product__item__pic__hover li a {
                                 z-index: 2;

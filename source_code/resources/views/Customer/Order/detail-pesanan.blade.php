@@ -1,4 +1,4 @@
-@extends('layouts.customer.master')
+@extends('layouts.Customer.master')
 
 @section('content')
     <div class="container mt-5 mb-3">
@@ -111,7 +111,7 @@
                                     </td>
                                 </tr>
                             @endif
-                            
+
 
 
 
@@ -206,7 +206,7 @@
                                     <strong>Penting!</strong> Mohon pastikan bahwa nominal yang Anda transfer sesuai dengan total yang tercantum pada invoice.
                                     Kepatuhan Anda dalam hal ini sangat kami hargai dan membantu proses verifikasi pembayaran berjalan dengan lancar.
                                     Perhatikan bahwa pembayaran yang tidak sesuai—baik lebih maupun kurang—dari jumlah yang tertera pada invoice akan mengakibatkan penundaan atau pembatalan proses order Anda.
-                                    Kami tidak akan melanjutkan proses order sampai pembayaran yang benar telah kami terima. 
+                                    Kami tidak akan melanjutkan proses order sampai pembayaran yang benar telah kami terima.
                                     Kami mengucapkan terima kasih atas kerjasama dan perhatian Anda.
                                 </div>
                                 <form action="{{ route('order.upload_bukti_pembayaran', $order->id) }}" method="POST" enctype="multipart/form-data">

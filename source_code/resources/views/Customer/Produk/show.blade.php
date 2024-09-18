@@ -1,4 +1,4 @@
-@extends('layouts.customer.master')
+@extends('layouts.Customer.master')
 
 @section('content')
 <!-- Product Details Section Begin -->
@@ -56,13 +56,13 @@
                         @else
                             {{ __('messages.contact_admin_for_price') }}
                         @endif
-                                                    
+
                         </div>
-                        
-                        
+
+
                     </div>
-                    
-                                                        
+
+
                     <div class="product__details__quantity">
                         <div class="quantity">
                             <div class="pro-qty">
@@ -75,7 +75,7 @@
                     @else
                     <a href="{{ route('login') }}" class="primary-btn add-to-cart-btn">{{ __('messages.add') }}</a>
                     @endauth
-                
+
 
                 @if ($bigSale && $bigSale->status === 'aktif')
                     <span class="nego-badge">Big Sale</span>
@@ -95,7 +95,7 @@
                                             $url = 'http://' . $url;
                                         }
                                     @endphp
-                        
+
                                     <a href="{{ $url }}" target="_blank" class="ecatalog-link">{{ Str::limit($produk->link_ekatalog, 50) }}</a>
                                 @else
                                     N/A
@@ -118,13 +118,13 @@
                         </style>
 
 
-                        <li><b>{{ __('messages.average_rating') }}</b> 
+                        <li><b>{{ __('messages.average_rating') }}</b>
                             <span>
                                 @if ($averageRating && $totalRatings)
                                     <!-- Tampilkan rata-rata rating -->
-                                    {{ number_format($averageRating, 1) }} / 5 
+                                    {{ number_format($averageRating, 1) }} / 5
                                     ({{ $totalRatings }} {{ __('messages.people') }})
-                                    
+
                                     <!-- Tampilkan bintang berdasarkan rata-rata rating -->
                                     <span class="ml-2">
                                         @for ($i = 1; $i <= 5; $i++)
@@ -142,8 +142,8 @@
                                 @endif
                             </span>
                         </li>
-                        
-                        
+
+
                     </ul>
                 </div>
             </div>
@@ -452,65 +452,65 @@
                                             Anda telah memberikan ulasan untuk produk ini.
                                         </div>
                                     @endif
-                                @endif  
+                                @endif
 <style>
     /* Style for the star rating */
     .star-rating input[type="radio"] {
         display: none;
     }
-    
+
     .star-rating label {
         font-size: 24px;
         color: #ddd;
         cursor: pointer;
         transition: color 0.2s;
     }
-    
+
     .star-rating input[type="radio"]:checked ~ label {
         color: #ffc107;
     }
-    
+
     .star-rating label:hover,
     .star-rating label:hover ~ label {
         color: #ffc107;
     }
-    
+
     /* Style for the form fields */
     .form-group label {
         font-weight: 600;
         color: #333;
     }
-    
+
     .custom-file-label {
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
     }
-    
+
     /* Style for the card and buttons */
     .card-header {
         font-size: 18px;
         font-weight: bold;
     }
-    
+
     .btn-primary {
         background-color: #007bff;
         border-color: #007bff;
         transition: background-color 0.3s, border-color 0.3s;
     }
-    
+
     .btn-primary:hover {
         background-color: #0056b3;
         border-color: #004085;
     }
     </style>
-    
+
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-            
+
         </div>
     </div>
 </section>
@@ -543,7 +543,7 @@
                             @if ($bigSaleItem && $bigSaleItem->status === 'aktif')
                                 <span class="nego-badge badge-primary">Big Sale</span>
                             @endif
-                            
+
                                 <ul class="featured__item__pic__hover">
                                     <li><a href="{{ route('produk_customer.user.show', $item->id) }}"><i
                                                 class="fa fa-info-circle"></i></a></li>
@@ -580,8 +580,8 @@
                                     {{ __('messages.contact_admin_for_price') }}
                                     @endif
                                 </h5>
-                                
-                                
+
+
                             </div>
                         </div>
                     </div>
@@ -669,7 +669,7 @@
                 event.preventDefault(); // Prevent default action
 
                 var isAuthenticated = '{{ Auth::check() }}';
-        
+
         if (!isAuthenticated) {
             // Redirect to login page if the user is not authenticated
             window.location.href = '{{ route('login') }}';

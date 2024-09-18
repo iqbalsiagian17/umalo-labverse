@@ -1,4 +1,4 @@
-@extends('layouts.admin.master')
+@extends('layouts.Admin.master')
 
 @section('content')
 
@@ -22,7 +22,7 @@
                 <div class="card-header">
                     <div class="card-title">Edit Produk</div>
                 </div>
-                
+
                 <div class="card-body">
                     <div class="d-flex justify-content-between align-items-center">
                         <ul class="nav nav-tabs" id="productFormTabs" role="tablist">
@@ -79,26 +79,26 @@
                             <div class="form-group">
                                 <label for="harga_potongan">Harga Diskon:</label>
                                 <input type="number" step="0.01" name="harga_potongan" class="form-control"
-                                       value="{{ old('harga_potongan', $produk->harga_potongan) }}" id="harga_potongan" 
+                                       value="{{ old('harga_potongan', $produk->harga_potongan) }}" id="harga_potongan"
                                        {{ old('allow_discount', $produk->harga_potongan ? true : false) ? '' : 'disabled' }}>
                                 @if ($errors->has('harga_potongan'))
                                     <small class="text-danger">{{ $errors->first('harga_potongan') }}</small>
                                 @endif
                                 <small class="form-text text-muted">Jika Anda ingin mematikan harga potongan, cukup ubah jadi 0,00.</small>
                             </div>
-                            
-                            
+
+
                             <div class="form-group form-check">
                                 <input type="checkbox" class="form-check-input" id="allow_discount" name="allow_discount"
                                        {{ old('allow_discount', $produk->harga_potongan ? 'checked' : '') ? 'checked' : '' }}>
                                 <label class="form-check-label" for="allow_discount">Izinkan Pengisian Harga Diskon</label>
                             </div>
-                            
+
                             <script>
                                 document.addEventListener('DOMContentLoaded', function() {
                                     const allowDiscountCheckbox = document.getElementById('allow_discount');
                                     const hargaDiskonInput = document.getElementById('harga_potongan');
-                            
+
                                     // Toggle the disabled state of the input field based on the checkbox state
                                     allowDiscountCheckbox.addEventListener('change', function() {
                                         if (this.checked) {
@@ -108,13 +108,13 @@
                                             hargaDiskonInput.value = ''; // Clear the input if unchecked
                                         }
                                     });
-                            
+
                                     // Trigger the change event on page load to set the initial state
                                     allowDiscountCheckbox.dispatchEvent(new Event('change'));
                                 });
                             </script>
-                            
-                            
+
+
 
                             <div class="form-group">
                                 <label for="spesifikasi_produk">Spesifikasi Produk:</label>
@@ -125,7 +125,7 @@
                                     <small class="text-danger">{{ $errors->first('spesifikasi_produk') }}</small>
                                 @endif
                             </div>
-                            
+
                             <script>
                                 $(document).ready(function() {
                                     $('#spesifikasi_produk').summernote({
@@ -145,7 +145,7 @@
                                     });
                                 });
                             </script>
-                            
+
 
                             <div class="form-group">
                                 <label for="link_ekatalog">Link E-katalog:</label>
@@ -230,7 +230,7 @@
                         <div class="form-group">
                             <label for="gambar">Gambar Produk:</label>
                             <input type="file" name="gambar[]" id="gambar[]" class="form-control" multiple>
-                        
+
                             <div class="mt-2 d-flex flex-wrap">
                                 @foreach($produk->images as $image)
                                     <div class="position-relative" style="margin-right: 10px;">
@@ -239,18 +239,18 @@
                                     </div>
                                 @endforeach
                             </div>
-                        
+
                             <input type="hidden" name="deleted_images" id="deleted_images">
                         </div>
-                        
-                        <button type="submit" class="btn btn-primary mt-3">Simpan</button>  
+
+                        <button type="submit" class="btn btn-primary mt-3">Simpan</button>
                     </div>
 
 
                         <!-- Categories Tab -->
                         <div class="tab-pane fade" id="categories" role="tabpanel" aria-labelledby="categories-tab">
-                            
-                            <button type="submit" class="btn btn-primary mt-3">Simpan</button>  
+
+                            <button type="submit" class="btn btn-primary mt-3">Simpan</button>
                         </div>
 
                         <!-- Details Tab -->
@@ -268,7 +268,7 @@
                                         @endif
                                     </div>
                                 </div>
-                        
+
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="jenis_alat">Jenis Alat:</label>
@@ -279,7 +279,7 @@
                                     </div>
                                 </div>
                             </div>
-                        
+
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
@@ -290,7 +290,7 @@
                                         @endif
                                     </div>
                                 </div>
-                        
+
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="merk">Merk:</label>
@@ -301,7 +301,7 @@
                                     </div>
                                 </div>
                             </div>
-                        
+
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
@@ -325,10 +325,10 @@
                                         @endif
                                     </div>
                                 </div>
-                        
-                               
+
+
                             </div>
-                        
+
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
@@ -342,7 +342,7 @@
                                         @endif
                                     </div>
                                 </div>
-                        
+
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="no_sni">No SNI:</label>
@@ -353,8 +353,8 @@
                                     </div>
                                 </div>
                             </div>
-                        
-                        
+
+
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
@@ -365,7 +365,7 @@
                                         @endif
                                     </div>
                                 </div>
-                        
+
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="asal_negara">Asal Negara:</label>
@@ -376,7 +376,7 @@
                                     </div>
                                 </div>
                             </div>
-                        
+
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
@@ -390,7 +390,7 @@
                                         @endif
                                     </div>
                                 </div>
-                        
+
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="fungsi">Fungsi:</label>
@@ -401,7 +401,7 @@
                                     </div>
                                 </div>
                             </div>
-                        
+
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
@@ -412,7 +412,7 @@
                                         @endif
                                     </div>
                                 </div>
-                        
+
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="garansi_produk">Garansi Produk:</label>
@@ -423,9 +423,9 @@
                                     </div>
                                 </div>
                             </div>
-                            <button type="submit" class="btn btn-primary mt-3">Simpan</button>  
+                            <button type="submit" class="btn btn-primary mt-3">Simpan</button>
                         </div>
-                        
+
 
                         <!-- Images Tab -->
                         <div class="tab-pane fade" id="images" role="tabpanel" aria-labelledby="images-tab">
@@ -435,7 +435,7 @@
                                 <table class="table table-bordered">
                                     <thead>
                                         <tr>
-                                            <th>No</th> 
+                                            <th>No</th>
                                             <th>Nama Produk List</th>
                                             <th>Spesifikasi Produk List</th>
                                             <th>Merk Produk List</th>
@@ -449,7 +449,7 @@
                                     <tbody>
                                         @foreach($produk->produkList as $detail)
                                             <tr class="detail-list">
-                                                <td class="numbering">1</td> 
+                                                <td class="numbering">1</td>
                                                 <td><input type="text" name="detail[nama][]" class="form-control" value="{{ $detail->nama }}"></td>
                                                 <td><textarea name="detail[spesifikasi][]" class="form-control">{{ $detail->spesifikasi }}</textarea></td>
                                                 <td><input type="text" name="detail[merk][]" class="form-control" value="{{ $detail->merk }}"></td>
@@ -469,7 +469,7 @@
                                 </table>
                                 <button type="button" class="btn btn-secondary mt-3" id="add-detail">Tambah Detail</button>
                             </div>
-                            <button type="submit" class="btn btn-primary mt-3">Simpan</button>  
+                            <button type="submit" class="btn btn-primary mt-3">Simpan</button>
                         </div>
                     </div>
 

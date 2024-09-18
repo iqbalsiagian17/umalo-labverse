@@ -1,4 +1,4 @@
-@extends('layouts.admin.master')
+@extends('layouts.Admin.master')
 
 @section('content')
 <div class="row">
@@ -82,7 +82,7 @@
                                 <small class="text-danger">{{ $errors->first('diskon_persen') }}</small>
                             @endif
                         </div>
-                                                
+
 
                         <div class="form-group mb-3">
                             <label for="searchInput">Cari Produk</label>

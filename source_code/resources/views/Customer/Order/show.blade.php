@@ -1,4 +1,4 @@
-@extends('layouts.customer.master')
+@extends('layouts.Customer.master')
 
 @section('content')
     <div class="container">
@@ -45,7 +45,7 @@
         <div class="mt-4">
             <a href="{{ route('order.transaction_history', $order->id) }}" class="btn btn-info">Lihat Riwayat Transaksi</a>
         </div>
-        
-        
+
+
     </div>
 @endsection

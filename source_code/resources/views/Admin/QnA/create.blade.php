@@ -1,4 +1,4 @@
-@extends('layouts.admin.master')
+@extends('layouts.Admin.master')
 
 @section('content')
 <div class="row">
@@ -20,7 +20,7 @@
 
                 <form action="{{ route('qas.store') }}" method="POST">
                     @csrf
-            
+
                     <div class="form-group">
                         <label for="pertanyaan">Pertanyaan:</label>
                         <input type="text" name="pertanyaan" class="form-control" id="pertanyaan" value="{{ old('pertanyaan') }}" required>
@@ -41,5 +41,5 @@
 
 
 
-    
+
 @endsection

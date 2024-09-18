@@ -1,4 +1,4 @@
-@extends('layouts.customer.master')
+@extends('layouts.Customer.master')
 
 @section('content')
 <div class="container mt-5 mb-5">
@@ -64,7 +64,7 @@
                 // Toggle the arrow icons
                 const icon = this.querySelector('i');
                 const isExpanded = this.getAttribute('aria-expanded') === 'true';
-                
+
                 // Remove all up arrow icons
                 document.querySelectorAll('#faqAccordion .btn-link i').forEach(i => {
                     i.classList.remove('fa-chevron-up');

@@ -1,4 +1,4 @@
-@extends('layouts.admin.master')
+@extends('layouts.Admin.master')
 
 @section('content')
 
@@ -31,17 +31,17 @@
                             <a class="nav-link" id="produk_list-tab" data-toggle="tab" href="#produk_lists" role="tab" aria-controls="produk_lists" aria-selected="false">Produk List</a>
                         </li>
                     </ul>
-                
+
                     <!-- Navigation Buttons -->
                     <div class="ml-auto">
                         <button type="button" class="btn btn-light" id="prevBtn"><i class="fas fa-arrow-left"></i> Back</button>
                         <button type="button" class="btn btn-light" id="nextBtn">Next <i class="fas fa-arrow-right"></i></button>
                     </div>
                 </div>
-    
+
                 <form action="{{ route('produk.store') }}" method="POST" enctype="multipart/form-data">
                     @csrf
-    
+
                     <div class="tab-content" id="productFormContent">
                         <!-- General Information Tab -->
                         <div class="tab-pane fade show active" id="general" role="tabpanel" aria-labelledby="general-tab">
@@ -63,7 +63,7 @@
                                     <small class="text-danger">{{ $errors->first('harga_ditampilkan') }}</small>
                                 @endif
                             </div>
-                            
+
                             <div class="form-group">
                                 <label for="harga_tayang"><span class="text-danger">*</span> Harga Produk:</label>
                                 <input type="number" step="0.01" name="harga_tayang" id="harga_tayang" class="form-control" value="{{ old('harga_tayang') }}" required>
@@ -150,7 +150,7 @@
                                         @endif
                                     </div>
                                 </div>
-    
+
                                 <div class="col-md-4">
                                     <div class="form-group">
                                         <label for="kategori_id"><span class="text-danger">*</span> Kategori:</label>
@@ -165,7 +165,7 @@
                                         @endif
                                     </div>
                                 </div>
-    
+
                                 <div class="col-md-4">
                                     <div class="form-group">
                                         <label for="sub_kategori_id"><span class="text-danger">*</span> Sub Kategori:</label>
@@ -188,7 +188,7 @@
                             </div>
                         <button type="submit" id="saveButton" class="btn btn-primary mt-3" style="display: none;">Simpan</button>
                         </div>
-    
+
                         <!-- Details Tab -->
                         <div class="tab-pane fade" id="details" role="tabpanel" aria-labelledby="details-tab">
                             <div class="row">
@@ -204,7 +204,7 @@
                                             <small class="text-danger">{{ $errors->first('unit_pengukuran') }}</small>
                                         @endif
                                     </div>
-                                    
+
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
@@ -215,9 +215,9 @@
                                         @endif
                                     </div>
                                 </div>
-                                                            
+
                             </div>
-    
+
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
@@ -228,7 +228,7 @@
                                         @endif
                                     </div>
                                 </div>
-    
+
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="merk">Merk:</label>
@@ -239,7 +239,7 @@
                                     </div>
                                 </div>
                             </div>
-    
+
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
@@ -253,7 +253,7 @@
                                             <small class="text-danger">{{ $errors->first('sni') }}</small>
                                         @endif
                                     </div>
-                                </div>                                
+                                </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="no_produk_penyedia">No Produk Penyedia:</label>
@@ -264,7 +264,7 @@
                                     </div>
                                 </div>
                             </div>
-    
+
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
@@ -274,8 +274,8 @@
                                             <small class="text-danger">{{ $errors->first('no_sni') }}</small>
                                         @endif
                                     </div>
-                                </div>                                
-    
+                                </div>
+
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="memiliki_svlk">Memiliki SVLK:</label>
@@ -287,10 +287,10 @@
                                         @if ($errors->has('memiliki_svlk'))
                                             <small class="text-danger">{{ $errors->first('memiliki_svlk') }}</small>
                                         @endif
-                                    </div>                                    
+                                    </div>
                                 </div>
                             </div>
-    
+
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
@@ -301,7 +301,7 @@
                                         @endif
                                     </div>
                                 </div>
-    
+
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="asal_negara">Asal Negara:</label>
@@ -312,7 +312,7 @@
                                     </div>
                                 </div>
                             </div>
-    
+
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
@@ -325,9 +325,9 @@
                                         @if ($errors->has('jenis_produk'))
                                             <small class="text-danger">{{ $errors->first('jenis_produk') }}</small>
                                         @endif
-                                    </div>                                    
+                                    </div>
                                 </div>
-    
+
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="fungsi">Fungsi:</label>
@@ -359,7 +359,7 @@
                                 </div>
                             </div>
                         </div>
-    
+
                         <!-- Images Tab -->
                         <div class="tab-pane fade" id="produk_lists" role="tabpanel" aria-labelledby="produk_list-tab">
                             <!-- Detail Produk List -->
@@ -368,7 +368,7 @@
                                 <table class="table table-bordered">
                                     <thead>
                                         <tr>
-                                            <th>No</th> 
+                                            <th>No</th>
                                             <th>Nama Produk List</th>
                                             <th>Spesifikasi Produk List</th>
                                             <th>Merk Produk List</th>
@@ -403,7 +403,7 @@
                             <button type="submit" id="saveButton" class="btn btn-primary mt-3" >Simpan</button>
                         </div>
                     </div>
-    
+
                 </form>
             </div>
         </div>
@@ -416,7 +416,7 @@
             var detailListContainer = document.querySelector('#detail-list-container tbody');
             var detailList = document.createElement('tr');
             detailList.classList.add('detail-list');
-        
+
             detailList.innerHTML = `
                 <td class="numbering"></td> <!-- Numbering Cell -->
                 <td><input type="text" name="detail[nama][]" class="form-control"></td>
@@ -434,16 +434,16 @@
                 <td><button type="button" class="btn btn-danger remove-detail">Hapus</button></td>
             `;
             detailListContainer.appendChild(detailList);
-        
+
             updateNumbering();
-        
+
             // Add event listener to the newly added remove button
             detailList.querySelector('.remove-detail').addEventListener('click', function() {
                 this.closest('tr').remove();
                 updateNumbering();
             });
         });
-        
+
         // Function to update numbering
         function updateNumbering() {
             const rows = document.querySelectorAll('#detail-list-container tbody .detail-list');
@@ -451,10 +451,10 @@
                 row.querySelector('.numbering').textContent = index + 1;
             });
         }
-        
+
         // Initial call to set up numbering
         updateNumbering();
-        
+
         // Add event listener to the initial remove button
         document.querySelectorAll('.remove-detail').forEach(function(button) {
             button.addEventListener('click', function() {

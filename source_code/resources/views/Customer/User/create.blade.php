@@ -1,4 +1,4 @@
-@extends('layouts.customer.master')
+@extends('layouts.Customer.master')
 
 @section('content')
 <div class="container">
@@ -16,7 +16,7 @@
         <div class="card-body">
             <form method="POST" action="{{ route('user.store') }}">
                 @csrf
-    
+
                 <!-- User Information Section -->
                 <h4 class="mb-3">{{ __('messages.additional_information') }}</h4>
                 <div class="row mb-4">
@@ -62,7 +62,7 @@
                         </div>
                     </div>
                 </div>
-    
+
                 <hr>
                 <!-- Address Section -->
                 <h4 class="mb3">{{ __('messages.location') }}</h4>
@@ -107,11 +107,11 @@
                         </div>
                     </div>
                 </div>
-    
+
                 <button type="submit" class="btn text-white" style="background: #42378C;">{{ __('messages.save') }}</button>
             </form>
         </div>
     </div>
-    
+
 </div>
 @endsection

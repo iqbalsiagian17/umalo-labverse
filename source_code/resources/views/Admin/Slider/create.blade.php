@@ -1,4 +1,4 @@
-@extends('layouts.admin.master')
+@extends('layouts.Admin.master')
 
 @section('content')
 <div class="row">
@@ -37,11 +37,11 @@
                     <div class="form-group mb-3">
                         <label for="url" class="form-label"><span class="text-danger">*</span> URL:</label>
                         <input type="text" class="form-control" id="url" name="url" value="{{ old('url') }}">
-                        
+
                         @if ($errors->has('url'))
                             <small class="text-danger">{{ $errors->first('url') }}</small>
                         @endif
-                        
+
                         <small class="form-text text-muted">Default: "/shop"</small>
                     </div>
                     <div class="form-group mb-3">

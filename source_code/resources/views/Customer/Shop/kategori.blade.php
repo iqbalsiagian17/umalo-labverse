@@ -1,4 +1,4 @@
-@extends('layouts.customer.master')
+@extends('layouts.Customer.master')
 
 @section('content')
 
@@ -8,7 +8,7 @@
             <div class="row">
                 <div class="col-lg-3 col-md-5">
                     <div class="sidebar">
-                    
+
                         <div class="sidebar__item">
                         <h4 style="color:#42378C;">{{ __('messages.kategori') }}</h4>
                         <ul>
@@ -29,7 +29,7 @@
                         </ul>
                     </div>
                     </div>
-                    
+
                 </div>
                 <div class="col-lg-9 col-md-7">
                     <div class="filter__item">
@@ -53,7 +53,7 @@
                                     </select>
                                 </div>
                             </div>
-                            
+
                             <script>
                                 function sortProducts() {
                                     var sortBy = document.getElementById('sort-by').value;
@@ -171,7 +171,7 @@
                             document.addEventListener('DOMContentLoaded', function() {
                                 // Get all product items
                                 const productItems = document.querySelectorAll('.product__item');
-                        
+
                                 // Add a click event listener to each product card
                                 productItems.forEach(item => {
                                     item.addEventListener('click', function(e) {
@@ -184,13 +184,13 @@
                                 });
                             });
                         </script>
-                        
+
                         <style>
                             /* Change cursor to pointer for the whole product item */
                             .product__item {
                                 cursor: pointer;
                             }
-                        
+
                             /* Ensure buttons like Add to Cart and Info Icon are not affected by the card click */
                             .product__item__pic__hover li a {
                                 z-index: 2;

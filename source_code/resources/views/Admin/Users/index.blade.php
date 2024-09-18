@@ -1,10 +1,10 @@
-@extends('layouts.admin.master')
+@extends('layouts.Admin.master')
 
 @section('content')
 
 @php
     $userId = Auth::id();
-    
+
     // Fetch unseen orders count
     $unseenCount = \App\Models\Order::whereDoesntHave('seen_by_users', function($query) use ($userId) {
         $query->where('user_id', $userId);

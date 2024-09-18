@@ -1,4 +1,4 @@
-@extends('layouts.customer.master')
+@extends('layouts.Customer.master')
 
 @section('content')
 
@@ -11,7 +11,7 @@
         padding: 10px 15px;
         border-radius: 4px; /* Membuat sudut sedikit melengkung */
     }
-    
+
     /* Styling untuk tab aktif dan hover */
     .nav-tabs .nav-item.show .nav-link, .nav-tabs .nav-link.active {
         color: #494c57;
@@ -21,7 +21,7 @@
         border: none; /* Menghilangkan border */
         box-shadow: none; /* Menghilangkan shadow ekstra */
     }
-    
+
     /* Styling untuk tab yang tidak aktif */
     .nav-tabs .nav-link {
         border: none; /* Menghilangkan border pada tab */
@@ -29,13 +29,13 @@
         color: #413937;
         transition: color 0.3s ease-in-out;
     }
-    
+
     /* Styling untuk hover pada tab */
     .nav-tabs .nav-link:hover {
         background-color: #f8f9fa;
         color: #42378C;
     }
-    
+
     /* Styling untuk konten tab */
     .tab-content > .tab-pane {
         padding: 20px;
@@ -44,11 +44,11 @@
         background-color: #fff; /* Memberikan background putih */
         border-radius: 4px; /* Membuat sudut konten sedikit melengkung */
     }
-    
-    
+
+
     </style>
 
-    
+
 <div class="container mt-5 mb-5">
 
     <ul class="nav nav-tabs mb-3" id="profileTabs" role="tablist">
@@ -72,9 +72,9 @@
                                 <div class="card border-0">
                                     <div class="card-body text-center">
                                         <img id="profilePhoto" src="{{ $user->foto_profile ? asset($user->foto_profile) : asset('assets/images/logo-nobg.png') }}" class="rounded-circle mb-3" alt="{{ __('messages.user_photo') }}" style="width: 250px; object-fit: contain;">
-                                        
+
                                         <br>
-                                
+
                                         <form id="uploadForm" method="POST" action="{{ route('user.uploadProfilePhoto') }}" enctype="multipart/form-data">
                                             @csrf
                                             <div class="mb-3">
@@ -85,17 +85,17 @@
                                             </div>
                                             <button type="button" class="btn btn-sm text-white" style="background: #42378C;" onclick="document.getElementById('fotoProfileInput').click();">{{ __('messages.choose_photo') }}</button>
                                         </form>
-                                
+
                                         <p class="text-muted mt-3">{{ __('messages.photo_file_requirements') }}</p>
                                     </div>
                                 </div>
-                                
+
                                 <script>
                                     document.getElementById('fotoProfileInput').addEventListener('change', function() {
                                         var form = document.getElementById('uploadForm');
                                         form.submit(); // Automatically submit the form when a file is selected
                                     });
-                                
+
                                     document.getElementById('fotoProfileInput').addEventListener('change', function(event) {
                                         var reader = new FileReader();
                                         reader.onload = function(){
@@ -105,7 +105,7 @@
                                         reader.readAsDataURL(event.target.files[0]);
                                     });
                                 </script>
-                                
+
                             </div>
                             <div class="d-flex flex-column mt-4">
                                 @if (is_null($user->password) || $user->password === '')
@@ -116,7 +116,7 @@
                                 <a href="{{ route('user.edit') }}" class="btn text-white" style="background: #42378C;">{{ __('messages.edit_data') }}</a>
                             </div>
                         </div>
-        
+
                         <!-- Account Information Section -->
                         <div class="col-md-6">
                             <h4 class="mb-3">{{ __('messages.account_bio') }}</h4>
@@ -131,7 +131,7 @@
                 </div>
             </div>
         </div>
-        
+
         <!-- Address List Tab -->
         <div class="tab-pane fade" id="address-list" role="tabpanel" aria-labelledby="address-list-tab">
             <div class="card mb-5 shadow rounded border-0">
@@ -141,7 +141,7 @@
                         <div class="d-flex justify-content-between">
                             <div>
                                 <h5 class="card-title">
-                                    <strong>Alamat {{ $index + 1 }}</strong> 
+                                    <strong>Alamat {{ $index + 1 }}</strong>
                                     <span class="badge {{ $userAddress->status == 'aktif' ? 'bg-success text-white' : 'bg-danger text-white' }}">
                                         {{ $userAddress->status }}
                                     </span>
@@ -166,13 +166,13 @@
                         </div>
                     </div>
                     @endforeach
-        
+
                     <div class="d-flex justify-content-center mt-3">
                         <a href="{{ route('user.createAddress') }}" class="btn btn-success">{{ __('messages.add_new_address') }}</a>
                     </div>
                 </div>
             </div>
-        </div>        
+        </div>
     </div>
 </div>
 

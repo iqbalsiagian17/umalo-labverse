@@ -1,4 +1,4 @@
-@extends('layouts.admin.master')
+@extends('layouts.Admin.master')
 
 @section('content')
 <div class="row">
@@ -39,7 +39,7 @@
                     </div>
                 </form>
                 <!-- End Form for Updating Status -->
-            </div>            
+            </div>
             <div class="card-body">
                 <table class="table table-bordered">
                     <thead class="thead-light">
@@ -148,7 +148,7 @@
                         <tr>
                             <td>Sub Kategori</td>
                             <td>{{ $produk->subkategori->nama ?: '-' }}</td>
-                        </tr>                        
+                        </tr>
                     </tbody>
                 </table>
             </div>
@@ -213,9 +213,9 @@
                     <p>No Detail Produk List Available</p>
                 @endif
             </div>
-            
+
         </div>
-        
+
     </div>
 
 

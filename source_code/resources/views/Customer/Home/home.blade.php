@@ -1,4 +1,4 @@
-@extends('layouts.customer.master')
+@extends('layouts.Customer.master')
 
 @section('content')
     <!-- Hero Section Begin -->
@@ -29,7 +29,7 @@
                 </div>
             @endforeach
         @endif
-        
+
             <div class="row">
                 <div class="col-lg-12">
                     <div id="heroCarousel" class="carousel slide" data-ride="carousel">
