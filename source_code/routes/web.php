@@ -22,6 +22,7 @@ use Laravel\Socialite\Facades\Socialite;
 use App\Http\Controllers\Costumer\Cart\CartController;
 use App\Http\Controllers\Costumer\Order\OrderController;
 use App\Http\Controllers\Costumer\BigSale\BigSaleCustomerController;
+use App\Http\Controllers\Costumer\Favorite\FavoriteController;
 use App\Http\Controllers\Costumer\QnA\QnaController;
 use App\Http\Controllers\Costumer\Shop\ShopController;
 use App\Http\Controllers\LanguageController;
@@ -78,6 +79,12 @@ Route::middleware(['auth', 'user-access:costumer'])->group(function () {
     Route::get('/cart', [CartController::class, 'viewCart'])->name('cart.view');
     Route::patch('/cart/update/{id}', [CartController::class, 'update'])->name('cart.update');
     Route::delete('/cart/remove/{id}', [CartController::class, 'remove'])->name('cart.remove');
+
+    //Favorite
+    Route::get('/favorites', [FavoriteController::class, 'showFavorites'])->name('favorite.show');
+    Route::post('/favorite/{product}', [FavoriteController::class, 'toggleFavorite'])->name('favorite.toggle');
+    Route::delete('/favorite/{product}', [FavoriteController::class, 'removeFavorite'])->name('favorite.remove');
+    Route::post('/favorite/{product}/cart', [FavoriteController::class, 'moveToCart'])->name('favorite.moveToCart');
 
     //checkout
     Route::post('/cart/checkout', [CartController::class, 'checkout'])->name('cart.checkout');

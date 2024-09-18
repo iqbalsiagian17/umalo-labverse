@@ -114,7 +114,7 @@
        (function(){
         var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
            s1.async = true;
-           s1.src = 'https://embed.tawk.to/66d166adea492f34bc0ba27f/1i6gvi641';
+           s1.src='https://embed.tawk.to/66d1440fea492f34bc0b9a5e/1i6gn3nr5';
            s1.charset = 'UTF-8';
            s1.setAttribute('crossorigin', '*');
            s0.parentNode.insertBefore(s1, s0);
@@ -124,24 +124,6 @@
 @endif
 
 
-<style>
-    @media (max-width: 768px) {
-    #tawkchat-container {
-        top: 10px !important; /* Mengatur widget berada di atas */
-        right: 10px !important; /* Mengatur widget di sebelah kanan */
-        left: auto !important; /* Pastikan posisi kiri tidak diatur */
-        bottom: auto !important; /* Pastikan posisi bawah tidak diatur */
-    }
-
-    #tawkchat-status {
-        top: 0 !important; /* Status bar di atas */
-        right: 0 !important;
-    }
-
-    /* Tambahkan padding atau margin jika perlu */
-}
-
-</style>
 
 
 

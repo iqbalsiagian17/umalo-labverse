@@ -164,13 +164,23 @@
                         <div class="header__cart mb-3">
                             <ul>
                                 @if (Auth::check())
-                                    <li>
-                                        <a href="{{ route('cart.view') }}">
-                                            <i class="fa fa-shopping-cart"></i>
-                                            <span
-                                                class="notification">{{ session('cart') ? array_sum(array_column(session('cart'), 'quantity')) : 0 }}</span>
-                                        </a>
-                                    </li>
+                                <li>
+                                    <a href="{{ route('favorite.show') }}">
+                                        <i class="fa fa-heart"></i> <!-- Change the icon to a heart -->
+                                        <span class="notification">
+                                            {{ Auth::check() ? Auth::user()->favorites()->count() : 0 }}
+                                        </span>
+                                        
+                                    </a>
+                                </li>
+
+                                <li>
+                                    <a href="{{ route('cart.view') }}">
+                                        <i class="fa fa-shopping-cart"></i>
+                                        <span
+                                            class="notification">{{ session('cart') ? array_sum(array_column(session('cart'), 'quantity')) : 0 }}</span>
+                                    </a>
+                                </li>
                                 @endif
                                 @guest
                                     <li>
@@ -216,8 +226,6 @@
                                             </div>
                                         </div>
                                     </li>
-
-
                                 @endguest
                             </ul>
                         </div>

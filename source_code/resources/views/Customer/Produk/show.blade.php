@@ -9,13 +9,58 @@
                 <div class="product__details__pic">
                     <div class="product__details__pic__item">
                         @if($images->isNotEmpty())
-                            <img class="product__details__pic__item--large"
-                                src="{{ asset($images->first()->gambar) }}" alt="{{ $produk->nama }}">
+                            <a href="{{ asset($images->first()->gambar) }}" data-lightbox="product-image" data-title="{{ $produk->nama }}">
+                                <img class="product__details__pic__item--large"
+                                    src="{{ asset($images->first()->gambar) }}" alt="{{ $produk->nama }}">
+                            </a>
                         @else
-                            <img src="https://via.placeholder.com/150" class="img-fluid mb-2" alt="{{ $produk->nama }}">
+                            <a href="https://via.placeholder.com/150" data-lightbox="product-image" data-title="{{ $produk->nama }}">
+                                <img src="https://via.placeholder.com/150" class="img-fluid mb-2" alt="{{ $produk->nama }}">
+                            </a>
                         @endif
-
                     </div>
+                    
+                    
+                    <script>
+                        const imageContainer = document.querySelector('.product__details__pic__item');
+                        const image = imageContainer.querySelector('img');
+                    
+                        imageContainer.addEventListener('mousemove', function(e) {
+                            const rect = imageContainer.getBoundingClientRect();
+                            const x = e.clientX - rect.left; // Posisi X mouse
+                            const y = e.clientY - rect.top; // Posisi Y mouse
+                    
+                            // Ukuran gambar yang ingin diperbesar
+                            const zoomFactor = 2;
+                    
+                            // Hitung posisi zoom relatif terhadap ukuran gambar
+                            const xPercent = (x / rect.width) * 100;
+                            const yPercent = (y / rect.height) * 100;
+                    
+                            image.style.transformOrigin = `${xPercent}% ${yPercent}%`;
+                            image.style.transform = `scale(${zoomFactor})`;
+                        });
+                    
+                        imageContainer.addEventListener('mouseleave', function() {
+                            // Kembalikan gambar ke ukuran normal saat mouse keluar
+                            image.style.transform = 'scale(1)';
+                        });
+                    </script>
+                    
+
+                    <style>
+                    .product__details__pic__item {
+                        overflow: hidden;
+                        position: relative;
+                    }
+
+                    .product__details__pic__item img {
+                        transition: transform 0.5s ease, transform-origin 0.5s ease;
+                        width: 100%;
+                        display: block;
+                    }
+
+                    </style>
                     <div class="product__details__pic__slider owl-carousel">
                         @if($images->isNotEmpty())
                             @foreach ($images as $image)
@@ -28,7 +73,11 @@
             </div>
             <div class="col-lg-6 col-md-6">
                 <div class="product__details__text">
-                    <h3>{{ $produk->nama }}</h3>
+                    <h3>{{ $produk->nama }} 
+                        <button type="button" class="btn primary-btn" data-bs-toggle="modal" data-bs-target="#shareModal" style="width: 45px; height: 45px; border-radius: 50%; padding: 0;">
+                            <i class="fas fa-share-alt"></i>
+                        </button>
+                    </h3>
                     <div class="product__details__price">
                         <div class="product__details__price">
                             @if ($produk->harga_ditampilkan === 'ya')
@@ -56,7 +105,8 @@
                         @else
                             {{ __('messages.contact_admin_for_price') }}
                         @endif
-
+                        
+                                                    
                         </div>
 
 
@@ -66,18 +116,326 @@
                     <div class="product__details__quantity">
                         <div class="quantity">
                             <div class="pro-qty">
-                                <input type="text" value="1">
+                                <span class="dec qtybtn">-</span>
+                                <input type="text" value="1" min="1" data-stok="{{ $produk->stok }}">
+                                <span class="inc qtybtn">+</span>
                             </div>
                         </div>
                     </div>
+                    
+                    
                     @auth
                     <a href="#" class="primary-btn add-to-cart-btn" data-id="{{ $produk->id }}">{{ __('messages.add') }}</a>
                     @else
                     <a href="{{ route('login') }}" class="primary-btn add-to-cart-btn">{{ __('messages.add') }}</a>
                     @endauth
+                    <a href="#" class="heart-icon" data-product-id="{{ $produk->id }}">
+                        <span class="icon_heart_alt"></span>
+                    </a>
+
+                    <script>
+                        $(document).on('click', '.heart-icon', function(e) {
+                            e.preventDefault();
+                            var productId = $(this).data('product-id'); // Get the product ID from the data attribute
+                    
+                            $.ajax({
+                                url: "{{ route('favorite.toggle', ':id') }}".replace(':id', productId), // Route to toggle favorite
+                                method: "POST",
+                                data: {
+                                    _token: "{{ csrf_token() }}"  // Pass the CSRF token for security
+                                },
+                                success: function(response) {
+                                    showNotification(response.message, false); // Show custom notification without page reload
+                                },
+                                error: function(xhr) {
+                                    showNotification('Something went wrong!', false); // Handle errors with custom notification
+                                }
+                            });
+                        });
+                    
+                        // Function to show custom notification
+                        function showNotification(message, reload = false) {
+                            $('.notification-text').text(message);
+                            $('#favorite-notification').fadeIn(400).delay(2000).fadeOut(400, function() {
+                                if (reload) {
+                                    window.location.reload(); // Reload the page if needed
+                                }
+                            });
+                        }
+                    </script>
+                    
+                    
+                                        
+                    <div class="product__details__subtotal hidden">
+                        <b>{{ __('messages.subtotal') }}: </b> 
+                        <span id="subtotal">Rp{{ number_format($produk->harga_potongan > 0 ? $produk->harga_potongan : ($bigSaleItem && $bigSaleItem->status === 'aktif' ? $bigSaleItem->pivot->harga_diskon : $produk->harga_tayang), 0, ',', '.') }}</span>
+                        <style>
+                            .hidden {
+                                display: none;
+                            }
+                        </style>
+                        
+                    </div>
+                    
+                    <script>
+                    document.addEventListener('DOMContentLoaded', function() {
+                    const price = {{ $produk->harga_potongan > 0 ? $produk->harga_potongan : ($bigSaleItem && $bigSaleItem->status === 'aktif' ? $bigSaleItem->pivot->harga_diskon : $produk->harga_tayang) }};
+                    const quantityInput = document.querySelector('.pro-qty input');
+                    const subtotalElement = document.getElementById('subtotal');
+                    const incrementButton = document.querySelector('.inc.qtybtn');
+                    const decrementButton = document.querySelector('.dec.qtybtn');
+                    const subtotalContainer = document.querySelector('.product__details__subtotal');
+                    const maxStock = parseInt(quantityInput.getAttribute('data-stok')); // Dapatkan stok maksimum
+
+                    // Fungsi untuk memperbarui subtotal
+                    function updateSubtotal() {
+                        let quantity = parseInt(quantityInput.value);
+                        if (isNaN(quantity) || quantity < 1) {
+                            quantity = 1;  // Pastikan quantity minimal 1
+                            quantityInput.value = 1;
+                        } else if (quantity > maxStock) {
+                            quantity = maxStock; // Jangan biarkan quantity melebihi stok
+                            quantityInput.value = maxStock;
+                            alert('Jumlah yang diminta melebihi stok yang tersedia.');
+                        }
+                        const subtotal = price * quantity;
+                        subtotalElement.innerHTML = 'Rp' + new Intl.NumberFormat('id-ID').format(subtotal);
+                    }
+
+                    // Fungsi untuk menampilkan subtotal setelah tombol diklik
+                    function showSubtotal() {
+                        subtotalContainer.classList.remove('hidden');
+                    }
+
+                    // Fungsi untuk mengubah nilai quantity
+                    function incrementQuantity() {
+                        let quantity = parseInt(quantityInput.value);
+                        if (isNaN(quantity) || quantity < 1) {
+                            quantity = 1;
+                        } else if (quantity < maxStock) {
+                            quantity += 1;
+                        } else {
+                            alert('Anda telah mencapai jumlah stok maksimum.');
+                            return; // Hentikan increment jika sudah mencapai stok maksimal
+                        }
+                        quantityInput.value = quantity;
+                        updateSubtotal();
+                        showSubtotal(); // Tampilkan subtotal
+                    }
+
+                    function decrementQuantity() {
+                        let quantity = parseInt(quantityInput.value);
+                        if (!isNaN(quantity) && quantity > 1) {
+                            quantity -= 1;
+                        } else {
+                            quantity = 1;  // Pastikan minimal 1
+                        }
+                        quantityInput.value = quantity;
+                        updateSubtotal();
+                        showSubtotal(); // Tampilkan subtotal
+                    }
+
+                    // Pastikan event listener hanya ditambahkan sekali
+                    incrementButton.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        incrementQuantity();
+                    });
+
+                    decrementButton.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        decrementQuantity();
+                    });
+
+                    // Inisialisasi subtotal saat halaman dimuat
+                    updateSubtotal();
+                });
+
+                        </script>
+
+                <!-- Modal -->
+                <div class="modal fade" id="shareModal" tabindex="-1" aria-labelledby="shareModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="shareModalLabel">Level-Up Your Output With Labverse</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">x</button>
+                            </div>
+                            <div class="modal-body">
+                                <!-- Example product card -->
+                                <div class="product-card">
+                                    @if($images->isNotEmpty())
+                                        <img src="{{ asset($images->first()->gambar) }}" alt="{{ $produk->nama }}" class="product-image">
+                                    @else
+                                        <img src="path_to_default_image.jpg" alt="Default Image" class="product-image">
+                                    @endif
+                                    <div class="product-info">
+                                        <p class="product-name">{{ $produk->nama }}</p>
+                                        <p class="product-price">Rp{{ number_format($produk->harga_tayang, 0, ',', '.') }}</p>
+                                    </div>
+                                </div>
+                                
+                                
+                                <p class="share-prompt">Mau bagikan lewat mana?</p>
+                                <hr>
+                                <div class="share-buttons">
+                                    <!-- Social buttons -->
+                                    <button type="button" class="btn share-button whatsapp-btn" data-platform="WhatsApp" onclick="share('WhatsApp')">
+                                        <i class="fab fa-whatsapp"></i>
+                                    </button>
+                                    <button type="button" class="btn share-button telegram-btn" data-platform="Telegram" onclick="share('Telegram')">
+                                        <i class="fab fa-telegram-plane"></i>
+                                    </button>
+                                    <button type="button" class="btn share-button facebook-btn" data-platform="Facebook" onclick="share('Facebook')" disabled>
+                                        <i class="fab fa-facebook-f"></i>
+                                    </button>
+                                    <button type="button" class="btn share-button twitter-btn" data-platform="Twitter" onclick="share('Twitter')">
+                                        <i class="fab fa-twitter"></i>
+                                    </button>
+                                    <button type="button" class="btn share-button instagram-btn" data-platform="Instagram" onclick="share('Instagram')" disabled>
+                                        <i class="fab fa-instagram"></i>
+                                    </button>
+                                    <button type="button" class="btn share-button copy-btn" onclick="copyURL()">
+                                        <i class="fas fa-copy"></i>
+                                    </button>
+                                </div>
+                                
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                
+
+                    <style>
+.modal-content {
+    padding: 20px;
+    border-radius: 10px;
+    background-color: #fff;
+    color: #333;
+}
+
+.modal-header {
+    border-bottom: 2px solid #dee2e6;
+    padding-bottom: 15px;
+}
+
+.modal-title {
+    font-size: 20px;
+    color: #0056b3; /* Contoh warna */
+}
+
+.btn-close {
+    color: #000;
+}
+
+.product-card {
+    display: flex;
+    align-items: center; /* Menjaga agar item tetap di tengah secara vertikal */
+    margin-bottom: 10px; /* Jarak antara card dan elemen lainnya */
+    padding: 10px; /* Padding dalam card */
+}
+
+.product-image {
+    width: 80px; /* Ukuran gambar disesuaikan */
+    height: auto; /* Menjaga rasio aspek */
+    margin-right: 15px; /* Jarak antara gambar dan teks */
+}
+
+.product-info {
+    flex-grow: 1;
+}
+
+.product-name {
+    font-weight: bold;
+    font-size: 16px; /* Sesuaikan sesuai kebutuhan */
+    margin-bottom: 5px; /* Jarak antara nama dan harga */
+}
+
+.product-price {
+    font-size: 14px; /* Sesuaikan sesuai kebutuhan */
+    color: #555; /* Warna teks harga */
+}
 
 
-                @if ($bigSale && $bigSale->status === 'aktif')
+.product-link {
+    color: #007bff;
+    font-size: 16px;
+}
+
+.share-buttons {
+    display: flex;
+    justify-content: space-around;
+    padding-top: 10px; /* Memberi padding atas */
+}
+
+.share-button {
+    width: 50px; /* Ukuran button yang lebih besar */
+    height: 50px;
+    border-radius: 50%;
+    background-color: #f8f9fa;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    margin-right: 5px; /* Jarak antar button */
+}
+
+.share-button i {
+    font-size: 24px; /* Ikon yang lebih besar */
+    color: #495057;
+}
+
+.share-button:hover {
+    background-color: #e2e6ea;
+    color: #0056b3; /* Efek hover */
+}
+
+</style>
+
+
+
+
+<script>
+    function share(platform) {
+        let url = "{{ url()->current() }}";
+        let message = encodeURIComponent('Beli (" ' + '{{ $produk->nama }}' + '") dengan harga terbaik! ' + url);
+        let shareUrl;
+    
+        switch (platform) {
+            case 'WhatsApp':
+                shareUrl = `https://api.whatsapp.com/send?text=${message}`;
+                break;
+            case 'Telegram':
+                shareUrl = `https://telegram.me/share/url?url=${url}&text=${message}`;
+                break;
+            case 'Twitter':
+                shareUrl = `https://twitter.com/intent/tweet?text=${message}&url=${url}`;
+                break;
+            case 'Instagram':
+                alert('Instagram tidak mendukung langsung berbagi URL.');
+                break;
+            case 'Facebook':
+                shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${url}`;
+                break;
+        }
+    
+        if (platform !== 'Instagram') window.open(shareUrl, '_blank');
+    }
+    
+    function copyURL() {
+        let url = "{{ url()->current() }}";
+        navigator.clipboard.writeText(url).then(function() {
+            alert('URL telah disalin!');
+        }, function(err) {
+            console.error('Gagal menyalin URL: ', err);
+        });
+    }
+</script>
+    
+    
+
+
+                    @if ($bigSale && $bigSale->status === 'aktif')
                     <span class="nego-badge">Big Sale</span>
                     @endif
 
@@ -609,6 +967,14 @@
         </div>
     </div>
 
+    <div id="favorite-notification" class="cart-notification" style="display: none;">
+        <div class="notification-content">
+            <div class="notification-icon">&#10003;</div> <!-- Change icon as needed -->
+            <div class="notification-text"></div>
+        </div>
+    </div>
+    
+
     <!-- CSS untuk Notifikasi -->
     <style>
        .star-rating {
@@ -667,18 +1033,19 @@
         document.querySelectorAll('.add-to-cart-btn').forEach(function(button) {
             button.addEventListener('click', function(event) {
                 event.preventDefault(); // Prevent default action
-
+        
                 var isAuthenticated = '{{ Auth::check() }}';
-
-        if (!isAuthenticated) {
-            // Redirect to login page if the user is not authenticated
-            window.location.href = '{{ route('login') }}';
-            return;
-        }
-
+        
+                if (!isAuthenticated) {
+                    // Redirect to login page if the user is not authenticated
+                    window.location.href = '{{ route('login') }}';
+                    return;
+                }
+        
                 var productId = this.dataset.id;
                 var token = '{{ csrf_token() }}';
-
+                var quantity = document.querySelector('.pro-qty input').value; // Ambil nilai quantity dari input
+        
                 fetch('{{ route('cart.add', '') }}/' + productId, {
                         method: 'POST',
                         headers: {
@@ -686,7 +1053,7 @@
                             'X-CSRF-TOKEN': token
                         },
                         body: JSON.stringify({
-                            quantity: 1 // Add exactly 1 quantity
+                            quantity: quantity // Gunakan nilai quantity yang diambil dari input
                         })
                     })
                     .then(response => {
@@ -714,7 +1081,8 @@
                     });
             });
         });
-    </script>
+        </script>
+        
     <script>
         document.querySelectorAll('.star-rating label').forEach(function(label) {
     label.addEventListener('mouseover', function() {

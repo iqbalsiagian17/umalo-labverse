@@ -210,4 +210,8 @@ return [
     'max_price' => 'Harga Maksimum',
     'apply_filter' => 'Terapkan Filter',
     'refresh' => 'Segarkan',
+
+    'favorites_empty' => 'Belum ada favorit.',
+    'view_details' => 'Lihat Detail',
+    'removed_from_favorites' => 'Dihapus dari Favorit',
 ];

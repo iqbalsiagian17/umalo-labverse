@@ -215,4 +215,8 @@ return [
         'max_price' => 'Maximum Price',
         'apply_filter' => 'Apply Filter',
         'refresh' => 'Refresh',
+
+    'favorites_empty' => 'You don\'t have any favorite yet.',
+    'view_details' => 'View Detail',
+    'removed_from_favorites' => 'Deleted From Favorites'
 ];

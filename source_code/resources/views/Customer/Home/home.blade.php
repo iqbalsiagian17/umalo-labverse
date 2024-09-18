@@ -305,7 +305,7 @@
         </div>
     </section>
 
-            @if($topSellingProducts->isNotEmpty())
+        @if($topSellingProducts->isNotEmpty())
             <section class="featured spad">
                 <div class="container">
                     <div class="row">
@@ -343,7 +343,7 @@
                                     </div>
 
                                     <div class="featured__item__text">
-                                        <h6><a href="#">{{ $item->nama }}</a></h6>
+                                        <h6><a href="{{ route('produk_customer.user.show', $item->id) }}">{{ $item->nama }}</a></h6>
                                         <h5>
                                             @if ($item->harga_potong)
                                                 <span style="text-decoration: line-through;">
@@ -369,7 +369,7 @@
                     </div>
                 </div>
             </section>
-            @endif
+        @endif
 
 
         <hr>
@@ -415,7 +415,7 @@
                             </div>
 
                             <div class="featured__item__text">
-                                <h6><a href="#">{{ $item->nama }}</a></h6>
+                                <h6><a href="{{ route('produk_customer.user.show', $item->id) }}">{{ $item->nama }}</a></h6>
                                 <h5>
                                     @if ($item->harga_potongan)
                                                 <span style="text-decoration: line-through; color:red;">

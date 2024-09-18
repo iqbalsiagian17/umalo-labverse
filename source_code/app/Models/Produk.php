@@ -85,5 +85,11 @@ class Produk extends Model
     {
         return $this->hasMany(Review::class, 'produk_id', 'id');
     }
+
+    public function favoritedBy()
+    {
+        return $this->hasMany(Favorite::class, 'produk_id');
+    }
+
  
 }
