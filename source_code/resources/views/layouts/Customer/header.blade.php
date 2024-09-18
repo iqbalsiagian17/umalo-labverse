@@ -20,7 +20,8 @@
     <!-- Css Styles -->
     <link rel="stylesheet" href="{{ asset('ogani/css/bootstrap.min.css') }}" type="text/css">
 
-    <link rel="stylesheet" href="{{ asset('ogani/css/font-awesome.min.css') }}" type="text/css">
+{{--     <link rel="stylesheet" href="{{ asset('ogani/css/font-awesome.min.css') }}" crossorigin="anonymous"> --}}    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <link rel="stylesheet" href="{{ asset('ogani/css/elegant-icons.css') }}" type="text/css">
     <link rel="stylesheet" href="{{ asset('ogani/css/nice-select.css') }}" type="text/css">
     <link rel="stylesheet" href="{{ asset('ogani/css/jquery-ui.min.css') }}" type="text/css">
@@ -33,5 +34,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/owl-carousel/1.3.3/owl.theme.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/owl-carousel/1.3.3/owl.carousel.min.js"></script>
+
+
 
 </head>

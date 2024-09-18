@@ -68,7 +68,24 @@ class ShopController extends Controller
         $subkategori = SubKategori::all(); // Untuk sidebar komoditas
 
         $sort = $request->get('sort');
+    
+        $minPrice = str_replace('.', '', $request->input('min_price'));
+        $maxPrice = str_replace('.', '', $request->input('max_price'));
+    
+            // Convert to integers
+            $minPrice = (int)$minPrice;
+            $maxPrice = (int)$maxPrice;
+
+
         $query = Produk::where('kategori_id', $id)->where('status', 'publish');
+        
+        // Menambahkan kondisi filter harga ke query
+        if (!empty($minPrice)) {
+            $query->where('harga_tayang', '>=', floatval($minPrice));
+        }
+        if (!empty($maxPrice)) {
+            $query->where('harga_tayang', '<=', floatval($maxPrice));
+        }
 
         if ($sort == 'newest') {
             $query->orderBy('created_at', 'desc');
@@ -102,7 +119,23 @@ class ShopController extends Controller
         $subkategori = SubKategori::all(); // Untuk sidebar komoditas
     
         $sort = $request->get('sort');
+
+        $minPrice = str_replace('.', '', $request->input('min_price'));
+        $maxPrice = str_replace('.', '', $request->input('max_price'));
+    
+            // Convert to integers
+            $minPrice = (int)$minPrice;
+            $maxPrice = (int)$maxPrice;
+
+
         $query = Produk::where('sub_kategori_id', $id)->where('status', 'publish');
+
+        if (!empty($minPrice)) {
+            $query->where('harga_tayang', '>=', floatval($minPrice));
+        }
+        if (!empty($maxPrice)) {
+            $query->where('harga_tayang', '<=', floatval($maxPrice));
+        }
     
         if ($sort == 'newest') {
             $query->orderBy('created_at', 'desc');

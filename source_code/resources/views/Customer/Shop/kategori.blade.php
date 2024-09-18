@@ -7,6 +7,130 @@
         <div class="container">
             <div class="row">
                 <div class="col-lg-3 col-md-5">
+
+                    <div class="sidebar__item">
+                        <h4 style="color:#42378C;">{{ __('messages.price_range') }}</h4>
+                        <form action="{{ url()->current() }}" method="GET">
+                            <div class="price-range1">
+                                <div class="form-group">
+                                    <label for="min_price">{{ __('messages.min_price') }}</label>
+                                    <input type="text" name="min_price" id="min_price" placeholder="Min"
+                                           value="{{ request('min_price') }}" class="form-control input-range" oninput="formatInput(this);">
+                                </div>
+                                <div class="form-group">
+                                    <label for="max_price" class="mt-2">{{ __('messages.max_price') }}</label>
+                                    <input type="text" name="max_price" id="max_price" placeholder="Max"
+                                           value="{{ request('max_price') }}" class="form-control input-range" oninput="formatInput(this);">
+                                </div>
+                                <button type="submit" class="btn btn-primary mt-3">{{ __('messages.apply_filter') }}</button>
+                                <button type="button" class="btn btn-secondary mt-3" onclick="resetFields()" title="{{ __('messages.refresh') }}">
+                                    <i class="fas fa-sync-alt"></i>
+                                </button>
+
+                            </div>
+                        </form>
+                    </div>
+
+                    <script>
+                        function formatInput(input) {
+                            let value = input.value;
+                            let numericValue = value.replace(/[^0-9]/g, '');
+                            let formatted = numericValue.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+                            input.value = formatted;
+                        }
+
+                        function resetFields() {
+                            var url = new URL(window.location.href);
+                            url.searchParams.delete('min_price');
+                            url.searchParams.delete('max_price');
+                            window.location.href = url.toString();
+                        }
+                    </script>
+
+
+
+                    <style>
+                        .sidebar__item {
+                            padding: 20px;
+                            background-color: #f7f7f7;
+                            border-radius: 10px;
+                            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+                            margin-bottom: 20px;
+                        }
+
+                        .sidebar__item h4 {
+                            font-size: 18px;
+                            margin-bottom: 15px;
+                            font-weight: bold;
+                        }
+
+                        .price-range1 .form-group {
+                            margin-bottom: 15px;
+                        }
+
+                        .price-range1 input {
+                            width: 100%;
+                            padding: 10px;
+                            border: 1px solid #ddd;
+                            border-radius: 5px;
+                            font-size: 14px;
+                            background-color: #fff;
+                            transition: border-color 0.3s ease-in-out;
+                        }
+
+                        .price-range1 input:focus {
+                            border-color: #42378C;
+                            outline: none;
+                            box-shadow: 0 0 5px rgba(66, 55, 140, 0.3);
+                        }
+
+                        .price-range1 label {
+                            font-size: 14px;
+                            font-weight: 600;
+                            color: #555;
+                            margin-bottom: 5px;
+                        }
+
+                        .btn-primary {
+                            background-color: #42378C;
+                            border-color: #42378C;
+                            color: #fff;
+                            font-weight: bold;
+                            padding: 10px 20px;
+                            border-radius: 5px;
+                            transition: background-color 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+                        }
+
+                        .btn-primary:hover {
+                            background-color: #2d2777;
+                            box-shadow: 0 4px 10px rgba(66, 55, 140, 0.3);
+                        }
+
+                        .btn-block {
+                            width: 100%;
+                        }
+
+                        /* Add some padding between sections */
+                        .sidebar__item + .sidebar__item {
+                            margin-top: 20px;
+                        }
+
+                        .btn-secondary {
+                            background-color: #6c757d; /* default secondary color */
+                            border-color: #6c757d;
+                            color: #fff;
+                            font-weight: bold;
+                            padding: 10px 20px;
+                            border-radius: 5px;
+                            transition: background-color 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+                        }
+
+                        .btn-secondary:hover {
+                            background-color: #5a6268; /* slightly darker shade for hover */
+                            box-shadow: 0 4px 10px rgba(108, 117, 125, 0.3); /* add shadow */
+                        }
+                    </style>
+
                     <div class="sidebar">
 
                         <div class="sidebar__item">
@@ -28,6 +152,7 @@
                             @endforeach
                         </ul>
                     </div>
+
                     </div>
 
                 </div>

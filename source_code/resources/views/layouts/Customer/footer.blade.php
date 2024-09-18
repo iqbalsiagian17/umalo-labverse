@@ -127,7 +127,7 @@
 
 
 
-{{-- <script>
+ <script>
     // Mencegah penggunaan Ctrl + U dan beberapa kombinasi lainnya
     document.addEventListener('keydown', function(event) {
         // Cegah kombinasi Ctrl + U, Ctrl + Shift + I, Ctrl + Shift + J, Ctrl + S, F12
@@ -154,7 +154,7 @@
             event.preventDefault();
         }
     });
-</script> --}}
+</script> 
 
 
 

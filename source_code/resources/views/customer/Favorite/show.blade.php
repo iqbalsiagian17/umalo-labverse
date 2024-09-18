@@ -6,7 +6,8 @@
     <div class="container">
         <div class="row">
             <div class="col-lg-12">
-
+                <h4>Favorite</h4>
+<hr>
                 @if($favorites->isEmpty())
                     <div class="card mb-3 mt-4 shadow rounded border-0 h-100">
                         <div class="card-body d-flex flex-column justify-content-center align-items-center" style="min-height: 300px;">

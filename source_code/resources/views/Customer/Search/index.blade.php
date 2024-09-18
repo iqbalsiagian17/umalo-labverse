@@ -8,9 +8,15 @@
                 <div class="col-lg-3 col-md-5">
                     <div class="sidebar">
 
+                        
+
+
                         <div class="sidebar__item">
                             <h4 style="color:#42378C;">{{ __('messages.price_range') }}</h4>
-                            <form action="{{ route('shop.priceRange') }}" method="GET">
+                            <form action="{{ url()->current() }}" method="GET">
+                                <!-- Hidden field for preserving the search query -->
+                                <input type="hidden" name="query" value="{{ request('query') }}">
+                            
                                 <div class="price-range1">
                                     <div class="form-group">
                                         <label for="min_price">{{ __('messages.min_price') }}</label>
@@ -19,18 +25,16 @@
                                     </div>
                                     <div class="form-group">
                                         <label for="max_price" class="mt-2">{{ __('messages.max_price') }}</label>
-                                        <input type="text" name="max_price" id="max_price" placeholder="Max"
-                                               value="{{ request('max_price') }}" class="form-control input-range" oninput="formatInput(this);">
+                                        <input type="text" name="max_price" id="max_price" placeholder="Max" value="{{ request('max_price') }}" class="form-control input-range" oninput="formatInput(this);">
                                     </div>
                                     <button type="submit" class="btn btn-primary mt-3">{{ __('messages.apply_filter') }}</button>
                                     <button type="button" class="btn btn-secondary mt-3" onclick="resetFields()" title="{{ __('messages.refresh') }}">
                                         <i class="fas fa-sync-alt"></i>
                                     </button>
-
                                 </div>
                             </form>
                         </div>
-
+    
                         <script>
                             function formatInput(input) {
                                 let value = input.value;
@@ -38,16 +42,17 @@
                                 let formatted = numericValue.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
                                 input.value = formatted;
                             }
-
+    
                             function resetFields() {
-                                document.getElementById('min_price').value = '';
-                                document.getElementById('max_price').value = '';
-                                window.location.href = '{{ route('shop.priceRange') }}'; // Redirect to the price range URL without parameters
+                                var url = new URL(window.location.href);
+                                url.searchParams.delete('min_price');
+                                url.searchParams.delete('max_price');
+                                window.location.href = url.toString();
                             }
                         </script>
-
-
-
+    
+    
+    
                         <style>
                             .sidebar__item {
                                 padding: 20px;
@@ -56,17 +61,17 @@
                                 box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
                                 margin-bottom: 20px;
                             }
-
+    
                             .sidebar__item h4 {
                                 font-size: 18px;
                                 margin-bottom: 15px;
                                 font-weight: bold;
                             }
-
+    
                             .price-range1 .form-group {
                                 margin-bottom: 15px;
                             }
-
+    
                             .price-range1 input {
                                 width: 100%;
                                 padding: 10px;
@@ -76,20 +81,20 @@
                                 background-color: #fff;
                                 transition: border-color 0.3s ease-in-out;
                             }
-
+    
                             .price-range1 input:focus {
                                 border-color: #42378C;
                                 outline: none;
                                 box-shadow: 0 0 5px rgba(66, 55, 140, 0.3);
                             }
-
+    
                             .price-range1 label {
                                 font-size: 14px;
                                 font-weight: 600;
                                 color: #555;
                                 margin-bottom: 5px;
                             }
-
+    
                             .btn-primary {
                                 background-color: #42378C;
                                 border-color: #42378C;
@@ -99,21 +104,21 @@
                                 border-radius: 5px;
                                 transition: background-color 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
                             }
-
+    
                             .btn-primary:hover {
                                 background-color: #2d2777;
                                 box-shadow: 0 4px 10px rgba(66, 55, 140, 0.3);
                             }
-
+    
                             .btn-block {
                                 width: 100%;
                             }
-
+    
                             /* Add some padding between sections */
                             .sidebar__item + .sidebar__item {
                                 margin-top: 20px;
                             }
-
+    
                             .btn-secondary {
                                 background-color: #6c757d; /* default secondary color */
                                 border-color: #6c757d;
@@ -123,7 +128,7 @@
                                 border-radius: 5px;
                                 transition: background-color 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
                             }
-
+    
                             .btn-secondary:hover {
                                 background-color: #5a6268; /* slightly darker shade for hover */
                                 box-shadow: 0 4px 10px rgba(108, 117, 125, 0.3); /* add shadow */

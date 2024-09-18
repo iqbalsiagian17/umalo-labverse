@@ -58,8 +58,8 @@ return [
 
     'url' => env('APP_URL', 'http://localhost/umalo-labverse/source_code/public'),
 
-    'asset_url' => env('ASSET_URL', '/'),
- //'asset' => env('APP_URL', 'http://localhost/umalo-labverse/source_code/public/'),
+    'asset_url' => env('ASSET_URL', 'http://localhost/umalo-labverse/source_code/public'),
+    'asset' => env('APP_URL', 'http://localhost/umalo-labverse/source_code/public'),
 
 
     /*

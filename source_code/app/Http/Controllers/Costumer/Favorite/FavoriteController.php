@@ -24,6 +24,7 @@ class FavoriteController extends Controller
         foreach ($favorites as $favorite) {
             $favorite->images = Produk::find($favorite->id)->images()->get();
         }
+        
     
         return view('Customer.Favorite.show', compact('favorites'));
     }

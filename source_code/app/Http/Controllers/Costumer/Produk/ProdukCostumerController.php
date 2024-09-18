@@ -9,6 +9,7 @@ use App\Models\Produk;
 use Illuminate\Http\Request;
 use App\Models\Order;
 use App\Models\SubKategori;
+use Illuminate\Support\Facades\DB;
 
 class ProdukCostumerController extends Controller
 {
@@ -40,7 +41,13 @@ class ProdukCostumerController extends Controller
                   ->latest()
                   ->first();
 
-    return view('Customer.Produk.show', compact('produk', 'images', 'produK', 'bigSale','bigSaleItem', 'order','averageRating','totalRatings'));
+                  $userId = auth()->id();
+                  $isFavorite = DB::table('favorites')
+                                  ->where('user_id', $userId)
+                                  ->where('produk_id', $id)
+                                  ->exists();
+
+    return view('Customer.Produk.show', compact('produk', 'images', 'produK', 'bigSale','bigSaleItem', 'order','averageRating','totalRatings' ,'isFavorite'));
 }
 
 
@@ -58,9 +65,20 @@ public function search(Request $request)
 
     // Start the query for searching products
     $produk = Produk::where(function ($q) use ($query) {
-            $q->where('nama', 'LIKE', "%{$query}%")
-                ->orWhere('merk', 'LIKE', "%{$query}%");
-        });
+        $q->where('nama', 'LIKE', "%{$query}%")
+          ->orWhere('merk', 'LIKE', "%{$query}%");
+    });
+
+    // Removing dots for price inputs and converting them to integers
+    $minPrice = preg_replace('/\D/', '', $request->input('min_price')); // Remove non-digits
+    $maxPrice = preg_replace('/\D/', '', $request->input('max_price'));
+
+    if (!empty($minPrice)) {
+        $produk->where('harga_tayang', '>=', (int)$minPrice);
+    }
+    if (!empty($maxPrice)) {
+        $produk->where('harga_tayang', '<=', (int)$maxPrice);
+    }
 
     // Apply sorting logic
     if ($sort == 'newest') {
@@ -68,9 +86,9 @@ public function search(Request $request)
     } elseif ($sort == 'oldest') {
         $produk->orderBy('created_at', 'asc');
     } elseif ($sort == 'price_lowest') {
-        $produk->orderBy('harga_tayang', 'asc'); // Sort by price lowest to highest
+        $produk->orderBy('harga_tayang', 'asc');
     } elseif ($sort == 'price_highest') {
-        $produk->orderBy('harga_tayang', 'desc'); // Sort by price highest to lowest
+        $produk->orderBy('harga_tayang', 'desc');
     }
 
     // Execute the query and paginate the results
@@ -82,6 +100,8 @@ public function search(Request $request)
     // Return the search results to a view
     return view('Customer.Search.index', compact('produk', 'query', 'subkategori', 'kategori', 'productCount'));
 }
+
+
 
 
 

@@ -84,11 +84,14 @@
                         </div>
                         <div class="mb-3">
                             <label for="tambahan" class="form-label">{{ __('messages.additional_info') }}</label>
-                            <input type="text" class="form-control" id="tambahan" name="tambahan" value="{{ old('tambahan') }}">
+                            <!-- Span to provide additional information -->
+                            <input type="text" class="form-control" id="tambahan" name="tambahan" value="{{ old('tambahan') }}" required>
+                            <span class="form-text text-muted">{{ __('Berikan ciri-ciri unik tempat Anda agar petugas pengantaran bisa lebih mudah menemukan lokasi pengiriman.') }}</span>
                             @if ($errors->has('tambahan'))
                                 <small class="text-danger">{{ $errors->first('tambahan') }}</small>
                             @endif
                         </div>
+                        
                     </div>
                     <div class="col-md-6">
                         <div class="mb-3">

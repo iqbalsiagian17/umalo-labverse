@@ -21,56 +21,55 @@
                     </div>
                     
                     
-                    <script>
-                        const imageContainer = document.querySelector('.product__details__pic__item');
-                        const image = imageContainer.querySelector('img');
-                    
-                        imageContainer.addEventListener('mousemove', function(e) {
-                            const rect = imageContainer.getBoundingClientRect();
-                            const x = e.clientX - rect.left; // Posisi X mouse
-                            const y = e.clientY - rect.top; // Posisi Y mouse
-                    
-                            // Ukuran gambar yang ingin diperbesar
-                            const zoomFactor = 2;
-                    
-                            // Hitung posisi zoom relatif terhadap ukuran gambar
-                            const xPercent = (x / rect.width) * 100;
-                            const yPercent = (y / rect.height) * 100;
-                    
-                            image.style.transformOrigin = `${xPercent}% ${yPercent}%`;
-                            image.style.transform = `scale(${zoomFactor})`;
-                        });
-                    
-                        imageContainer.addEventListener('mouseleave', function() {
-                            // Kembalikan gambar ke ukuran normal saat mouse keluar
-                            image.style.transform = 'scale(1)';
-                        });
-                    </script>
-                    
+                        <script>
+                            const imageContainer = document.querySelector('.product__details__pic__item');
+                            const image = imageContainer.querySelector('img');
+                        
+                            imageContainer.addEventListener('mousemove', function(e) {
+                                const rect = imageContainer.getBoundingClientRect();
+                                const x = e.clientX - rect.left; // Posisi X mouse
+                                const y = e.clientY - rect.top; // Posisi Y mouse
+                        
+                                // Ukuran gambar yang ingin diperbesar
+                                const zoomFactor = 2;
+                        
+                                // Hitung posisi zoom relatif terhadap ukuran gambar
+                                const xPercent = (x / rect.width) * 100;
+                                const yPercent = (y / rect.height) * 100;
+                        
+                                image.style.transformOrigin = `${xPercent}% ${yPercent}%`;
+                                image.style.transform = `scale(${zoomFactor})`;
+                            });
+                        
+                            imageContainer.addEventListener('mouseleave', function() {
+                                // Kembalikan gambar ke ukuran normal saat mouse keluar
+                                image.style.transform = 'scale(1)';
+                            });
+                        </script>
 
-                    <style>
-                    .product__details__pic__item {
-                        overflow: hidden;
-                        position: relative;
-                    }
+                        <style>
+                        .product__details__pic__item {
+                            overflow: hidden;
+                            position: relative;
+                        }
 
-                    .product__details__pic__item img {
-                        transition: transform 0.5s ease, transform-origin 0.5s ease;
-                        width: 100%;
-                        display: block;
-                    }
-
-                    </style>
-                    <div class="product__details__pic__slider owl-carousel">
-                        @if($images->isNotEmpty())
-                            @foreach ($images as $image)
-                                <img data-imgbigurl="{{ asset($image->gambar) }}"
-                                     src="{{ asset($image->gambar) }}" alt="{{ $produk->nama }}">
-                            @endforeach
-                       @endif
+                        .product__details__pic__item img {
+                            transition: transform 0.5s ease, transform-origin 0.5s ease;
+                            width: 100%;
+                            display: block;
+                        }
+                        </style>
+                        
+                        <div class="product__details__pic__slider owl-carousel">
+                            @if($images->isNotEmpty())
+                                @foreach ($images as $image)
+                                    <img data-imgbigurl="{{ asset($image->gambar) }}"
+                                        src="{{ asset($image->gambar) }}" alt="{{ $produk->nama }}">
+                                @endforeach
+                        @endif
+                        </div>
                     </div>
                 </div>
-            </div>
             <div class="col-lg-6 col-md-6">
                 <div class="product__details__text">
                     <h3>{{ $produk->nama }} 
@@ -130,8 +129,30 @@
                     <a href="{{ route('login') }}" class="primary-btn add-to-cart-btn">{{ __('messages.add') }}</a>
                     @endauth
                     <a href="#" class="heart-icon" data-product-id="{{ $produk->id }}">
-                        <span class="icon_heart_alt"></span>
+                        <i class="fas fa-heart {{ $isFavorite ? 'favorite' : '' }}"></i>
                     </a>
+                    
+                        <style>
+                        .heart-icon {
+                            color: gray;
+                            cursor: pointer;
+                        }
+
+                        .heart-icon .icon_heart_alt {
+                            color: gray;
+                            transition: color 0.3s ease; /* Smooth transition */
+                        }
+
+                        .heart-icon .favorite {
+                            color: red; /* Warna merah penuh ketika menjadi favorit */
+                        }
+
+                        .heart-icon:hover .icon_heart_alt {
+                            color: #ff0000; /* Hover effect */
+                        }
+
+                        </style>            
+        
 
                     <script>
                         $(document).on('click', '.heart-icon', function(e) {
@@ -252,185 +273,185 @@
 
                         </script>
 
-                <!-- Modal -->
-                <div class="modal fade" id="shareModal" tabindex="-1" aria-labelledby="shareModalLabel" aria-hidden="true">
-                    <div class="modal-dialog modal-dialog-centered">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="shareModalLabel">Level-Up Your Output With Labverse</h5>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">x</button>
-                            </div>
-                            <div class="modal-body">
-                                <!-- Example product card -->
-                                <div class="product-card">
-                                    @if($images->isNotEmpty())
-                                        <img src="{{ asset($images->first()->gambar) }}" alt="{{ $produk->nama }}" class="product-image">
-                                    @else
-                                        <img src="path_to_default_image.jpg" alt="Default Image" class="product-image">
-                                    @endif
-                                    <div class="product-info">
-                                        <p class="product-name">{{ $produk->nama }}</p>
-                                        <p class="product-price">Rp{{ number_format($produk->harga_tayang, 0, ',', '.') }}</p>
+                            <!-- Modal -->
+                            <div class="modal fade" id="shareModal" tabindex="-1" aria-labelledby="shareModalLabel" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="shareModalLabel">Level-Up Your Output With Labverse</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">x</button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <!-- Example product card -->
+                                            <div class="product-card">
+                                                @if($images->isNotEmpty())
+                                                    <img src="{{ asset($images->first()->gambar) }}" alt="{{ $produk->nama }}" class="product-image">
+                                                @else
+                                                    <img src="path_to_default_image.jpg" alt="Default Image" class="product-image">
+                                                @endif
+                                                <div class="product-info">
+                                                    <p class="product-name">{{ $produk->nama }}</p>
+                                                    <p class="product-price">Rp{{ number_format($produk->harga_tayang, 0, ',', '.') }}</p>
+                                                </div>
+                                            </div>
+                                            
+                                            
+                                            <p class="share-prompt">Mau bagikan lewat mana?</p>
+                                            <hr>
+                                            <div class="share-buttons">
+                                                <!-- Social buttons -->
+                                                <button type="button" class="btn share-button whatsapp-btn" data-platform="WhatsApp" onclick="share('WhatsApp')">
+                                                    <i class="fab fa-whatsapp"></i>
+                                                </button>
+                                                <button type="button" class="btn share-button telegram-btn" data-platform="Telegram" onclick="share('Telegram')">
+                                                    <i class="fab fa-telegram-plane"></i>
+                                                </button>
+                                                <button type="button" class="btn share-button facebook-btn" data-platform="Facebook" onclick="share('Facebook')" disabled>
+                                                    <i class="fab fa-facebook-f"></i>
+                                                </button>
+                                                <button type="button" class="btn share-button twitter-btn" data-platform="Twitter" onclick="share('Twitter')">
+                                                    <i class="fab fa-twitter"></i>
+                                                </button>
+                                                <button type="button" class="btn share-button instagram-btn" data-platform="Instagram" onclick="share('Instagram')" disabled>
+                                                    <i class="fab fa-instagram"></i>
+                                                </button>
+                                                <button type="button" class="btn share-button copy-btn" onclick="copyURL()">
+                                                    <i class="fas fa-copy"></i>
+                                                </button>
+                                            </div>
+                                            
+                                        </div>
                                     </div>
                                 </div>
-                                
-                                
-                                <p class="share-prompt">Mau bagikan lewat mana?</p>
-                                <hr>
-                                <div class="share-buttons">
-                                    <!-- Social buttons -->
-                                    <button type="button" class="btn share-button whatsapp-btn" data-platform="WhatsApp" onclick="share('WhatsApp')">
-                                        <i class="fab fa-whatsapp"></i>
-                                    </button>
-                                    <button type="button" class="btn share-button telegram-btn" data-platform="Telegram" onclick="share('Telegram')">
-                                        <i class="fab fa-telegram-plane"></i>
-                                    </button>
-                                    <button type="button" class="btn share-button facebook-btn" data-platform="Facebook" onclick="share('Facebook')" disabled>
-                                        <i class="fab fa-facebook-f"></i>
-                                    </button>
-                                    <button type="button" class="btn share-button twitter-btn" data-platform="Twitter" onclick="share('Twitter')">
-                                        <i class="fab fa-twitter"></i>
-                                    </button>
-                                    <button type="button" class="btn share-button instagram-btn" data-platform="Instagram" onclick="share('Instagram')" disabled>
-                                        <i class="fab fa-instagram"></i>
-                                    </button>
-                                    <button type="button" class="btn share-button copy-btn" onclick="copyURL()">
-                                        <i class="fas fa-copy"></i>
-                                    </button>
-                                </div>
-                                
                             </div>
-                        </div>
-                    </div>
-                </div>
 
                 
 
                     <style>
-.modal-content {
-    padding: 20px;
-    border-radius: 10px;
-    background-color: #fff;
-    color: #333;
-}
+                        .modal-content {
+                            padding: 20px;
+                            border-radius: 10px;
+                            background-color: #fff;
+                            color: #333;
+                        }
 
-.modal-header {
-    border-bottom: 2px solid #dee2e6;
-    padding-bottom: 15px;
-}
+                        .modal-header {
+                            border-bottom: 2px solid #dee2e6;
+                            padding-bottom: 15px;
+                        }
 
-.modal-title {
-    font-size: 20px;
-    color: #0056b3; /* Contoh warna */
-}
+                        .modal-title {
+                            font-size: 20px;
+                            color: #0056b3; /* Contoh warna */
+                        }
 
-.btn-close {
-    color: #000;
-}
+                        .btn-close {
+                            color: #000;
+                        }
 
-.product-card {
-    display: flex;
-    align-items: center; /* Menjaga agar item tetap di tengah secara vertikal */
-    margin-bottom: 10px; /* Jarak antara card dan elemen lainnya */
-    padding: 10px; /* Padding dalam card */
-}
+                        .product-card {
+                            display: flex;
+                            align-items: center; /* Menjaga agar item tetap di tengah secara vertikal */
+                            margin-bottom: 10px; /* Jarak antara card dan elemen lainnya */
+                            padding: 10px; /* Padding dalam card */
+                        }
 
-.product-image {
-    width: 80px; /* Ukuran gambar disesuaikan */
-    height: auto; /* Menjaga rasio aspek */
-    margin-right: 15px; /* Jarak antara gambar dan teks */
-}
+                        .product-image {
+                            width: 80px; /* Ukuran gambar disesuaikan */
+                            height: auto; /* Menjaga rasio aspek */
+                            margin-right: 15px; /* Jarak antara gambar dan teks */
+                        }
 
-.product-info {
-    flex-grow: 1;
-}
+                        .product-info {
+                            flex-grow: 1;
+                        }
 
-.product-name {
-    font-weight: bold;
-    font-size: 16px; /* Sesuaikan sesuai kebutuhan */
-    margin-bottom: 5px; /* Jarak antara nama dan harga */
-}
+                        .product-name {
+                            font-weight: bold;
+                            font-size: 16px; /* Sesuaikan sesuai kebutuhan */
+                            margin-bottom: 5px; /* Jarak antara nama dan harga */
+                        }
 
-.product-price {
-    font-size: 14px; /* Sesuaikan sesuai kebutuhan */
-    color: #555; /* Warna teks harga */
-}
-
-
-.product-link {
-    color: #007bff;
-    font-size: 16px;
-}
-
-.share-buttons {
-    display: flex;
-    justify-content: space-around;
-    padding-top: 10px; /* Memberi padding atas */
-}
-
-.share-button {
-    width: 50px; /* Ukuran button yang lebih besar */
-    height: 50px;
-    border-radius: 50%;
-    background-color: #f8f9fa;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border: none;
-    margin-right: 5px; /* Jarak antar button */
-}
-
-.share-button i {
-    font-size: 24px; /* Ikon yang lebih besar */
-    color: #495057;
-}
-
-.share-button:hover {
-    background-color: #e2e6ea;
-    color: #0056b3; /* Efek hover */
-}
-
-</style>
+                        .product-price {
+                            font-size: 14px; /* Sesuaikan sesuai kebutuhan */
+                            color: #555; /* Warna teks harga */
+                        }
 
 
+                        .product-link {
+                            color: #007bff;
+                            font-size: 16px;
+                        }
+
+                        .share-buttons {
+                            display: flex;
+                            justify-content: space-around;
+                            padding-top: 10px; /* Memberi padding atas */
+                        }
+
+                        .share-button {
+                            width: 50px; /* Ukuran button yang lebih besar */
+                            height: 50px;
+                            border-radius: 50%;
+                            background-color: #f8f9fa;
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            border: none;
+                            margin-right: 5px; /* Jarak antar button */
+                        }
+
+                        .share-button i {
+                            font-size: 24px; /* Ikon yang lebih besar */
+                            color: #495057;
+                        }
+
+                        .share-button:hover {
+                            background-color: #e2e6ea;
+                            color: #0056b3; /* Efek hover */
+                        }
+
+                    </style>
 
 
-<script>
-    function share(platform) {
-        let url = "{{ url()->current() }}";
-        let message = encodeURIComponent('Beli (" ' + '{{ $produk->nama }}' + '") dengan harga terbaik! ' + url);
-        let shareUrl;
-    
-        switch (platform) {
-            case 'WhatsApp':
-                shareUrl = `https://api.whatsapp.com/send?text=${message}`;
-                break;
-            case 'Telegram':
-                shareUrl = `https://telegram.me/share/url?url=${url}&text=${message}`;
-                break;
-            case 'Twitter':
-                shareUrl = `https://twitter.com/intent/tweet?text=${message}&url=${url}`;
-                break;
-            case 'Instagram':
-                alert('Instagram tidak mendukung langsung berbagi URL.');
-                break;
-            case 'Facebook':
-                shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${url}`;
-                break;
-        }
-    
-        if (platform !== 'Instagram') window.open(shareUrl, '_blank');
-    }
-    
-    function copyURL() {
-        let url = "{{ url()->current() }}";
-        navigator.clipboard.writeText(url).then(function() {
-            alert('URL telah disalin!');
-        }, function(err) {
-            console.error('Gagal menyalin URL: ', err);
-        });
-    }
-</script>
+
+
+                        <script>
+                            function share(platform) {
+                                let url = "{{ url()->current() }}";
+                                let message = encodeURIComponent('Beli (" ' + '{{ $produk->nama }}' + '") dengan harga terbaik! ' + url);
+                                let shareUrl;
+                            
+                                switch (platform) {
+                                    case 'WhatsApp':
+                                        shareUrl = `https://api.whatsapp.com/send?text=${message}`;
+                                        break;
+                                    case 'Telegram':
+                                        shareUrl = `https://telegram.me/share/url?url=${url}&text=${message}`;
+                                        break;
+                                    case 'Twitter':
+                                        shareUrl = `https://twitter.com/intent/tweet?text=${message}&url=${url}`;
+                                        break;
+                                    case 'Instagram':
+                                        alert('Instagram tidak mendukung langsung berbagi URL.');
+                                        break;
+                                    case 'Facebook':
+                                        shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${url}`;
+                                        break;
+                                }
+                            
+                                if (platform !== 'Instagram') window.open(shareUrl, '_blank');
+                            }
+                            
+                            function copyURL() {
+                                let url = "{{ url()->current() }}";
+                                navigator.clipboard.writeText(url).then(function() {
+                                    alert('URL telah disalin!');
+                                }, function(err) {
+                                    console.error('Gagal menyalin URL: ', err);
+                                });
+                            }
+                        </script>
     
     
 
@@ -702,38 +723,38 @@
                                                 <p class="text-secondary mb-2">{{ $review->content }}</p>
 
                                                <!-- Review Images -->
-@if (is_array($decodedImages = json_decode($review->images, true)) && !empty($decodedImages))
-    <div class="review-images mb-3">
-        @foreach ($decodedImages as $imageIndex => $image)
-            <a href="#" data-toggle="modal" data-target="#imageModal{{ $review->id }}-{{ $imageIndex }}">
-                <img src="{{ asset('storage/' . $image) }}" alt="Review Image" class="img-thumbnail mr-2 mb-2" width="100" height="100" style="object-fit: cover;">
-            </a>
+                                            @if (is_array($decodedImages = json_decode($review->images, true)) && !empty($decodedImages))
+                                                <div class="review-images mb-3">
+                                                    @foreach ($decodedImages as $imageIndex => $image)
+                                                        <a href="#" data-toggle="modal" data-target="#imageModal{{ $review->id }}-{{ $imageIndex }}">
+                                                            <img src="{{ asset('storage/' . $image) }}" alt="Review Image" class="img-thumbnail mr-2 mb-2" width="100" height="100" style="object-fit: cover;">
+                                                        </a>
 
-            <!-- Modal -->
-            <div class="modal fade" id="imageModal{{ $review->id }}-{{ $imageIndex }}" tabindex="-1" aria-labelledby="imageModalLabel{{ $review->id }}-{{ $imageIndex }}" aria-hidden="true">
-                <div class="modal-dialog modal-dialog-centered">
-                    <div class="modal-content">
-                        <div class="modal-body">
-                            <img src="{{ asset('storage/' . $image) }}" class="img-fluid" alt="Review Image">
-                        </div>
-                    </div>
-                </div>
-            </div>
-        @endforeach
-    </div>
-@endif
+                                                        <!-- Modal -->
+                                                        <div class="modal fade" id="imageModal{{ $review->id }}-{{ $imageIndex }}" tabindex="-1" aria-labelledby="imageModalLabel{{ $review->id }}-{{ $imageIndex }}" aria-hidden="true">
+                                                            <div class="modal-dialog modal-dialog-centered">
+                                                                <div class="modal-content">
+                                                                    <div class="modal-body">
+                                                                        <img src="{{ asset('storage/' . $image) }}" class="img-fluid" alt="Review Image">
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    @endforeach
+                                                </div>
+                                            @endif
 
-<!-- Review Videos -->
-@if (is_array($decodedVideos = json_decode($review->videos, true)) && !empty($decodedVideos))
-    <div class="review-videos mb-3">
-        @foreach ($decodedVideos as $video)
-            <video width="40%" height="auto" controls class="mb-2">
-                <source src="{{ asset('storage/' . $video) }}" type="video/mp4">
-                Your browser does not support the video tag.
-            </video>
-        @endforeach
-    </div>
-@endif
+                                                <!-- Review Videos -->
+                                                @if (is_array($decodedVideos = json_decode($review->videos, true)) && !empty($decodedVideos))
+                                                    <div class="review-videos mb-3">
+                                                        @foreach ($decodedVideos as $video)
+                                                            <video width="40%" height="auto" controls class="mb-2">
+                                                                <source src="{{ asset('storage/' . $video) }}" type="video/mp4">
+                                                                Your browser does not support the video tag.
+                                                            </video>
+                                                        @endforeach
+                                                    </div>
+                                                @endif
 
 
                                                 <small
@@ -811,151 +832,149 @@
                                         </div>
                                     @endif
                                 @endif
-<style>
-    /* Style for the star rating */
-    .star-rating input[type="radio"] {
-        display: none;
-    }
+                                    <style>
+                                        /* Style for the star rating */
+                                        .star-rating input[type="radio"] {
+                                            display: none;
+                                        }
 
-    .star-rating label {
-        font-size: 24px;
-        color: #ddd;
-        cursor: pointer;
-        transition: color 0.2s;
-    }
+                                        .star-rating label {
+                                            font-size: 24px;
+                                            color: #ddd;
+                                            cursor: pointer;
+                                            transition: color 0.2s;
+                                        }
 
-    .star-rating input[type="radio"]:checked ~ label {
-        color: #ffc107;
-    }
+                                        .star-rating input[type="radio"]:checked ~ label {
+                                            color: #ffc107;
+                                        }
 
-    .star-rating label:hover,
-    .star-rating label:hover ~ label {
-        color: #ffc107;
-    }
+                                        .star-rating label:hover,
+                                        .star-rating label:hover ~ label {
+                                            color: #ffc107;
+                                        }
 
-    /* Style for the form fields */
-    .form-group label {
-        font-weight: 600;
-        color: #333;
-    }
+                                        /* Style for the form fields */
+                                        .form-group label {
+                                            font-weight: 600;
+                                            color: #333;
+                                        }
 
-    .custom-file-label {
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-    }
+                                        .custom-file-label {
+                                            white-space: nowrap;
+                                            overflow: hidden;
+                                            text-overflow: ellipsis;
+                                        }
 
-    /* Style for the card and buttons */
-    .card-header {
-        font-size: 18px;
-        font-weight: bold;
-    }
+                                        /* Style for the card and buttons */
+                                        .card-header {
+                                            font-size: 18px;
+                                            font-weight: bold;
+                                        }
 
-    .btn-primary {
-        background-color: #007bff;
-        border-color: #007bff;
-        transition: background-color 0.3s, border-color 0.3s;
-    }
+                                        .btn-primary {
+                                            background-color: #007bff;
+                                            border-color: #007bff;
+                                            transition: background-color 0.3s, border-color 0.3s;
+                                        }
 
-    .btn-primary:hover {
-        background-color: #0056b3;
-        border-color: #004085;
-    }
-    </style>
-
+                                        .btn-primary:hover {
+                                            background-color: #0056b3;
+                                            border-color: #004085;
+                                        }
+                                        </style>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-
         </div>
     </div>
 </section>
 <!-- Product Details Section End -->
 
 
-@if($produK->isNotEmpty())
-    <section class="featured spad">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-12">
-                    <div class="section-title">
-                        <h2>{{ __('messages.other_products') }} !!</h2>
+    @if($produK->isNotEmpty())
+        <section class="featured spad">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="section-title">
+                            <h2>{{ __('messages.other_products') }} !!</h2>
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <div class="row featured__filter" id="MixItUpD27635">
-                @foreach ($produK as $index => $item)
-                    @php
-                        $imagePath = $item->images->isNotEmpty()
-                            ? $item->images->first()->gambar
-                            : 'path/to/default/image.jpg';
-                        $bigSaleItem = $item->bigSales->first(); // Ambil Big Sale pertama jika ada
-                    @endphp
-                    <div class="col-lg-3 col-md-4 col-sm-6 mix oranges fresh-meat">
-                        <div class="featured__item">
-                            <div class="featured__item__pic"
-                                style="background-image: url('{{ asset($imagePath) }}'); background-size: cover; background-position: center; border-radius: 10px;">
-                            @if ($bigSaleItem && $bigSaleItem->status === 'aktif')
-                                <span class="nego-badge badge-primary">Big Sale</span>
-                            @endif
+                <div class="row featured__filter" id="MixItUpD27635">
+                    @foreach ($produK as $index => $item)
+                        @php
+                            $imagePath = $item->images->isNotEmpty()
+                                ? $item->images->first()->gambar
+                                : 'path/to/default/image.jpg';
+                            $bigSaleItem = $item->bigSales->first(); // Ambil Big Sale pertama jika ada
+                        @endphp
+                        <div class="col-lg-3 col-md-4 col-sm-6 mix oranges fresh-meat">
+                            <div class="featured__item">
+                                <div class="featured__item__pic"
+                                    style="background-image: url('{{ asset($imagePath) }}'); background-size: cover; background-position: center; border-radius: 10px;">
+                                @if ($bigSaleItem && $bigSaleItem->status === 'aktif')
+                                    <span class="nego-badge badge-primary">Big Sale</span>
+                                @endif
 
-                                <ul class="featured__item__pic__hover">
-                                    <li><a href="{{ route('produk_customer.user.show', $item->id) }}"><i
-                                                class="fa fa-info-circle"></i></a></li>
+                                    <ul class="featured__item__pic__hover">
+                                        <li><a href="{{ route('produk_customer.user.show', $item->id) }}"><i
+                                                    class="fa fa-info-circle"></i></a></li>
 
-                                    @auth
-                                        <!-- Jika pengguna sudah login -->
-                                        <li><a href="#" class="add-to-cart-btn" data-id="{{ $item->id }}"><i
-                                                    class="fa fa-shopping-cart"></i></a></li>
-                                    @else
-                                        <!-- Jika pengguna belum login -->
-                                        <li><a href="{{ route('login') }}"><i class="fa fa-shopping-cart"></i></a></li>
-                                    @endauth
-                                </ul>
-                            </div>
-
-                            <div class="featured__item__text">
-                                <h6><a href="#">{{ $item->nama }}</a></h6>
-                                <h5>
-                                    @if ($item->harga_ditampilkan === 'ya')
-                                        @if($bigSaleItem && $bigSaleItem->status === 'aktif')
-                                            <span style="text-decoration: line-through; color: #ff0000;">
-                                                Rp{{ number_format($item->harga_tayang, 0, ',', '.') }}
-                                            </span>
-                                            <br>
-                                            <span style="color: #000000;">
-                                                Rp{{ number_format($bigSaleItem->pivot->harga_diskon, 0, ',', '.') }}
-                                            </span>
+                                        @auth
+                                            <!-- Jika pengguna sudah login -->
+                                            <li><a href="#" class="add-to-cart-btn" data-id="{{ $item->id }}"><i
+                                                        class="fa fa-shopping-cart"></i></a></li>
                                         @else
-                                            <span style="color: #000000;">
-                                                Rp{{ number_format($item->harga_tayang, 0, ',', '.') }}
-                                            </span>
+                                            <!-- Jika pengguna belum login -->
+                                            <li><a href="{{ route('login') }}"><i class="fa fa-shopping-cart"></i></a></li>
+                                        @endauth
+                                    </ul>
+                                </div>
+
+                                <div class="featured__item__text">
+                                    <h6><a href="#">{{ $item->nama }}</a></h6>
+                                    <h5>
+                                        @if ($item->harga_ditampilkan === 'ya')
+                                            @if($bigSaleItem && $bigSaleItem->status === 'aktif')
+                                                <span style="text-decoration: line-through; color: #ff0000;">
+                                                    Rp{{ number_format($item->harga_tayang, 0, ',', '.') }}
+                                                </span>
+                                                <br>
+                                                <span style="color: #000000;">
+                                                    Rp{{ number_format($bigSaleItem->pivot->harga_diskon, 0, ',', '.') }}
+                                                </span>
+                                            @else
+                                                <span style="color: #000000;">
+                                                    Rp{{ number_format($item->harga_tayang, 0, ',', '.') }}
+                                                </span>
+                                            @endif
+                                        @else
+                                        {{ __('messages.contact_admin_for_price') }}
                                         @endif
-                                    @else
-                                    {{ __('messages.contact_admin_for_price') }}
-                                    @endif
-                                </h5>
+                                    </h5>
 
 
+                                </div>
                             </div>
                         </div>
-                    </div>
 
-                    @if ($index == 3 && $produK->count() > 4)
-                        <div class="col-lg-12 text-center mt-3">
-                            <a href="{{ route('shop') }}" class="primary-btn rounded">{{ __('messages.selengkapnya') }}</a>
-                        </div>
-                        @break
-                    @endif
+                        @if ($index == 3 && $produK->count() > 4)
+                            <div class="col-lg-12 text-center mt-3">
+                                <a href="{{ route('shop') }}" class="primary-btn rounded">{{ __('messages.selengkapnya') }}</a>
+                            </div>
+                            @break
+                        @endif
 
-                @endforeach
+                    @endforeach
+                </div>
             </div>
-        </div>
-    </section>
-@endif
+        </section>
+    @endif
 
 
 
@@ -975,132 +994,131 @@
     </div>
     
 
-    <!-- CSS untuk Notifikasi -->
-    <style>
-       .star-rating {
-    direction: rtl;
-    font-size: 2rem;
-    display: flex;
-    justify-content: flex-start;
-}
+        <!-- CSS untuk Notifikasi -->
+        <style>
+        .star-rating {
+                direction: rtl;
+                font-size: 2rem;
+                display: flex;
+                justify-content: flex-start;
+            }
 
-.star-rating input[type="radio"] {
-    display: none;
-}
+            .star-rating input[type="radio"] {
+                display: none;
+            }
 
-.star-rating label {
-    color: #ccc;
-    cursor: pointer;
-}
+            .star-rating label {
+                color: #ccc;
+                cursor: pointer;
+            }
 
-.star-rating input[type="radio"]:checked ~ label {
-    color: #ffc700;
-}
+            .star-rating input[type="radio"]:checked ~ label {
+                color: #ffc700;
+            }
 
-.star-rating label:hover,
-.star-rating label:hover ~ label {
-    color: #ffc700;
-}
+            .star-rating label:hover,
+            .star-rating label:hover ~ label {
+                color: #ffc700;
+            }
 
-        .cart-notification {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background-color: rgba(0, 0, 0, 0.8);
-            color: white;
-            padding: 20px 30px;
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.5);
-            z-index: 1000;
-        }
+            .cart-notification {
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                background-color: rgba(0, 0, 0, 0.8);
+                color: white;
+                padding: 20px 30px;
+                border-radius: 10px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.5);
+                z-index: 1000;
+            }
 
-        .notification-icon {
-            font-size: 30px;
-            margin-right: 15px;
-        }
+            .notification-icon {
+                font-size: 30px;
+                margin-right: 15px;
+            }
 
-        .notification-text {
-            font-size: 18px;
-        }
-    </style>
+            .notification-text {
+                font-size: 18px;
+            }
+        </style>
 
-    <!-- AJAX for Add to Cart -->
-    <script>
-        document.querySelectorAll('.add-to-cart-btn').forEach(function(button) {
-            button.addEventListener('click', function(event) {
-                event.preventDefault(); // Prevent default action
-        
-                var isAuthenticated = '{{ Auth::check() }}';
-        
-                if (!isAuthenticated) {
-                    // Redirect to login page if the user is not authenticated
-                    window.location.href = '{{ route('login') }}';
-                    return;
-                }
-        
-                var productId = this.dataset.id;
-                var token = '{{ csrf_token() }}';
-                var quantity = document.querySelector('.pro-qty input').value; // Ambil nilai quantity dari input
-        
-                fetch('{{ route('cart.add', '') }}/' + productId, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-CSRF-TOKEN': token
-                        },
-                        body: JSON.stringify({
-                            quantity: quantity // Gunakan nilai quantity yang diambil dari input
+        <!-- AJAX for Add to Cart -->
+        <script>
+            document.querySelectorAll('.add-to-cart-btn').forEach(function(button) {
+                button.addEventListener('click', function(event) {
+                    event.preventDefault(); // Prevent default action
+            
+                    var isAuthenticated = '{{ Auth::check() }}';
+            
+                    if (!isAuthenticated) {
+                        // Redirect to login page if the user is not authenticated
+                        window.location.href = '{{ route('login') }}';
+                        return;
+                    }
+            
+                    var productId = this.dataset.id;
+                    var token = '{{ csrf_token() }}';
+                    var quantity = document.querySelector('.pro-qty input').value; // Ambil nilai quantity dari input
+            
+                    fetch('{{ route('cart.add', '') }}/' + productId, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-CSRF-TOKEN': token
+                            },
+                            body: JSON.stringify({
+                                quantity: quantity // Gunakan nilai quantity yang diambil dari input
+                            })
                         })
-                    })
-                    .then(response => {
-                        if (!response.ok) {
-                            throw new Error('Network response was not ok');
-                        }
-                        return response.json();
-                    })
-                    .then(data => {
-                        if (data.success) {
-                            // Display notification or update cart count
-                            var notification = document.getElementById('cart-notification');
-                            notification.style.display = 'flex';
-                            setTimeout(() => {
-                                notification.style.display = 'none';
-                            }, 3000); // Notification disappears after 3 seconds
-                        } else {
-                            alert('Failed to add product to cart: ' + (data.message ||
-                                'Unknown error.'));
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Error:', error);
-                        alert('An error occurred while adding the product to the cart.');
-                    });
+                        .then(response => {
+                            if (!response.ok) {
+                                throw new Error('Network response was not ok');
+                            }
+                            return response.json();
+                        })
+                        .then(data => {
+                            if (data.success) {
+                                // Display notification or update cart count
+                                var notification = document.getElementById('cart-notification');
+                                notification.style.display = 'flex';
+                                setTimeout(() => {
+                                    notification.style.display = 'none';
+                                }, 3000); // Notification disappears after 3 seconds
+                            } else {
+                                alert('Failed to add product to cart: ' + (data.message ||
+                                    'Unknown error.'));
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                            alert('An error occurred while adding the product to the cart.');
+                        });
+                });
+            });
+            </script>
+        
+            <script>
+                document.querySelectorAll('.star-rating label').forEach(function(label) {
+                label.addEventListener('mouseover', function() {
+                this.classList.add('hover');
+                this.previousElementSibling?.classList.add('hover');
+                this.previousElementSibling?.previousElementSibling?.classList.add('hover');
+                this.previousElementSibling?.previousElementSibling?.previousElementSibling?.classList.add('hover');
+                this.previousElementSibling?.previousElementSibling?.previousElementSibling?.previousElementSibling?.classList.add('hover');
+            });
+                label.addEventListener('mouseout', function() {
+                this.classList.remove('hover');
+                this.previousElementSibling?.classList.remove('hover');
+                this.previousElementSibling?.previousElementSibling?.classList.remove('hover');
+                this.previousElementSibling?.previousElementSibling?.previousElementSibling?.classList.remove('hover');
+                this.previousElementSibling?.previousElementSibling?.previousElementSibling?.previousElementSibling?.classList.remove('hover');
             });
         });
-        </script>
-        
-    <script>
-        document.querySelectorAll('.star-rating label').forEach(function(label) {
-    label.addEventListener('mouseover', function() {
-        this.classList.add('hover');
-        this.previousElementSibling?.classList.add('hover');
-        this.previousElementSibling?.previousElementSibling?.classList.add('hover');
-        this.previousElementSibling?.previousElementSibling?.previousElementSibling?.classList.add('hover');
-        this.previousElementSibling?.previousElementSibling?.previousElementSibling?.previousElementSibling?.classList.add('hover');
-    });
-    label.addEventListener('mouseout', function() {
-        this.classList.remove('hover');
-        this.previousElementSibling?.classList.remove('hover');
-        this.previousElementSibling?.previousElementSibling?.classList.remove('hover');
-        this.previousElementSibling?.previousElementSibling?.previousElementSibling?.classList.remove('hover');
-        this.previousElementSibling?.previousElementSibling?.previousElementSibling?.previousElementSibling?.classList.remove('hover');
-    });
-});
 
     </script>
-
 @endsection
