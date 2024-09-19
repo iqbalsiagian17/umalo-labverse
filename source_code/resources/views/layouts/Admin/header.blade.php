@@ -7,7 +7,7 @@
       content="width=device-width, initial-scale=1.0, shrink-to-fit=no"
       name="viewport"
     />
-    <link rel="icon" href="{{ asset('assets/images/logo-nobg.png') }}" type="image/png">
+    <link rel="icon" href="{{ asset('assets/images/logo_gram_labverse.png') }}" type="image/png">
 
 
     <!-- Bootstrap CSS -->

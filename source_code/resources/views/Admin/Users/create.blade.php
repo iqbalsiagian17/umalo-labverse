@@ -14,13 +14,13 @@
         <div class="row">
         <div class="card">
             <div class="card-header">
-                <h2 class="card-title">User Information</h2>
+                <h2 class="card-title">Informasi User</h2>
             </div>
             <div class="card-body">
                 <form action="{{ route('users.store') }}" method="POST">
                     @csrf
                     <div class="form-group">
-                        <label for="name" class="form-label">Name</label>
+                        <label for="name" class="form-label">Nama</label>
                         <input type="text" class="form-control" id="name" name="name" value="{{ old('name') }}" required>
                         @if ($errors->has('name'))
                             <small class="text-danger">{{ $errors->first('name') }}</small>
@@ -48,14 +48,14 @@
                         @endif
                     </div>
                     <div class="form-group">
-                        <label for="password_confirmation" class="form-label">Confirm Password</label>
+                        <label for="password_confirmation" class="form-label">Konfirmasi Password</label>
                         <input type="password" class="form-control" id="password_confirmation" name="password_confirmation" required>
                         @if ($errors->has('password_confirmation'))
                             <small class="text-danger">{{ $errors->first('password_confirmation') }}</small>
                         @endif
                     </div>
                     <div class="form-group">
-                        <label for="role" class="form-label">Role</label>
+                        <label for="role" class="form-label">Sebagai</label>
                         <select class="form-control" id="role" name="role" required>
                             <option value="0">Customer</option>
                             <option value="1">Admin</option>
@@ -65,69 +65,69 @@
                         @endif
                     </div>
                     <hr>
-                    <h3>Contact Information</h3>
+                    <h3>Informasi Kontak</h3>
                     <div class="form-group">
-                        <label for="no_telepone" class="form-label">Phone Number</label>
+                        <label for="no_telepone" class="form-label">Nomor Telephone / WhatsApp</label>
                         <input type="text" class="form-control" id="no_telepone" name="no_telepone" value="{{ old('no_telepone') }}" required>
                         @if ($errors->has('no_telepone'))
                             <small class="text-danger">{{ $errors->first('no_telepone') }}</small>
                         @endif
                     </div>
                     <div class="form-group">
-                        <label for="alamat" class="form-label">Address</label>
+                        <label for="alamat" class="form-label">Alamat</label>
                         <input type="text" class="form-control" id="alamat" name="alamat" value="{{ old('alamat') }}" required>
                         @if ($errors->has('alamat'))
                             <small class="text-danger">{{ $errors->first('alamat') }}</small>
                         @endif
                     </div>
                     <div class="form-group">
-                        <label for="kota" class="form-label">City</label>
+                        <label for="kota" class="form-label">Kota</label>
                         <input type="text" class="form-control" id="kota" name="kota" value="{{ old('kota') }}" required>
                         @if ($errors->has('kota'))
                             <small class="text-danger">{{ $errors->first('kota') }}</small>
                         @endif
                     </div>
                     <div class="form-group">
-                        <label for="provinsi" class="form-label">Province</label>
+                        <label for="provinsi" class="form-label">Provinsi</label>
                         <input type="text" class="form-control" id="provinsi" name="provinsi" value="{{ old('provinsi') }}" required>
                         @if ($errors->has('provinsi'))
                             <small class="text-danger">{{ $errors->first('provinsi') }}</small>
                         @endif
                     </div>
                     <div class="form-group">
-                        <label for="tambahan" class="form-label">Detail Lebih Alamat</label>
+                        <label for="tambahan" class="form-label">Detail Tambahan Mengenai Alamat</label>
                         <input type="text" class="form-control" id="tambahan" name="tambahan" value="{{ old('tambahan') }}" required>
                         @if ($errors->has('tambahan'))
                             <small class="text-danger">{{ $errors->first('tambahan') }}</small>
                         @endif
                     </div>
                     <div class="form-group">
-                        <label for="kode_pos" class="form-label">Postal Code</label>
+                        <label for="kode_pos" class="form-label">Kode Pos</label>
                         <input type="text" class="form-control" id="kode_pos" name="kode_pos" value="{{ old('kode_pos') }}" required>
                         @if ($errors->has('kode_pos'))
                             <small class="text-danger">{{ $errors->first('kode_pos') }}</small>
                         @endif
                     </div>
                     <hr>
-                    <h3>Personal Information</h3>
+                    <h3>Informasi Pribadi</h3>
                     <div class="form-group">
-                        <label for="lahir" class="form-label">Date of Birth</label>
+                        <label for="lahir" class="form-label">Tanggal Lahir</label>
                         <input type="date" class="form-control" id="lahir" name="lahir" value="{{ old('lahir') }}" required>
                         @if ($errors->has('lahir'))
                             <small class="text-danger">{{ $errors->first('lahir') }}</small>
                         @endif
                     </div>
                     <div class="form-group">
-                        <label for="jenis_kelamin" class="form-label">Gender</label>
+                        <label for="jenis_kelamin" class="form-label">Jenis Kelamin</label>
                         <select class="form-control" id="jenis_kelamin" name="jenis_kelamin" required>
-                            <option value="Laki-Laki">Male</option>
-                            <option value="Perempuan">Female</option>
+                            <option value="Laki-Laki">Pria</option>
+                            <option value="Perempuan">Wanita</option>
                         </select>
                         @if ($errors->has('jenis_kelamin'))
                             <small class="text-danger">{{ $errors->first('jenis_kelamin') }}</small>
                         @endif
                     </div>
-                    <button type="submit" class="btn btn-primary">Create User</button>
+                    <button type="submit" class="btn btn-primary">Tambahkan User</button>
                 </form>
             </div>
         </div>

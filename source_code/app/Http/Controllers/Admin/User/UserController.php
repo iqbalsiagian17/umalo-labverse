@@ -8,14 +8,26 @@ use App\Models\UserAddress;
 use App\Models\UserDetail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $users = User::with('userDetail')->where('role', 0)->paginate(10);
+        $role = $request->query('role', '0'); // Default to '0' if no role is provided
+        
+        $query = User::with('userDetail');
+    
+        // Check if 'role' parameter exists
+        if (!is_null($role)) {
+            $query->where('role', $role);
+        }
+    
+        $users = $query->paginate(10);
+    
         return view('admin.users.index', compact('users'));
     }
+    
 
     public function create()
     {
@@ -77,47 +89,66 @@ class UserController extends Controller
     }
 
     public function update(Request $request, $id)
-    {
-        $validatedData = $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email,' . $id,
-            'password' => 'nullable|string|min:8|confirmed', // Password is optional in update
-            'role' => 'required|in:0,1', // 0 for customer, 1 for admin
-        ]);
+{
+    $validatedData = $request->validate([
+        'name' => 'required|string|max:255',
+        'email' => 'required|email|unique:users,email,' . $id,
+        'role' => 'required|in:0,1', // 0 for customer, 1 for admin
+    ]);
 
-        $user = User::findOrFail($id);
+    $user = User::findOrFail($id);
 
-        // If password is provided, hash it; otherwise, keep the existing password
-        if ($request->filled('password')) {
-            $validatedData['password'] = bcrypt($validatedData['password']);
-        } else {
-            unset($validatedData['password']); // Remove password from $validatedData if not provided
-        }
+    // Update the user data
+    $user->update($validatedData);
 
-        // Update the user data
-        $user->update($validatedData);
+    // Check if userDetail exists or create a new one
+    $userDetail = $user->userDetail;
 
-        // Update user details
-        $user->userDetail->update([
+    if ($userDetail) {
+        // If userDetail exists, update it
+        $userDetail->update([
             'no_telepone' => $request->no_telepone,
             'perusahaan' => $request->perusahaan,
             'lahir' => $request->lahir,
             'jenis_kelamin' => $request->jenis_kelamin,
         ]);
+    } else {
+        // If userDetail doesn't exist, create a new record
+        $user->userDetail()->create([
+            'no_telepone' => $request->no_telepone,
+            'perusahaan' => $request->perusahaan,
+            'lahir' => $request->lahir,
+            'jenis_kelamin' => $request->jenis_kelamin,
+        ]);
+    }
 
-        // Update or create user address
-        $user->addresses()->updateOrCreate(
-            ['user_id' => $user->id], // Criteria for matching the existing record
-            [
-                'alamat' => $request->alamat,
-                'kota' => $request->kota,
-                'provinsi' => $request->provinsi,
-                'kode_pos' => $request->kode_pos,
-                'tambahan' => $request->tambahan,
-            ]
-        );
+    // Update or create user address
+    $user->addresses()->updateOrCreate(
+        ['user_id' => $user->id], // Criteria for matching the existing record
+        [
+            'alamat' => $request->alamat,
+            'kota' => $request->kota,
+            'provinsi' => $request->provinsi,
+            'kode_pos' => $request->kode_pos,
+            'tambahan' => $request->tambahan,
+        ]
+    );
 
-        return redirect()->route('users.index')->with('success', 'User updated successfully.');
+    return redirect()->route('users.index')->with('success', 'User updated successfully.');
+}
+
+
+    public function updatePassword(Request $request, $id)
+    {
+        $user = User::findOrFail($id);
+
+        $request->validate([
+            'password' => 'required|string|min:8|confirmed',
+        ]);
+
+        $user->update(['password' => Hash::make($request->password)]);
+
+        return redirect()->route('users.index')->with('success', 'Password updated successfully.');
     }
 
 

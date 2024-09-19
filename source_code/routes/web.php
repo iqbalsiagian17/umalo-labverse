@@ -141,6 +141,7 @@ Route::middleware(['auth', 'user-access:admin'])->group(function () {
     Route::resource('qas', QaController::class);
     Route::resource('transaksi', TransaksiController::class);
     Route::resource('users', UserController::class);
+    Route::put('/users/{id}/password', [UserController::class, 'updatePassword'])->name('users.update.password');
 
 
     Route::get('admin/produk/getSubKategori/{kategoriId}', [ProdukController::class, 'getSubKategori']);
