@@ -161,7 +161,7 @@ private function updateBigSaleStatus()
         $averageVisitTimeToday = $visitDurations->avg();
 
         // Mengirim variabel ke view
-        return view('Admin.Dashboard.dashboard', compact('customerCount', 'orderCount', 'orderNotFinishCount', 'visitorCountToday', 'hourlyVisits', 'averageVisitTimeToday', 'totalSales'));
+        return view('admin.dashboard.dashboard', compact('customerCount', 'orderCount', 'orderNotFinishCount', 'visitorCountToday', 'hourlyVisits', 'averageVisitTimeToday', 'totalSales'));
     }
 
 }
