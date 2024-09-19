@@ -1,4 +1,4 @@
-@extends('Layouts.Customer.master')
+@extends('layouts.Customer.master')
 
 @section('content')
 
@@ -48,19 +48,19 @@
                                             <a href="{{ route('produk_customer.user.show', $favorite->id) }}" class="btn btn-primary mr-2" title="{{ __('messages.view_details') }}">
                                                 <i class="fa fa-eye"></i> <!-- Font Awesome eye icon for view details -->
                                             </a>
-                                    
+
                                             <!-- Move to Cart Icon -->
                                             <a href="#" class="btn btn-success mr-2 move-to-cart" data-product-id="{{ $favorite->id }}" title="{{ __('messages.move_to_cart') }}">
                                                 <i class="fa fa-shopping-cart"></i> <!-- Font Awesome shopping cart icon for moving to cart -->
                                             </a>
-                                    
+
                                             <!-- Remove Icon -->
                                             <a href="#" class="btn btn-danger remove-favorite" data-product-id="{{ $favorite->id }}" title="{{ __('messages.remove') }}">
                                                 <i class="fa fa-trash"></i> <!-- Font Awesome trash icon for remove -->
                                             </a>
                                         </div>
                                     </td>
-                                                                        
+
                                 </tr>
                                 @endforeach
                             </tbody>
@@ -112,7 +112,7 @@
     $('.remove-favorite').click(function(e) {
         e.preventDefault();
         var productId = $(this).data('product-id');
-        
+
         $.ajax({
             url: "{{ route('favorite.remove', ':id') }}".replace(':id', productId),
             method: "DELETE",
