@@ -1,5 +1,4 @@
 @extends('layouts.Customer.master')
-
 @section('content')
 <!-- Product Details Section Begin -->
 <section class="product-details spad">
@@ -19,28 +18,28 @@
                             </a>
                         @endif
                     </div>
-                    
-                    
+
+
                         <script>
                             const imageContainer = document.querySelector('.product__details__pic__item');
                             const image = imageContainer.querySelector('img');
-                        
+
                             imageContainer.addEventListener('mousemove', function(e) {
                                 const rect = imageContainer.getBoundingClientRect();
                                 const x = e.clientX - rect.left; // Posisi X mouse
                                 const y = e.clientY - rect.top; // Posisi Y mouse
-                        
+
                                 // Ukuran gambar yang ingin diperbesar
                                 const zoomFactor = 2;
-                        
+
                                 // Hitung posisi zoom relatif terhadap ukuran gambar
                                 const xPercent = (x / rect.width) * 100;
                                 const yPercent = (y / rect.height) * 100;
-                        
+
                                 image.style.transformOrigin = `${xPercent}% ${yPercent}%`;
                                 image.style.transform = `scale(${zoomFactor})`;
                             });
-                        
+
                             imageContainer.addEventListener('mouseleave', function() {
                                 // Kembalikan gambar ke ukuran normal saat mouse keluar
                                 image.style.transform = 'scale(1)';
@@ -59,7 +58,7 @@
                             display: block;
                         }
                         </style>
-                        
+
                         <div class="product__details__pic__slider owl-carousel">
                             @if($images->isNotEmpty())
                                 @foreach ($images as $image)
@@ -72,7 +71,7 @@
                 </div>
             <div class="col-lg-6 col-md-6">
                 <div class="product__details__text">
-                    <h3>{{ $produk->nama }} 
+                    <h3>{{ $produk->nama }}
                         <button type="button" class="btn primary-btn" data-bs-toggle="modal" data-bs-target="#shareModal" style="width: 45px; height: 45px; border-radius: 50%; padding: 0;">
                             <i class="fas fa-share-alt"></i>
                         </button>
@@ -104,8 +103,8 @@
                         @else
                             {{ __('messages.contact_admin_for_price') }}
                         @endif
-                        
-                                                    
+
+
                         </div>
 
 
@@ -121,8 +120,8 @@
                             </div>
                         </div>
                     </div>
-                    
-                    
+
+
                     @auth
                     <a href="#" class="primary-btn add-to-cart-btn" data-id="{{ $produk->id }}">{{ __('messages.add') }}</a>
                     @else
@@ -131,7 +130,7 @@
                     <a href="#" class="heart-icon" data-product-id="{{ $produk->id }}">
                         <i class="fas fa-heart {{ $isFavorite ? 'favorite' : '' }}"></i>
                     </a>
-                    
+
                         <style>
                         .heart-icon {
                             color: gray;
@@ -151,14 +150,14 @@
                             color: #ff0000; /* Hover effect */
                         }
 
-                        </style>            
-        
+                        </style>
+
 
                     <script>
                         $(document).on('click', '.heart-icon', function(e) {
                             e.preventDefault();
                             var productId = $(this).data('product-id'); // Get the product ID from the data attribute
-                    
+
                             $.ajax({
                                 url: "{{ route('favorite.toggle', ':id') }}".replace(':id', productId), // Route to toggle favorite
                                 method: "POST",
@@ -173,7 +172,7 @@
                                 }
                             });
                         });
-                    
+
                         // Function to show custom notification
                         function showNotification(message, reload = false) {
                             $('.notification-text').text(message);
@@ -184,20 +183,20 @@
                             });
                         }
                     </script>
-                    
-                    
-                                        
+
+
+
                     <div class="product__details__subtotal hidden">
-                        <b>{{ __('messages.subtotal') }}: </b> 
+                        <b>{{ __('messages.subtotal') }}: </b>
                         <span id="subtotal">Rp{{ number_format($produk->harga_potongan > 0 ? $produk->harga_potongan : ($bigSaleItem && $bigSaleItem->status === 'aktif' ? $bigSaleItem->pivot->harga_diskon : $produk->harga_tayang), 0, ',', '.') }}</span>
                         <style>
                             .hidden {
                                 display: none;
                             }
                         </style>
-                        
+
                     </div>
-                    
+
                     <script>
                     document.addEventListener('DOMContentLoaded', function() {
                     const price = {{ $produk->harga_potongan > 0 ? $produk->harga_potongan : ($bigSaleItem && $bigSaleItem->status === 'aktif' ? $bigSaleItem->pivot->harga_diskon : $produk->harga_tayang) }};
@@ -294,8 +293,8 @@
                                                     <p class="product-price">Rp{{ number_format($produk->harga_tayang, 0, ',', '.') }}</p>
                                                 </div>
                                             </div>
-                                            
-                                            
+
+
                                             <p class="share-prompt">Mau bagikan lewat mana?</p>
                                             <hr>
                                             <div class="share-buttons">
@@ -319,13 +318,13 @@
                                                     <i class="fas fa-copy"></i>
                                                 </button>
                                             </div>
-                                            
+
                                         </div>
                                     </div>
                                 </div>
                             </div>
 
-                
+
 
                     <style>
                         .modal-content {
@@ -421,7 +420,7 @@
                                 let url = "{{ url()->current() }}";
                                 let message = encodeURIComponent('Beli (" ' + '{{ $produk->nama }}' + '") dengan harga terbaik! ' + url);
                                 let shareUrl;
-                            
+
                                 switch (platform) {
                                     case 'WhatsApp':
                                         shareUrl = `https://api.whatsapp.com/send?text=${message}`;
@@ -439,10 +438,10 @@
                                         shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${url}`;
                                         break;
                                 }
-                            
+
                                 if (platform !== 'Instagram') window.open(shareUrl, '_blank');
                             }
-                            
+
                             function copyURL() {
                                 let url = "{{ url()->current() }}";
                                 navigator.clipboard.writeText(url).then(function() {
@@ -452,8 +451,8 @@
                                 });
                             }
                         </script>
-    
-    
+
+
 
 
                     @if ($bigSale && $bigSale->status === 'aktif')
@@ -992,7 +991,7 @@
             <div class="notification-text"></div>
         </div>
     </div>
-    
+
 
         <!-- CSS untuk Notifikasi -->
         <style>
@@ -1052,19 +1051,19 @@
             document.querySelectorAll('.add-to-cart-btn').forEach(function(button) {
                 button.addEventListener('click', function(event) {
                     event.preventDefault(); // Prevent default action
-            
+
                     var isAuthenticated = '{{ Auth::check() }}';
-            
+
                     if (!isAuthenticated) {
                         // Redirect to login page if the user is not authenticated
                         window.location.href = '{{ route('login') }}';
                         return;
                     }
-            
+
                     var productId = this.dataset.id;
                     var token = '{{ csrf_token() }}';
                     var quantity = document.querySelector('.pro-qty input').value; // Ambil nilai quantity dari input
-            
+
                     fetch('{{ route('cart.add', '') }}/' + productId, {
                             method: 'POST',
                             headers: {
@@ -1101,7 +1100,7 @@
                 });
             });
             </script>
-        
+
             <script>
                 document.querySelectorAll('.star-rating label').forEach(function(label) {
                 label.addEventListener('mouseover', function() {

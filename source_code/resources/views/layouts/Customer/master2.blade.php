@@ -1,6 +1,3 @@
-@include('layouts.customer.header')
-
-
-@include('layouts.customer.content')
-
-@include('layouts.customer.footer')
+@include('layouts.Customer.header')
+@include('layouts.Customer.content')
+@include('layouts.Customer.footer')

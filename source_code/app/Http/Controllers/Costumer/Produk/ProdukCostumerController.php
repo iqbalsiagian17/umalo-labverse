@@ -98,7 +98,7 @@ public function search(Request $request)
     $productCount = $produk->total();
 
     // Return the search results to a view
-    return view('Customer.Search.index', compact('produk', 'query', 'subkategori', 'kategori', 'productCount'));
+    return view('customer.search.index', compact('produk', 'query', 'subkategori', 'kategori', 'productCount'));
 }
 
 

@@ -1,4 +1,4 @@
-@extends('layouts.customer.master2')
+@extends('layouts.Customer.master2')
 
 @section('content')
     <!----------------------- Main Container -------------------------->
