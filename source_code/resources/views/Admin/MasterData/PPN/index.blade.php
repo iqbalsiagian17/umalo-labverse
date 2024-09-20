@@ -1,18 +1,28 @@
 @extends('layouts.Admin.master')
 
 @section('content')
+
+@if (session('success'))
+<div class="alert alert-success">
+    {{ session('success') }}
+</div>
+@endif
+
+@if (session('error'))
+<div class="alert alert-danger">
+    {{ session('error') }}
+</div>
+@endif
+
 <div class="row">
     <div class="col-md-12">
         <div class="card">
             <div class="card-header d-flex justify-content-between align-items-center">
                 <div class="card-title"><h1>PPN</h1></div>
+                @if ($ppns->isEmpty()) <!-- Show button only if no PPN record exists -->
                 <a href="{{ route('admin.masterdata.ppn.create') }}" class="btn btn-primary mb-3">Buat PPN</a>
+                @endif            
             </div>
-            @if (session('success'))
-            <div class="alert alert-success">
-                {{ session('success') }}
-            </div>
-            @endif
             <div class="card-body">
                 <div class="row">
                     <div class="table-responsive">

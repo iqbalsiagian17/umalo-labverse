@@ -19,6 +19,12 @@ class PPNController extends Controller
      */
     public function create()
     {
+
+        $ppnExists = PPN::exists(); // Check if any PPN record exists
+    if ($ppnExists) {
+        return redirect()->route('admin.masterdata.ppn.index')->with('error', 'PPN record already exists.');
+    }
+
         return view('admin.masterdata.ppn.create');
     }
 

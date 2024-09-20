@@ -70,13 +70,18 @@ $(".changeBackgroundColor").on("click", function () {
 });
 
 function customCheckColor() {
-  var logoHeader = $(".logo-header").attr("data-background-color");
-  if (logoHeader !== "white") {
-    $(".logo-header .navbar-brand").attr("src", "assets/img/kaiadmin/logo_light.svg");
+  var logoHeader = $(".logo-header");
+  var backgroundColor = logoHeader.attr("data-background-color");
+  var logoLight = logoHeader.attr("data-logo-light");
+  var logoDark = logoHeader.attr("data-logo-dark");
+
+  if (backgroundColor !== "white") {
+    $(".logo-header .navbar-brand").attr("src", logoLight);
   } else {
-    $(".logo-header .navbar-brand").attr("src", "assets/img/kaiadmin/logo_dark.svg");
+    $(".logo-header .navbar-brand").attr("src", logoDark);
   }
 }
+
 
 var toggle_customSidebar = false,
   custom_open = 0;

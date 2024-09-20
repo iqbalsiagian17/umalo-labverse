@@ -441,18 +441,6 @@
         }
     </style>
 
-    <script>
-        document.getElementById('toggleCategories').addEventListener('click', function() {
-            var categoriesList = document.getElementById('categoriesList');
-
-            if (categoriesList.style.display === 'block' || categoriesList.style.display === 'block') {
-                categoriesList.style.display = 'none';
-            } else {
-                categoriesList.style.display = 'none';
-            }
-        });
-    </script>
-
     <!-- Notifikasi (Hidden by Default) -->
     <div id="cart-notification" class="cart-notification" style="display: none;">
         <div class="notification-content">

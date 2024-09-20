@@ -127,7 +127,7 @@
 
 
 
- <script>
+ {{-- <script>
     // Mencegah penggunaan Ctrl + U dan beberapa kombinasi lainnya
     document.addEventListener('keydown', function(event) {
         // Cegah kombinasi Ctrl + U, Ctrl + Shift + I, Ctrl + Shift + J, Ctrl + S, F12
@@ -154,7 +154,7 @@
             event.preventDefault();
         }
     });
-</script> 
+</script>  --}}
 
 
 
@@ -171,7 +171,7 @@
     <script src="{{ asset('ogani/js/owl.carousel.min.js') }}"></script>
     <script src="{{ asset('ogani/js/main.js') }}"></script>
     <script src="{{ asset('ogani/js/popper.min.js') }}"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <script src="{{ asset('js/bootstrap/bootstrap.min.js') }}"></script>
+
     </body>
     </html>

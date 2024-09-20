@@ -1,8 +1,8 @@
 <!-- Sidebar -->
-<div class="sidebar" data-background-color="dark">
+<div class="sidebar" data-background-color="white">
     <div class="sidebar-logo">
       <!-- Logo Header -->
-      <div class="logo-header" data-background-color="dark">
+<div class="logo-header" data-background-color="white" data-logo-light="{{ asset('assets/images/logo-nobg.png') }}" data-logo-dark="{{ asset('assets/images/logo-dark.png') }}">
         <a href="{{ route('dashboard') }}" class="logo">
           <img
             src="{{ asset('assets/images/logo-nobg.png') }}"
@@ -11,6 +11,7 @@
             width="200"
           />
         </a>
+        
         <div class="nav-toggle">
           <button class="btn btn-toggle toggle-sidebar">
             <i class="gg-menu-right"></i>

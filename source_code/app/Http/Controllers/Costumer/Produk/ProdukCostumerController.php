@@ -8,6 +8,7 @@ use App\Models\Komoditas;
 use App\Models\Produk;
 use Illuminate\Http\Request;
 use App\Models\Order;
+use App\Models\PPN;
 use App\Models\SubKategori;
 use Illuminate\Support\Facades\DB;
 
@@ -17,6 +18,8 @@ class ProdukCostumerController extends Controller
 {
     $produk = Produk::with(['images', 'kategori', 'subKategori', 'komoditas', 'bigSales', 'reviews.user'])->findOrFail($id);
     $images = $produk->images;
+    $ppn = PPN::firstOrFail(); // Assuming there's always at least one PPN record
+
 
     $bigSale = $produk->bigSales->first();
     $bigSaleItem = $produk->bigSales()->where('status', 'aktif')->first();
@@ -47,7 +50,7 @@ class ProdukCostumerController extends Controller
                                   ->where('produk_id', $id)
                                   ->exists();
 
-    return view('customer.produk.show', compact('produk', 'images', 'produK', 'bigSale','bigSaleItem', 'order','averageRating','totalRatings' ,'isFavorite'));
+    return view('customer.produk.show', compact('produk', 'images', 'produK', 'bigSale','bigSaleItem', 'order','averageRating','totalRatings' ,'isFavorite','ppn'));
 }
 
 
