@@ -34,16 +34,31 @@
                             <small class="text-danger">{{ $errors->first('deskripsi') }}</small>
                         @endif
                     </div>
-                    <div class="form-group mb-3">
-                        <label for="url" class="form-label"><span class="text-danger">*</span> URL:</label>
-                        <input type="text" class="form-control" id="url" name="url" value="{{ old('url') }}">
 
-                        @if ($errors->has('url'))
-                            <small class="text-danger">{{ $errors->first('url') }}</small>
-                        @endif
-
-                        <small class="form-text text-muted">Default: "/shop"</small>
+                    <div class="form-group">
+                        <label for="url">Select URL for the Slider:</label>
+                        <select name="url" class="form-control" id="url">
+                            <option value="">Select a URL</option>
+                            
+                            <!-- Predefined URLs Group -->
+                            <optgroup label="Halaman General">
+                                @foreach($routeOptions as $name => $url)
+                                    <option value="{{ $url }}">{{ $name }}</option>
+                                @endforeach
+                            </optgroup>
+                    
+                            <!-- Product URLs Group -->
+                            <optgroup label="Halaman Detail Produk">
+                                @foreach($products as $product)
+                                    <option value="{{ route('produk_customer.user.show', ['id' => $product->id]) }}">
+                                        Product: {{ $product->nama }}
+                                    </option>
+                                @endforeach
+                            </optgroup>
+                        </select>
                     </div>
+                    
+
                     <div class="form-group mb-3">
                         <label for="tombol" class="form-label"><span class="text-danger">*</span> Tulisan Tombol:</label>
                         <input type="text" class="form-control" id="tombol" name="tombol" value="{{ old('tombol') }}">

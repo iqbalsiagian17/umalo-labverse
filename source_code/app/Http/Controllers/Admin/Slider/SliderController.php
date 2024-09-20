@@ -3,9 +3,12 @@
 namespace App\Http\Controllers\Admin\Slider;
 
 use App\Http\Controllers\Controller;
+use App\Models\Produk;
 use App\Models\Slider;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
+
 
 class SliderController extends Controller
 {
@@ -23,7 +26,15 @@ class SliderController extends Controller
      */
     public function create()
     {
-        return view('admin.slider.create');
+        $routeOptions = [
+            'home' => route('home'),
+            'shop' => route('shop'),
+        ];
+
+        $products = Produk::all();
+
+
+        return view('admin.slider.create', compact('routeOptions','products'));
     }
 
     /**
@@ -52,11 +63,14 @@ class SliderController extends Controller
             $imagePath = 'uploads/slider/' . $newImageName;
         }
 
+        $url = $request->input('url');
+
+
         // Membuat slider dengan data yang diberikan
         Slider::create([
             'image' => $imagePath,
             'deskripsi' => $request->input('deskripsi'),
-            'url' => $request->input('url'),
+            'url' => $url,
             'tombol' => $request->input('tombol'),
         ]);
 
@@ -77,8 +91,18 @@ class SliderController extends Controller
      */
     public function edit($id)
     {
+
         $slider = Slider::findOrFail($id);
-        return view('admin.slider.edit', compact('slider'));
+
+        // Prepare route options and products
+        $routeOptions = [
+            'home' => route('home'),
+            'shop' => route('shop'),
+        ];
+        
+        $products = Produk::all();
+
+        return view('admin.slider.edit', compact('slider', 'routeOptions', 'products'));
     }
 
     /**
@@ -136,4 +160,6 @@ class SliderController extends Controller
 
         return redirect()->route('slider.index')->with('success', 'Slider deleted successfully.');
     }
+
+    
 }
