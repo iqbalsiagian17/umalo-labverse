@@ -76,7 +76,7 @@
                                         <span class="nego-badge">{{ __('messages.bisa_nego') }}</span>
                                     @endif
                                     <ul class="product__item__pic__hover">
-                                        <li><a href="{{ route('produk_customer.user.show', $product->id) }}"><i
+                                        <li><a href="{{ route('produk_customer.user.show', $product->id) }}?source={{ Str::random(10) }}"><i
                                                     class="fa fa-info-circle"></i></a></li>
                                         @auth
                                             <!-- Jika pengguna sudah login -->
@@ -89,7 +89,7 @@
                                     </ul>
                                 </div>
                                 <div class="product__item__text">
-                                    <h6><a href="{{ route('produk_customer.user.show', $product->id) }}">{{ \Illuminate\Support\Str::limit($product->nama, 30, '...') }}</a>
+                                    <h6><a href="{{ route('produk_customer.user.show', $product->id) }}?source={{ Str::random(10) }}">{{ \Illuminate\Support\Str::limit($product->nama, 30, '...') }}</a>
                                     </h6>
                                     <span style="text-decoration: line-through; color: #ff0000;">
                                         <b>Rp{{ number_format($product->harga_tayang, 0, ',', '.') }}</b>

@@ -13,20 +13,29 @@ use Illuminate\Support\Facades\Hash;
 class UserController extends Controller
 {
     public function index(Request $request)
-    {
-        $role = $request->query('role', '0'); // Default to '0' if no role is provided
-        
-        $query = User::with('userDetail');
-    
-        // Check if 'role' parameter exists
-        if (!is_null($role)) {
-            $query->where('role', $role);
-        }
-    
-        $users = $query->paginate(10);
-    
-        return view('admin.users.index', compact('users'));
+{
+    $role = $request->query('role', '0'); // Default to '0' if no role is provided
+    $search = $request->input('search');
+
+    // Inisialisasi query
+    $query = User::with('userDetail');
+
+    // Filter berdasarkan role
+    if (!is_null($role)) {
+        $query->where('role', $role);
     }
+
+    // Filter pencarian berdasarkan nama
+    if (!is_null($search)) {
+        $query->where('name', 'like', '%' . $search . '%');
+    }
+
+    // Paginate hasil pencarian
+    $users = $query->paginate(10);
+
+    return view('admin.users.index', compact('users'));
+}
+
     
 
     public function create()

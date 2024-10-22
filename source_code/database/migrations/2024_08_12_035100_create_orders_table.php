@@ -17,6 +17,7 @@ return new class extends Migration
             $table->decimal('harga_total', 15, 2);
             $table->decimal('harga_setelah_nego', 15, 2)->nullable(); // Adding the harga_setelah_nego column
             $table->string('status')->default('pending');
+            $table->string('invoice_number')->nullable();
             $table->timestamps();
         
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');

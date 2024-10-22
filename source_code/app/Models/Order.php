@@ -14,7 +14,8 @@ class Order extends Model
         'harga_total',
         'harga_setelah_nego',
         'status',
-        'whatsapp_number'
+        'whatsapp_number',
+        'invoice_number'
     ];
 
     // Definisikan relasi dengan OrderItem

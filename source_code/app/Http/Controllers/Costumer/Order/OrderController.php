@@ -8,6 +8,7 @@ use App\Models\Order;
 use PDF;
 use App\Models\PPN;
 use App\Models\Materai;
+use Illuminate\Support\Facades\Log;
 
 class OrderController extends Controller
 {
@@ -94,39 +95,28 @@ class OrderController extends Controller
         // Retrieve the order along with related items, user details, and addresses
         $order = Order::with(['orderItems.produk', 'user.userDetail', 'user.addresses'])->findOrFail($id);
 
-        // Retrieve the latest PPN record
-        $ppn = PPN::latest()->first();
-
         // Retrieve all Materai records
-        $materai = Materai::all();
 
         // Retrieve the UserDetail from the Order's user relationship
         $userDetail = $order->user->userDetail;
 
         // Retrieve the UserAddresses from the User
         $userAddresses = $order->user->addresses;
-        $invoiceNumber = $this->generateInvoiceNumber($order);
-         // Get the company abbreviation
-// Get the company abbreviation
-$companyAbbreviation = $this->getCompanyAbbreviation($order->user->userDetail->perusahaan);
 
-// Get the Roman numeral for the month the order was created
-$romanMonth = $this->getRomanMonth($order->created_at->month);
+        // Generate the invoice number
+$invoiceNumber = $order->invoice_number;
 
-        // Calculate the total price including PPN
-        $totalPriceWithPPN = $order->harga_total + ($order->harga_total * ($ppn->ppn / 100));
-
-        // Convert Materai images to base64
-        $materaiImages = [];
-        foreach ($materai as $item) {
-            $path = public_path($item->image);
-            if (file_exists($path)) {
-                $type = pathinfo($path, PATHINFO_EXTENSION);
-                $data = file_get_contents($path);
-                $base64 = 'data:image/' . $type . ';base64,' . base64_encode($data);
-                $materaiImages[] = $base64;
-            }
+        // Handle case where invoice_number is not set
+        if (!$invoiceNumber) {
+            return redirect()->back()->with('error', 'Invoice number not found for this order.');
         }
+
+        // Get the company abbreviation
+        $companyAbbreviation = $this->getCompanyAbbreviation($order->user->userDetail->perusahaan);
+
+        // Get the Roman numeral for the month the order was created
+        $romanMonth = $this->getRomanMonth($order->created_at->month);
+
         // Convert ags.jpeg, maps-and-flags.png, email.png, phone-call.png to base64
         $logoPath = public_path('assets/images/ags.jpeg');
         $agsLogo = '';
@@ -164,8 +154,7 @@ $romanMonth = $this->getRomanMonth($order->created_at->month);
         }
 
         // Pass all the images to the view along with other data
-        $pdf = PDF::loadView('customer.order.pdf', compact('order', 'ppn', 'materaiImages', 'totalPriceWithPPN', 'userDetail', 'userAddresses', 'agsLogo', 'mapsIcon', 'emailIcon', 'phoneIcon', 'invoiceNumber','companyAbbreviation', 'romanMonth'));
-
+        $pdf = PDF::loadView('customer.order.pdf', compact('order',  'userDetail', 'userAddresses', 'agsLogo', 'mapsIcon', 'emailIcon', 'phoneIcon', 'invoiceNumber', 'companyAbbreviation', 'romanMonth'));
 
         // Sanitize the company name to create a valid filename
         $companyName = preg_replace('/[^A-Za-z0-9\-]/', '_', $userDetail->perusahaan);
@@ -180,54 +169,49 @@ $romanMonth = $this->getRomanMonth($order->created_at->month);
         // Return the generated PDF for download
         return $pdf->download($fileName);
     }
+
     public function generateInvoiceNumber($order)
 {
-    // Step 1: Generate unique number (use order ID or auto-increment)
-    $uniqueNumber = str_pad($order->id, 6, '0', STR_PAD_LEFT); // e.g., 000001, 000002, etc.
+    // Step 1: Get the current month and year
+    $currentMonth = \Carbon\Carbon::now()->month;
+    $currentYear = \Carbon\Carbon::now()->year;
 
-    // Step 2: Default INV-AGS
+    // Step 2: Count the number of orders in the current month and year
+    // This will reset the count each month
+    $orderCount = Order::whereMonth('created_at', $currentMonth)
+        ->whereYear('created_at', $currentYear)
+        ->count();
+
+    // Step 3: Increment the count to generate the next sequence number
+    $sequence = $orderCount + 1;
+
+    // Step 4: Format the sequence as a 4-digit number
+    $uniqueNumber = str_pad($sequence, 4, '0', STR_PAD_LEFT); // e.g., 0001, 0002, etc.
+
+    // Step 5: Set the invoice prefix (for AGS company)
     $invoicePrefix = 'INV-AGS';
 
-    // Step 3: Get company abbreviation, excluding "PT", "CV", etc.
-    $companyName = $order->user->userDetail->perusahaan;
-
-    // Define a list of words to ignore (like PT, CV, UD)
-    $ignoreWords = ['PT', 'CV', 'UD'];
-
-    // Split the company name into words and filter out the ignore words
-    $filteredWords = array_filter(explode(' ', $companyName), function ($word) use ($ignoreWords) {
-        return !in_array(strtoupper($word), $ignoreWords); // Exclude "PT", "CV", etc.
-    });
-
-    // Create abbreviation from the filtered words
-    $companyAbbreviation = strtoupper(implode('', array_map(function ($word) {
-        return $word[0];
-    }, $filteredWords))); // Take the first letter of each remaining word
-
-    // Step 4: Get Roman numeral for the month
+    // Step 6: Get Roman numeral for the current month
     $romanMonths = [
-        1 => 'I',
-        2 => 'II',
-        3 => 'III',
-        4 => 'IV',
-        5 => 'V',
-        6 => 'VI',
-        7 => 'VII',
-        8 => 'VIII',
-        9 => 'IX',
-        10 => 'X',
-        11 => 'XI',
-        12 => 'XII'
+        1 => 'I', 2 => 'II', 3 => 'III', 4 => 'IV', 5 => 'V',
+        6 => 'VI', 7 => 'VII', 8 => 'VIII', 9 => 'IX', 10 => 'X',
+        11 => 'XI', 12 => 'XII'
     ];
-    $currentMonth = \Carbon\Carbon::now()->month; // Get current month
-    $currentYear = \Carbon\Carbon::now()->year; // Get current year
     $monthRoman = $romanMonths[$currentMonth]; // Convert month to Roman numeral
 
-    // Step 5: Combine the parts to generate the invoice number
-    $invoiceNumber = "{$uniqueNumber}/{$invoicePrefix}-{$companyAbbreviation}/{$monthRoman}/{$currentYear}";
+    // Step 7: Combine the parts to generate the invoice number
+    // Format: 0001/INV-AGS/X/2024
+    $invoiceNumber = "{$uniqueNumber}/{$invoicePrefix}/{$monthRoman}/{$currentYear}";
+
+    // Step 8: Save the invoice number to the order
+    $order->invoice_number = $invoiceNumber;
+    $order->save();
 
     return $invoiceNumber;
 }
+
+
+
 
     // Helper function to get the company abbreviation
     public function getCompanyAbbreviation($companyName)

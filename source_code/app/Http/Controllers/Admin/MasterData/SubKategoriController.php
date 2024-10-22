@@ -9,11 +9,30 @@ use App\Models\Kategori;
 
 class SubKategoriController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $subkategoris = SubKategori::with('kategori')->where('flag', 'yes')->get(); // Filter berdasarkan flag
-        return view('admin.masterdata.subkategori.index', compact('subkategoris'));
+        // Ambil input pencarian dari request
+        $search = $request->input('search');
+    
+        // Query untuk mendapatkan subkategori dengan kategori, filter berdasarkan flag dan pencarian
+        $query = SubKategori::with('kategori')->where('flag', 'yes');
+    
+        // Jika ada input pencarian, tambahkan filter where
+        if ($search) {
+            $query->where(function($query) use ($search) {
+                $query->where('nama', 'like', '%' . $search . '%')
+                      ->orWhereHas('kategori', function($query) use ($search) {
+                          $query->where('nama', 'like', '%' . $search . '%');
+                      });
+            });
+        }
+    
+        // Paginate hasil pencarian
+        $subkategoris = $query->paginate(10);
+    
+        return view('admin.masterdata.subkategori.index', compact('subkategoris', 'search'));
     }
+    
 
     public function create()
     {

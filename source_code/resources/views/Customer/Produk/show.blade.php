@@ -100,14 +100,6 @@
                                     Rp{{ number_format($produk->harga_tayang, 0, ',', '.') }}
                                 </span>
                             @endif
-                            <i class="fa fa-exclamation-circle icon-above" data-toggle="tooltip" title="Harga yang tertera belum termasuk Pajak Pertambahan Nilai (PPN). Apabila PPN dikenakan, total harga akan menjadi Rp{{ number_format($produk->harga_tayang * (1 + $ppn->ppn / 100), 0, ',', '.') }}"></i>
-
-                            <script>
-                                $(function () {
-                                    $('[data-toggle="tooltip"]').tooltip()
-                                })
-                            </script>
-
                             <style>
                                 .icon-above {
                                     color: black;       /* Set the icon color to black */

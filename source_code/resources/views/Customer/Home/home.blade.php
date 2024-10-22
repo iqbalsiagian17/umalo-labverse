@@ -199,7 +199,7 @@
                                                 <div class="featured__item__pic"
                                                     style="position: relative; background-image: url('{{ asset($imagePath) }}'); background-size: cover; background-position: center; border-radius: 10px;">
                                                     <ul class="featured__item__pic__hover">
-                                                        <li><a href="{{ route('produk_customer.user.show', $product->id) }}"><i
+                                                        <li><a href="{{ route('produk_customer.user.show', $product->id) }}?source={{ Str::random(10) }}"><i
                                                                     class="fa fa-info-circle"></i></a></li>
 
                                                         @auth
@@ -217,7 +217,7 @@
 
                                                 <div class="featured__item__text">
                                                     <h6><a
-                                                            href="{{ route('produk_customer.user.show', $product->id) }}">{{ $product->nama }}</a>
+                                                            href="{{ route('produk_customer.user.show', $product->id) }}?source={{ Str::random(10) }}">{{ $product->nama }}</a>
                                                     </h6>
                                                     <h5>
                                                         <span style="text-decoration: line-through; color: #ff0000;">
@@ -326,12 +326,15 @@
                                     : 'path/to/default/image.jpg';
                             @endphp
                             <div class="col-lg-3 col-md-4 col-sm-6 mix oranges fresh-meat">
-                                <div class="featured__item" data-href="{{ route('produk_customer.user.show', $item->id) }}">
+                                <div class="featured__item" data-href="{{ route('produk_customer.user.show', ['id' => $item->id . '-' . Str::random(10)]) }}">
                                     <div class="featured__item__pic"
                                         style="background-image: url('{{ asset($imagePath) }}'); background-size: cover; background-position: center; border-radius: 10px;">
                                         <ul class="featured__item__pic__hover">
-                                            <li><a href="{{ route('produk_customer.user.show', $item->id) }}"><i
-                                                        class="fa fa-info-circle"></i></a></li>
+                                            <li>
+                                                <a href="{{ route('produk_customer.user.show', ['id' => $item->id . '-' . Str::random(10)]) }}">
+                                                    <i class="fa fa-info-circle"></i>
+                                                </a>
+                                            </li>
 
                                             @auth
                                                 <!-- Jika pengguna sudah login -->
@@ -345,7 +348,7 @@
                                     </div>
 
                                     <div class="featured__item__text">
-                                        <h6><a href="{{ route('produk_customer.user.show', $item->id) }}">{{ $item->nama }}</a></h6>
+                                        <h6><a href="{{ route('produk_customer.user.show', ['id' => $item->id . '-' . Str::random(10)]) }}">{{ $item->nama }}</a></h6>
                                         <h5>
                                             @if ($item->harga_potong)
                                                 <span style="text-decoration: line-through;">
@@ -395,7 +398,7 @@
                             : 'path/to/default/image.jpg';
                     @endphp
                     <div class="col-lg-3 col-md-4 col-sm-6 mix oranges fresh-meat">
-                        <div class="featured__item" data-href="{{ route('produk_customer.user.show', $item->id) }}">
+                        <div class="featured__item" data-href="{{ route('produk_customer.user.show', $item->id) }}?source={{ Str::random(10) }}">
                             <div class="featured__item__pic"
                                 style="background-image: url('{{ asset($imagePath) }}'); background-size: cover; background-position: center; border-radius: 10px;">
                                 @if ($item->harga_potongan)
@@ -403,7 +406,7 @@
                                 @endif
 
                                 <ul class="featured__item__pic__hover">
-                                    <li><a href="{{ route('produk_customer.user.show', $item->id) }}"><i
+                                    <li><a href="{{ route('produk_customer.user.show', $item->id) }}?source={{ Str::random(10) }}"><i
                                                 class="fa fa-info-circle"></i></a></li>
                                     @auth
                                         <!-- Jika pengguna sudah login -->
@@ -417,7 +420,7 @@
                             </div>
 
                             <div class="featured__item__text">
-                                <h6><a href="{{ route('produk_customer.user.show', $item->id) }}">{{ $item->nama }}</a></h6>
+                                <h6><a href="{{ route('produk_customer.user.show', $item->id) }}?source={{ Str::random(10) }}">{{ $item->nama }}</a></h6>
                                 <h5>
                                     @if ($item->harga_potongan)
                                                 <span style="text-decoration: line-through; color:red;">

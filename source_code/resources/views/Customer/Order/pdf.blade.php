@@ -214,7 +214,7 @@
 <div class="invoice-info">
     <p class="invoice-title">INVOICE</p>
     <p><strong>Number:</strong> {{ $invoiceNumber }}</p>
-    <p><strong>Date:</strong> {{ \Carbon\Carbon::now()->format('F j, Y') }}</p>
+    <p><strong>Date:</strong> {{ $order->created_at->format('F j, Y') }}</p>
 </div>
 
 @php
@@ -290,18 +290,12 @@
             <td colspan="4" style="text-align:right;"><strong>Subtotal</strong></td>
             <td>Rp {{ number_format($order->harga_setelah_nego ?? $order->harga_total, 0, ',', '.') }}</td>
         </tr>
-        <tr>
-            <td colspan="4" style="text-align:right;"><strong>PPN ({{ $ppn->ppn }}%)</strong></td>
-            <td>
-                Rp
-                {{ number_format(($order->harga_setelah_nego ?? $order->harga_total) * ($ppn->ppn / 100), 0, ',', '.') }}
-            </td>
         </tr>
         <tr>
-            <td colspan="4" style="text-align:right;"><strong>Total Price Include PPN</strong></td>
+            <td colspan="4" style="text-align:right;"><strong>Total Price</strong></td>
             <td>
                 Rp
-                {{ number_format(($order->harga_setelah_nego ?? $order->harga_total) + ($order->harga_setelah_nego ?? $order->harga_total) * ($ppn->ppn / 100), 0, ',', '.') }}
+                {{ number_format($order->harga_setelah_nego ?? $order->harga_total, 0, ',', '.') }}
             </td>
         </tr>
     </tbody>
@@ -325,10 +319,10 @@
     <div class="signature-section">
         <p>Kind Regards,</p>
         <p><strong>PT. Arkamaya Guna Saharsa</strong></p>
-        @foreach ($materaiImages as $image)
+{{--         @foreach ($materaiImages as $image)
             <img src="{{ $image }}" alt="Materai Image" style="width: 100px;">
         @endforeach
-
+ --}}
         <p>Agustina Panjaitan</p>
         <p>Director</p>
     </div>

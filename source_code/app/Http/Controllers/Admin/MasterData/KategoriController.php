@@ -7,11 +7,25 @@ use Illuminate\Http\Request;
 
 class KategoriController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $kategoris = Kategori::where('flag', 'yes')->get();
-        return view('admin.masterdata.kategori.index', compact('kategoris'));
+        // Ambil input pencarian dari form
+        $search = $request->input('search');
+    
+        // Query untuk mendapatkan kategori yang di-flag 'yes' dan filter jika ada pencarian
+        $query = Kategori::where('flag', 'yes');
+    
+        // Jika ada pencarian, tambahkan filter where untuk nama
+        if ($search) {
+            $query->where('nama', 'like', '%' . $search . '%');
+        }
+    
+        // Paginate hasil pencarian atau semua kategori
+        $kategoris = $query->paginate(10); // Sesuaikan jumlah item per halaman
+    
+        return view('admin.masterdata.kategori.index', compact('kategoris', 'search'));
     }
+    
 
     public function create()
     {

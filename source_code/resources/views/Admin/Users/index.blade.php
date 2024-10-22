@@ -28,12 +28,19 @@
     <div class="card">
         <div class="card-header d-flex justify-content-between align-items-center">
             <h4 class="mb-0">User Management</h4>
-            <a href="{{ route('users.create') }}" class="btn btn-primary">Add New User</a>
+            <div>
+                <form action="{{ route('users.index') }}" method="GET" class="d-flex">
+                    <input type="text" name="search" class="form-control me-2" placeholder="Cari Nama User" value="{{ request('search') }}">
+                    <button type="submit" class="btn btn-primary">Cari</button>
+                </form>
+            </div>
         </div>
+        
 
         <!-- Filter Dropdown and Success Message -->
         <div class="card-body">
             <div class="d-flex justify-content-between align-items-center mb-3">
+                <!-- Filter Users Dropdown on the left -->
                 <div class="dropdown">
                     <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
                         Filter Users
@@ -43,13 +50,17 @@
                         <li><a class="dropdown-item {{ request('role', '0') == '1' ? 'active' : '' }}" href="{{ route('users.index', ['role' => 1]) }}">Admins</a></li>
                     </ul>
                 </div>
-                
-                @if (session('success'))
-                    <div class="alert alert-success">
-                        {{ session('success') }}
-                    </div>
-                @endif
+            
+                <!-- Add New User Button on the right -->
+                <a href="{{ route('users.create') }}" class="btn btn-primary">Add New User</a>
             </div>
+            
+            @if (session('success'))
+                <div class="alert alert-success">
+                    {{ session('success') }}
+                </div>
+            @endif
+            
 
             <!-- User Table -->
             <div class="table-responsive">

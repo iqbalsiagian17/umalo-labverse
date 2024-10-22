@@ -215,7 +215,7 @@
                                         <div class="product__item__pic"
                                             style="background-image: url('{{ asset($imagePath) }}');">
                                             <ul class="product__item__pic__hover">
-                                                <li><a href="{{ route('produk_customer.user.show', $product->id) }}"><i
+                                                <li><a href="{{ route('produk_customer.user.show', $product->id) }}?source={{ Str::random(10) }}"><i
                                                             class="fa fa-info-circle"></i></a></li>
                                                 @auth
                                                     <!-- Jika pengguna sudah login -->
@@ -231,7 +231,7 @@
                                         </div>
                                         <div class="product__item__text">
                                             <h6><a
-                                                    href="{{ route('produk_customer.user.show', $product->id) }}">{{ \Illuminate\Support\Str::limit($product->nama, 20, '...') }}</a>
+                                                    href="{{ route('produk_customer.user.show', $product->id) }}?source={{ Str::random(10) }}">{{ \Illuminate\Support\Str::limit($product->nama, 20, '...') }}</a>
                                             </h6>
                                             <h5>Rp{{ number_format($product->harga_tayang, 2) }}</h5>
                                         </div>
@@ -248,7 +248,7 @@
                         <div class="row" id="product-list">
                             @foreach ($produk as $product)
                                 <div class="col-lg-4 col-md-6 col-sm-6 product__item-container">
-                                    <div class="product__item" data-href="{{ route('produk_customer.user.show', $product->id) }}">
+                                    <div class="product__item" data-href="{{ route('produk_customer.user.show', $product->id) }}?source={{ Str::random(10) }}">
                                         @php
                                             $imagePath = $product->images->isNotEmpty()
                                                 ? $product->images->first()->gambar
@@ -258,7 +258,7 @@
                                             style="background-image: url('{{ asset($imagePath) }}');">
                                             <ul class="product__item__pic__hover">
                                                 <li>
-                                                    <a href="{{ route('produk_customer.user.show', $product->id) }}">
+                                                    <a href="{{ route('produk_customer.user.show', $product->id) }}?source={{ Str::random(10) }}">
                                                         <i class="fa fa-info-circle"></i>
                                                     </a>
                                                 </li>
@@ -279,7 +279,7 @@
                                         </div>
                                         <div class="product__item__text">
                                             <h6>
-                                                <a href="{{ route('produk_customer.user.show', $product->id) }}">
+                                                <a href="{{ route('produk_customer.user.show', $product->id) }}?source={{ Str::random(10) }}">
                                                     {{ \Illuminate\Support\Str::limit($product->nama, 20, '...') }}
                                                 </a>
                                             </h6>

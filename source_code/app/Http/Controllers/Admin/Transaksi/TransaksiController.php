@@ -7,40 +7,48 @@ use App\Models\Order;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Services\InvoiceService;
+
 
 class TransaksiController extends Controller
 {
     public function index(Request $request)
-    {
-        // Ambil input pencarian
-        $search = $request->input('search');
+{
+    // Ambil input pencarian
+    $searchName = $request->input('search_name');
+    $searchInvoice = $request->input('search_invoice');
 
-        // Query order dengan filter nama user jika ada pencarian
-        $orders = Order::with(['orderItems', 'user.userdetail'])
-            ->when($search, function ($query, $search) {
-                return $query->whereHas('user', function ($query) use ($search) {
-                    $query->where('name', 'like', '%' . $search . '%');
-                });
-            })
-            ->paginate(10); // Menampilkan 10 transaksi per halaman
+    // Query order dengan filter nama user dan/atau nomor invoice jika ada pencarian
+    $orders = Order::with(['orderItems', 'user.userdetail'])
+        ->when($searchName, function ($query, $searchName) {
+            return $query->whereHas('user', function ($query) use ($searchName) {
+                $query->where('name', 'like', '%' . $searchName . '%');
+            });
+        })
+        ->when($searchInvoice, function ($query, $searchInvoice) {
+            return $query->orWhere('invoice_number', 'like', '%' . $searchInvoice . '%');
+        })
+        ->paginate(10); // Menampilkan 10 transaksi per halaman
 
-            if ($search && $orders->isEmpty()) {
-                session()->flash('no_results', 'Tidak ada hasil untuk pencarian: ' . $search);
-            }
-
-        // Lihat transaksi yang sudah dilihat
-        $seenOrders = Session::get('seen_orders', []);
-
-        foreach ($orders as $order) {
-            if (!in_array($order->id, $seenOrders)) {
-                $seenOrders[] = $order->id;
-            }
-        }
-
-        Session::put('seen_orders', $seenOrders);
-
-        return view('admin.transaksi.index', compact('orders'));
+    // Jika pencarian kosong
+    if (($searchName || $searchInvoice) && $orders->isEmpty()) {
+        session()->flash('no_results', 'Tidak ada hasil untuk pencarian.');
     }
+
+    // Lihat transaksi yang sudah dilihat
+    $seenOrders = Session::get('seen_orders', []);
+
+    foreach ($orders as $order) {
+        if (!in_array($order->id, $seenOrders)) {
+            $seenOrders[] = $order->id;
+        }
+    }
+
+    Session::put('seen_orders', $seenOrders);
+
+    return view('admin.transaksi.index', compact('orders'));
+}
+
 
 
 
@@ -58,7 +66,7 @@ class TransaksiController extends Controller
         return view('admin.transaksi.edit', compact('order'));
     }
 
-    public function update(Request $request, $id)
+    public function update(Request $request, $id, InvoiceService $invoiceService)
     {
         $order = Order::findOrFail($id);
 
@@ -87,6 +95,12 @@ class TransaksiController extends Controller
         ], 400);
     } else {
         $order->status = $request->status;
+    }
+
+    // **Generate Invoice Number when status is 'Diterima'**
+    if ($request->status == 'Diterima' && !$order->invoice_number) {
+        $invoiceNumber = $invoiceService->generateInvoiceNumber($order); // Use the service here
+        $order->invoice_number = $invoiceNumber;
     }
 
     if ($request->status == 'Negosiasi' && $request->has('negotiation_rejected')) {

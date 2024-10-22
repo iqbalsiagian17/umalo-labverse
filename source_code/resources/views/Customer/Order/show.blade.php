@@ -37,7 +37,7 @@
         </table>
         @if($order->status == 'Diterima')
         <a href="{{ route('order.generate_pdf', $order->id) }}" class="btn btn-primary mt-3">Download Invoice</a>
-    @endif
+        @endif
 
         <div class="mt-4">
             <a href="{{ route('cart.view') }}" class="btn btn-secondary">Back</a>

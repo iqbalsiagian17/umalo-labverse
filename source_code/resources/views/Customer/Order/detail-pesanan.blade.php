@@ -19,6 +19,7 @@
             <div class="card-body shadow">
                 <div class="row">
                     <div class="col-md-6">
+                        <h4 class="mb-3">{{ __('Invoice') }}: <strong>{{ $order->invoice_number }}</strong></h4>
                         <h4 class="mb-3">{{ __('messages.order_number') }}: <strong>{{ $order->id }}</strong></h4>
                         <p><strong>{{ __('messages.status') }}:</strong> <span
                                 class="badge bg-info text-dark">{{ $order->status }}</span></p>

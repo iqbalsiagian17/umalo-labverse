@@ -7,15 +7,21 @@
         <div class="card">
             <div class="card-header d-flex justify-content-between align-items-center">
                 <h1 class="card-title mb-0">Transaksi</h1>
-                <form action="{{ route('transaksi.index') }}" method="GET" class="form-inline">
-                    <div class="input-group">
-                        <input type="text" name="search" class="form-control" placeholder="Cari Nama User" value="{{ request('search') }}">
-                        <div class="input-group-append">
-                            <button type="submit" class="btn btn-primary">Cari</button>
-                        </div>
+                <form action="{{ route('transaksi.index') }}" method="GET" class="d-flex align-items-center">
+                    <div class="input-group me-2">
+                        <input type="text" name="search_name" class="form-control" placeholder="Cari Nama User" value="{{ request('search_name') }}">
                     </div>
+                    <div class="input-group me-2">
+                        <input type="text" name="search_invoice" class="form-control" placeholder="Cari Nomor Invoice" value="{{ request('search_invoice') }}">
+                    </div>
+                    <button type="submit" class="btn btn-primary me-2">Cari</button>
+                    <a href="{{ route('transaksi.index') }}" class="btn btn-secondary">
+                        <i class="fas fa-sync-alt"></i>
+                    </a>
                 </form>
             </div>
+            
+            
 
             <!-- Notifikasi jika hasil pencarian kosong -->
             @if(session('no_results'))
@@ -38,6 +44,7 @@
                             <tr>
                                 <th>No</th>
                                 <th>ID Transaksi</th>
+                                <th>Invoice</th>
                                 <th>User</th>
                                 <th>Harga Total</th>
                                 <th>Status</th>
@@ -49,10 +56,14 @@
                             <tr>
                                 <td>{{ $index + 1 }}</td>
                                 <td>{{ $order->id }}</td>
+                                <td>
+                                    <a href="{{ route('order.generate_pdf', ['id' => $order->id]) }}" target="_blank">
+                                        {{ $order->invoice_number }}
+                                    </a>
+                                </td>
                                 <td>{{ $order->user->name }}</td>
                                 <td>
                                     @if($order->harga_setelah_nego)
-                                        <span style="text-decoration: line-through;">Rp {{ number_format($order->harga_total, 0, ',', '.') }}</span><br>
                                         <span>Rp {{ number_format($order->harga_setelah_nego, 0, ',', '.') }}</span>
                                     @else
                                         Rp {{ number_format($order->harga_total, 0, ',', '.') }}
@@ -76,11 +87,9 @@
                     <div class="d-flex justify-content-center">
                         {{ $orders->links('pagination::bootstrap-5') }}
                     </div>
-
                     </div>
                 </div>
             </div>
-
         </div>
     </div>
 </div>
