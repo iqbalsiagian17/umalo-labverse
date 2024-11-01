@@ -4,32 +4,6 @@
     <!-- Hero Section Begin -->
     <section class="hero mt-5">
         <div class="container">
-            @if($pendingOrders->isNotEmpty())
-            @foreach($pendingOrders as $order)
-            <div class="alert alert-warning alert-dismissible fade show d-flex align-items-center mb-3" role="alert" style="border-radius: 10px; box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); background-color: #fff3cd; padding: 1rem 1.5rem;">
-                <i class="fas fa-exclamation-triangle" style="font-size: 1.8rem; color: #856404; margin-right: 1.5rem;"></i>
-                <div style="flex-grow: 1; font-size: 1rem; color: #856404;">
-                    <strong>Pesanan Anda #{{ $order->id }}</strong> sudah dikonfirmasi admin dan sedang menunggu Anda untuk mengirim bukti pembayaran segera.
-                    <a href="{{ route('order.detail', $order->id) }}" class="alert-link" style="font-weight: bold; text-decoration: underline; color: #856404;">Klik di sini</a> untuk melihat detail pesanan.
-                </div>
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" style="background: none; border: none; color: #856404; font-size: 1.5rem; opacity: 0.8;">&times;</button>
-            </div>
-            @endforeach
-        @endif
-
-        @if ($rejectOrders->isNotEmpty())
-            @foreach ($rejectOrders as $order)
-                <div class="alert alert-warning alert-dismissible fade show d-flex align-items-center mb-3" role="alert" style="border-radius: 10px; box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); background-color: #fff3cd; padding: 1rem 1.5rem;">
-                    <i class="fas fa-exclamation-triangle" style="font-size: 1.8rem; color: #856404; margin-right: 1.5rem;"></i>
-                    <div style="flex-grow: 1; font-size: 1rem; color: #856404;">
-                        <strong>Pesanan Anda #{{ $order->id }}</strong> telah ditolak untuk negosiasi dan berlanjut ke pembelian reguler.
-                        <a href="{{ route('order.detail', $order->id) }}" class="alert-link" style="font-weight: bold; text-decoration: underline; color: #856404;">Klik di sini</a> untuk melihat detail pesanan.
-                    </div>
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" style="background: none; border: none; color: #856404; font-size: 1.5rem; opacity: 0.8;">&times;</button>
-                </div>
-            @endforeach
-        @endif
-
             <div class="row">
                 <div class="col-lg-12">
                     <div id="heroCarousel" class="carousel slide" data-ride="carousel">
@@ -136,7 +110,7 @@
         <br>
     </section>
     <!-- Hero Section End -->
-    <section class="hero">
+    {{-- <section class="hero">
         <div class="container">
                 <div class="row">
                         <div class="col-lg-12">
@@ -188,10 +162,10 @@
 
                                 <!-- Product list start -->
                                 <div class="row featured__filter mt-5" id="MixItUpD27635">
-                                    @foreach ($bigSale->produk as $product)
+                                    @foreach ($bigSale->Product as $product)
                                         @php
                                             $imagePath = $product->images->isNotEmpty()
-                                                ? $product->images->first()->gambar
+                                                ? $product->images->first()->image
                                                 : 'path/to/default/image.jpg';
                                         @endphp
                                         <div class="col-lg-3 col-md-4 col-sm-6 mix oranges fresh-meat">
@@ -199,7 +173,7 @@
                                                 <div class="featured__item__pic"
                                                     style="position: relative; background-image: url('{{ asset($imagePath) }}'); background-size: cover; background-position: center; border-radius: 10px;">
                                                     <ul class="featured__item__pic__hover">
-                                                        <li><a href="{{ route('produk_customer.user.show', $product->id) }}?source={{ Str::random(10) }}"><i
+                                                        <li><a href="{{ route('Product_customer.user.show', $product->id) }}?source={{ Str::random(10) }}"><i
                                                                     class="fa fa-info-circle"></i></a></li>
 
                                                         @auth
@@ -217,11 +191,11 @@
 
                                                 <div class="featured__item__text">
                                                     <h6><a
-                                                            href="{{ route('produk_customer.user.show', $product->id) }}?source={{ Str::random(10) }}">{{ $product->nama }}</a>
+                                                            href="{{ route('Product_customer.user.show', $product->id) }}?source={{ Str::random(10) }}">{{ $product->name }}</a>
                                                     </h6>
                                                     <h5>
                                                         <span style="text-decoration: line-through; color: #ff0000;">
-                                                            Rp{{ number_format($product->harga_tayang, 0, ',', '.') }}
+                                                            Rp{{ number_format($product->price, 0, ',', '.') }}
                                                         </span>
                                                         <br>
                                                         Rp{{ number_format($product->pivot->harga_diskon, 0, ',', '.') }}
@@ -305,108 +279,37 @@
                         </div>
                 </div>
         </div>
-    </section>
-
-        @if($topSellingProducts->isNotEmpty())
-            <section class="featured spad">
-                <div class="container">
-                    <div class="row">
-                        <div class="col-lg-12">
-                            <div class="section-title">
-                                <h2>{{ __('messages.produk_terlaris') }}</h2>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="row featured__filter" id="MixItUpD27635">
-                        @foreach ($topSellingProducts as $item)
-                            @php
-                                $imagePath = $item->images->isNotEmpty()
-                                    ? $item->images->first()->gambar
-                                    : 'path/to/default/image.jpg';
-                            @endphp
-                            <div class="col-lg-3 col-md-4 col-sm-6 mix oranges fresh-meat">
-                                <div class="featured__item" data-href="{{ route('produk_customer.user.show', ['id' => $item->id . '-' . Str::random(10)]) }}">
-                                    <div class="featured__item__pic"
-                                        style="background-image: url('{{ asset($imagePath) }}'); background-size: cover; background-position: center; border-radius: 10px;">
-                                        <ul class="featured__item__pic__hover">
-                                            <li>
-                                                <a href="{{ route('produk_customer.user.show', ['id' => $item->id . '-' . Str::random(10)]) }}">
-                                                    <i class="fa fa-info-circle"></i>
-                                                </a>
-                                            </li>
-
-                                            @auth
-                                                <!-- Jika pengguna sudah login -->
-                                                <li><a href="#" class="add-to-cart-btn" data-id="{{ $item->id }}"><i
-                                                            class="fa fa-shopping-cart"></i></a></li>
-                                            @else
-                                                <!-- Jika pengguna belum login -->
-                                                <li><a href="{{ route('login') }}"><i class="fa fa-shopping-cart"></i></a></li>
-                                            @endauth
-                                        </ul>
-                                    </div>
-
-                                    <div class="featured__item__text">
-                                        <h6><a href="{{ route('produk_customer.user.show', ['id' => $item->id . '-' . Str::random(10)]) }}">{{ $item->nama }}</a></h6>
-                                        <h5>
-                                            @if ($item->harga_potong)
-                                                <span style="text-decoration: line-through;">
-                                                    Rp{{ number_format($item->harga_tayang, 0, ',', '.') }}
-                                                </span>
-                                                <br>
-                                                <span>
-                                                    Rp{{ number_format($item->harga_potong, 0, ',', '.') }}
-                                                </span>
-                                            @else
-                                                @if ($item->harga_ditampilkan === 'ya')
-                                                    Rp{{ number_format($item->harga_tayang, 0, ',', '.') }}
-                                                @else
-                                                    {{ __('messages.hubungi_admin') }}
-                                                @endif
-                                            @endif
-
-                                        </h5>
-                                    </div>
-                                </div>
-                            </div>
-                        @endforeach
-                    </div>
-                </div>
-            </section>
-        @endif
+    </section> --}}
 
 
-        <hr>
-
-        @if($produk->isNotEmpty())
+    @if($product->isNotEmpty())
     <section class="featured spad">
         <div class="container">
             <div class="row">
                 <div class="col-lg-12">
                     <div class="section-title">
-                        <h2>{{ __('messages.produk_terbaru') }}</h2>
+                        <h2>{{ __('messages.Product_terbaru') }}</h2>
                     </div>
                 </div>
             </div>
 
             <div class="row featured__filter" id="MixItUpD27635">
-                @foreach ($produk as $index => $item)
-                    @php
-                        $imagePath = $item->images->isNotEmpty()
-                            ? $item->images->first()->gambar
-                            : 'path/to/default/image.jpg';
-                    @endphp
+                @foreach ($product as $index => $item)
+                @php
+                $imagePath = $item->images->isNotEmpty()
+                        ? $item->images->first()->images
+                        : 'assets/dummy/produck1.png'; // Gambar default jika tidak ada gambar
+                @endphp
                     <div class="col-lg-3 col-md-4 col-sm-6 mix oranges fresh-meat">
-                        <div class="featured__item" data-href="{{ route('produk_customer.user.show', $item->id) }}?source={{ Str::random(10) }}">
+                        <div class="featured__item" data-href="{{ route('Product_customer.user.show', $item->id) }}?source={{ Str::random(10) }}">
                             <div class="featured__item__pic"
                                 style="background-image: url('{{ asset($imagePath) }}'); background-size: cover; background-position: center; border-radius: 10px;">
-                                @if ($item->harga_potongan)
+                                @if ($item->discount_price)
                                     <span class="nego-badge bg-danger">{{ __('Diskon!!') }}</span>
                                 @endif
 
                                 <ul class="featured__item__pic__hover">
-                                    <li><a href="{{ route('produk_customer.user.show', $item->id) }}?source={{ Str::random(10) }}"><i
+                                    <li><a href="{{ route('Product_customer.user.show', $item->id) }}?source={{ Str::random(10) }}"><i
                                                 class="fa fa-info-circle"></i></a></li>
                                     @auth
                                         <!-- Jika pengguna sudah login -->
@@ -420,19 +323,19 @@
                             </div>
 
                             <div class="featured__item__text">
-                                <h6><a href="{{ route('produk_customer.user.show', $item->id) }}?source={{ Str::random(10) }}">{{ $item->nama }}</a></h6>
+                                <h6><a href="{{ route('Product_customer.user.show', $item->id) }}?source={{ Str::random(10) }}">{{ $item->name }}</a></h6>
                                 <h5>
-                                    @if ($item->harga_potongan)
+                                    @if ($item->discount_price)
                                                 <span style="text-decoration: line-through; color:red;">
-                                                    Rp{{ number_format($item->harga_tayang, 0, ',', '.') }}
+                                                    Rp{{ number_format($item->price, 0, ',', '.') }}
                                                 </span>
                                                 <br>
                                                 <span>
-                                                    Rp{{ number_format($item->harga_potongan, 0, ',', '.') }}
+                                                    Rp{{ number_format($item->discount_price, 0, ',', '.') }}
                                                 </span>
                                             @else
-                                                @if ($item->harga_ditampilkan === 'ya')
-                                                    Rp{{ number_format($item->harga_tayang, 0, ',', '.') }}
+                                                @if ($item->is_price_displayed === 'yes')
+                                                    Rp{{ number_format($item->price, 0, ',', '.') }}
                                                 @else
                                                     {{ __('messages.hubungi_admin') }}
                                                 @endif
@@ -442,7 +345,7 @@
                         </div>
                     </div>
 
-                    @if ($index == 7 && $produk->count() > 8)
+                    @if ($index == 7 && $product->count() > 8)
                         <div class="col-lg-12 text-center mt-3">
                             <a href="{{ route('shop') }}" class="primary-btn rounded">{{ __('messages.selengkapnya') }}</a>
                         </div>

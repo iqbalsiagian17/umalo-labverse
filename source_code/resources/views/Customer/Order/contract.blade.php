@@ -12,7 +12,7 @@
         <table class="table table-bordered">
             <thead>
                 <tr>
-                    <th>Produk</th>
+                    <th>Product</th>
                     <th>Jumlah</th>
                     <th>Harga</th>
                     <th>Sub Total</th>
@@ -21,7 +21,7 @@
             <tbody>
                 @foreach($order->orderItems as $item)
                     <tr>
-                        <td>{{ $item->produk->nama }}</td>
+                        <td>{{ $item->Product->nama }}</td>
                         <td>{{ $item->jumlah }}</td>
                         <td>{{ $item->harga }}</td>
                         <td>{{ $item->harga * $item->jumlah }}</td>

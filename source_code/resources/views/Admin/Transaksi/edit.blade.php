@@ -82,8 +82,8 @@
                     <table class="table table-bordered">
                         <thead>
                             <tr>
-                                <th>Produk ID</th>
-                                <th>Nama Produk</th>
+                                <th>Product ID</th>
+                                <th>Nama Product</th>
                                 <th>Jumlah</th>
                                 <th>Harga Satuan</th>
                                 <th>Total Harga</th>
@@ -92,8 +92,8 @@
                         <tbody>
                             @foreach ($order->orderItems as $item)
                                 <tr>
-                                    <td>{{ $item->produk_id }}</td>
-                                    <td>{{ $item->produk->nama }}</td>
+                                    <td>{{ $item->Product_id }}</td>
+                                    <td>{{ $item->Product->nama }}</td>
                                     <td>{{ $item->jumlah }}</td>
                                     <td>{{ 'Rp ' . number_format($item->harga, 0, ',', '.') }}</td>
                                     <td>

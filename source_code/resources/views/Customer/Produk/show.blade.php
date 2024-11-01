@@ -8,13 +8,13 @@
                 <div class="product__details__pic">
                     <div class="product__details__pic__item">
                         @if($images->isNotEmpty())
-                            <a href="{{ asset($images->first()->gambar) }}" data-lightbox="product-image" data-title="{{ $produk->nama }}">
+                            <a href="{{ asset($images->first()->gambar) }}" data-lightbox="product-image" data-title="{{ $Product->nama }}">
                                 <img class="product__details__pic__item--large"
-                                    src="{{ asset($images->first()->gambar) }}" alt="{{ $produk->nama }}">
+                                    src="{{ asset($images->first()->gambar) }}" alt="{{ $Product->nama }}">
                             </a>
                         @else
-                            <a href="https://via.placeholder.com/150" data-lightbox="product-image" data-title="{{ $produk->nama }}">
-                                <img src="https://via.placeholder.com/150" class="img-fluid mb-2" alt="{{ $produk->nama }}">
+                            <a href="https://via.placeholder.com/150" data-lightbox="product-image" data-title="{{ $Product->nama }}">
+                                <img src="https://via.placeholder.com/150" class="img-fluid mb-2" alt="{{ $Product->nama }}">
                             </a>
                         @endif
                     </div>
@@ -63,7 +63,7 @@
                             @if($images->isNotEmpty())
                                 @foreach ($images as $image)
                                     <img data-imgbigurl="{{ asset($image->gambar) }}"
-                                        src="{{ asset($image->gambar) }}" alt="{{ $produk->nama }}">
+                                        src="{{ asset($image->gambar) }}" alt="{{ $Product->nama }}">
                                 @endforeach
                         @endif
                         </div>
@@ -71,25 +71,25 @@
                 </div>
             <div class="col-lg-6 col-md-6">
                 <div class="product__details__text">
-                    <h3>{{ $produk->nama }}
+                    <h3>{{ $Product->nama }}
                         <button type="button" class="btn primary-btn" data-bs-toggle="modal" data-bs-target="#shareModal" style="width: 45px; height: 45px; border-radius: 50%; padding: 0;">
                             <i class="fas fa-share-alt"></i>
                         </button>
                     </h3>
                     <div class="product__details__price">
                         <div class="product__details__price">
-                            @if ($produk->harga_ditampilkan === 'ya')
-                            @if ($produk->harga_potongan > 0)
+                            @if ($Product->harga_ditampilkan === 'ya')
+                            @if ($Product->harga_potongan > 0)
                                 <span style="text-decoration: line-through; color: #ff0000;">
-                                    Rp{{ number_format($produk->harga_tayang, 0, ',', '.') }}
+                                    Rp{{ number_format($Product->harga_tayang, 0, ',', '.') }}
                                 </span>
                                 <br>
                                 <span style="color: #000000;">
-                                    Rp{{ number_format($produk->harga_potongan, 0, ',', '.') }}
+                                    Rp{{ number_format($Product->harga_potongan, 0, ',', '.') }}
                                 </span>
                             @elseif ($bigSaleItem && $bigSaleItem->status === 'aktif')
                                 <span style="text-decoration: line-through; color: #ff0000;">
-                                    Rp{{ number_format($produk->harga_tayang, 0, ',', '.') }}
+                                    Rp{{ number_format($Product->harga_tayang, 0, ',', '.') }}
                                 </span>
                                 <br>
                                 <span style="color: #000000;">
@@ -97,7 +97,7 @@
                                 </span>
                             @else
                                 <span style="color: #000000;">
-                                    Rp{{ number_format($produk->harga_tayang, 0, ',', '.') }}
+                                    Rp{{ number_format($Product->harga_tayang, 0, ',', '.') }}
                                 </span>
                             @endif
                             <style>
@@ -122,7 +122,7 @@
                         <div class="quantity">
                             <div class="pro-qty">
                                 <span class="dec qtybtn">-</span>
-                                <input type="text" value="1" min="1" data-stok="{{ $produk->stok }}">
+                                <input type="text" value="1" min="1" data-stok="{{ $Product->stok }}">
                                 <span class="inc qtybtn">+</span>
                             </div>
                         </div>
@@ -130,11 +130,11 @@
 
 
                     @auth
-                    <a href="#" class="primary-btn add-to-cart-btn" data-id="{{ $produk->id }}">{{ __('messages.add') }}</a>
+                    <a href="#" class="primary-btn add-to-cart-btn" data-id="{{ $Product->id }}">{{ __('messages.add') }}</a>
                     @else
                     <a href="{{ route('login') }}" class="primary-btn add-to-cart-btn">{{ __('messages.add') }}</a>
                     @endauth
-                    <a href="#" class="heart-icon" data-product-id="{{ $produk->id }}">
+                    <a href="#" class="heart-icon" data-product-id="{{ $Product->id }}">
                         <i class="fas fa-heart {{ $isFavorite ? 'favorite' : '' }}"></i>
                     </a>
 
@@ -195,7 +195,7 @@
 
                     <div class="product__details__subtotal hidden">
                         <b>{{ __('messages.subtotal') }}: </b>
-                        <span id="subtotal">Rp{{ number_format($produk->harga_potongan > 0 ? $produk->harga_potongan : ($bigSaleItem && $bigSaleItem->status === 'aktif' ? $bigSaleItem->pivot->harga_diskon : $produk->harga_tayang), 0, ',', '.') }}</span>
+                        <span id="subtotal">Rp{{ number_format($Product->harga_potongan > 0 ? $Product->harga_potongan : ($bigSaleItem && $bigSaleItem->status === 'aktif' ? $bigSaleItem->pivot->harga_diskon : $Product->harga_tayang), 0, ',', '.') }}</span>
                         <style>
                             .hidden {
                                 display: none;
@@ -206,7 +206,7 @@
 
                     <script>
                     document.addEventListener('DOMContentLoaded', function() {
-                    const price = {{ $produk->harga_potongan > 0 ? $produk->harga_potongan : ($bigSaleItem && $bigSaleItem->status === 'aktif' ? $bigSaleItem->pivot->harga_diskon : $produk->harga_tayang) }};
+                    const price = {{ $Product->harga_potongan > 0 ? $Product->harga_potongan : ($bigSaleItem && $bigSaleItem->status === 'aktif' ? $bigSaleItem->pivot->harga_diskon : $Product->harga_tayang) }};
                     const quantityInput = document.querySelector('.pro-qty input');
                     const subtotalElement = document.getElementById('subtotal');
                     const incrementButton = document.querySelector('.inc.qtybtn');
@@ -291,13 +291,13 @@
                                             <!-- Example product card -->
                                             <div class="product-card">
                                                 @if($images->isNotEmpty())
-                                                    <img src="{{ asset($images->first()->gambar) }}" alt="{{ $produk->nama }}" class="product-image">
+                                                    <img src="{{ asset($images->first()->gambar) }}" alt="{{ $Product->nama }}" class="product-image">
                                                 @else
                                                     <img src="path_to_default_image.jpg" alt="Default Image" class="product-image">
                                                 @endif
                                                 <div class="product-info">
-                                                    <p class="product-name">{{ $produk->nama }}</p>
-                                                    <p class="product-price">Rp{{ number_format($produk->harga_tayang, 0, ',', '.') }}</p>
+                                                    <p class="product-name">{{ $Product->nama }}</p>
+                                                    <p class="product-price">Rp{{ number_format($Product->harga_tayang, 0, ',', '.') }}</p>
                                                 </div>
                                             </div>
 
@@ -425,7 +425,7 @@
                         <script>
                             function share(platform) {
                                 let url = "{{ url()->current() }}";
-                                let message = encodeURIComponent('Beli (" ' + '{{ $produk->nama }}' + '") dengan harga terbaik! ' + url);
+                                let message = encodeURIComponent('Beli (" ' + '{{ $Product->nama }}' + '") dengan harga terbaik! ' + url);
                                 let shareUrl;
 
                                 switch (platform) {
@@ -467,21 +467,21 @@
                     @endif
 
                     <ul>
-                        <li><b>{{ __('messages.stock') }}</b> <span>{{ $produk->stok }}</span></li>
-                        <li><b>{{ __('messages.commodity') }}</b> <span>{{ $produk->komoditas ? $produk->komoditas->nama : 'N/A' }}</span></li>
-                        <li><b>{{ __('messages.category') }}</b> <span>{{ $produk->kategori ? $produk->kategori->nama : 'N/A' }}</span></li>
-                        <li><b>{{ __('messages.sub_category') }}</b> <span>{{ $produk->subKategori ? $produk->subKategori->nama : 'N/A' }}</span></li>
+                        <li><b>{{ __('messages.stock') }}</b> <span>{{ $Product->stok }}</span></li>
+                        <li><b>{{ __('messages.commodity') }}</b> <span>{{ $Product->komoditas ? $Product->komoditas->nama : 'N/A' }}</span></li>
+                        <li><b>{{ __('messages.category') }}</b> <span>{{ $Product->Category ? $Product->Category->nama : 'N/A' }}</span></li>
+                        <li><b>{{ __('messages.sub_category') }}</b> <span>{{ $Product->subCategory ? $Product->subCategory->nama : 'N/A' }}</span></li>
                         <li><b>{{ __('messages.ecatalog') }}</b>
                             <span>
-                                @if ($produk->link_ekatalog)
+                                @if ($Product->link_ekatalog)
                                     @php
-                                        $url = $produk->link_ekatalog;
+                                        $url = $Product->link_ekatalog;
                                         if (!preg_match('~^(?:f|ht)tps?://~i', $url)) {
                                             $url = 'http://' . $url;
                                         }
                                     @endphp
 
-                                    <a href="{{ $url }}" target="_blank" class="ecatalog-link">{{ Str::limit($produk->link_ekatalog, 50) }}</a>
+                                    <a href="{{ $url }}" target="_blank" class="ecatalog-link">{{ Str::limit($Product->link_ekatalog, 50) }}</a>
                                 @else
                                     N/A
                                 @endif
@@ -552,143 +552,143 @@
                         <div class="tab-pane active" id="tabs-1" role="tabpanel">
                             <div class="product__details__tab__desc">
                                 <h6>{{ __('messages.product_information') }}</h6>
-                                <p>{!! $produk->spesifikasi_produk !!}</p>
+                                <p>{!! $Product->spesifikasi_Product !!}</p>
                             </div>
                         </div>
                         <div class="tab-pane" id="tabs-2" role="tabpanel">
                             <div class="product__details__tab__desc">
                                 <table class="table table-striped">
                                     <tbody>
-                                        @if($produk->tipe_barang)
+                                        @if($Product->tipe_barang)
                                             <tr>
                                                 <th scope="row"><strong>{{ __('messages.product_type') }}:</strong></th>
-                                                <td>{{ $produk->tipe_barang }}</td>
+                                                <td>{{ $Product->tipe_barang }}</td>
                                             </tr>
                                         @endif
-                                        @if($produk->stok)
+                                        @if($Product->stok)
                                             <tr>
                                                 <th scope="row"><strong>Stok:</strong></th>
-                                                <td>{{ $produk->stok }}</td>
+                                                <td>{{ $Product->stok }}</td>
                                             </tr>
                                         @endif
-                                        @if($produk->masa_berlaku_produk)
+                                        @if($Product->masa_berlaku_Product)
                                             <tr>
                                                 <th scope="row"><strong>{{ __('messages.stock') }}:</strong></th>
-                                                <td>{{ $produk->masa_berlaku_produk }}</td>
+                                                <td>{{ $Product->masa_berlaku_Product }}</td>
                                             </tr>
                                         @endif
-                                        @if($produk->merk)
+                                        @if($Product->merk)
                                             <tr>
                                                 <th scope="row"><strong>Merk:</strong></th>
-                                                <td>{{ $produk->merk }}</td>
+                                                <td>{{ $Product->merk }}</td>
                                             </tr>
                                         @endif
-                                        @if($produk->no_produk_penyedia)
+                                        @if($Product->no_Product_penyedia)
                                             <tr>
-                                                <th scope="row"><strong>No Produk Penyedia:</strong></th>
-                                                <td>{{ $produk->no_produk_penyedia }}</td>
+                                                <th scope="row"><strong>No Product Penyedia:</strong></th>
+                                                <td>{{ $Product->no_Product_penyedia }}</td>
                                             </tr>
                                         @endif
-                                        @if($produk->unit_pengukuran)
+                                        @if($Product->unit_pengukuran)
                                             <tr>
                                                 <th scope="row"><strong>Unit Pengukuran:</strong></th>
-                                                <td>{{ $produk->unit_pengukuran }}</td>
+                                                <td>{{ $Product->unit_pengukuran }}</td>
                                             </tr>
                                         @endif
-                                        @if($produk->jenis_produk)
+                                        @if($Product->jenis_Product)
                                             <tr>
-                                                <th scope="row"><strong>Jenis Produk:</strong></th>
-                                                <td>{{ $produk->jenis_produk }}</td>
+                                                <th scope="row"><strong>Jenis Product:</strong></th>
+                                                <td>{{ $Product->jenis_Product }}</td>
                                             </tr>
                                         @endif
-                                        @if($produk->kode_kbli)
+                                        @if($Product->kode_kbli)
                                             <tr>
                                                 <th scope="row"><strong>Kode KBLI:</strong></th>
-                                                <td>{{ $produk->kode_kbli }}</td>
+                                                <td>{{ $Product->kode_kbli }}</td>
                                             </tr>
                                         @endif
-                                        @if($produk->nilai_tkdn)
+                                        @if($Product->nilai_tkdn)
                                             <tr>
                                                 <th scope="row"><strong>Nilai TKDN:</strong></th>
-                                                <td>{{ $produk->nilai_tkdn }}</td>
+                                                <td>{{ $Product->nilai_tkdn }}</td>
                                             </tr>
                                         @endif
-                                        @if($produk->no_sni)
+                                        @if($Product->no_sni)
                                             <tr>
                                                 <th scope="row"><strong>No SNI:</strong></th>
-                                                <td>{{ $produk->no_sni }}</td>
+                                                <td>{{ $Product->no_sni }}</td>
                                             </tr>
                                         @endif
-                                        @if($produk->asal_negara)
+                                        @if($Product->asal_negara)
                                             <tr>
                                                 <th scope="row"><strong>Asal Negara:</strong></th>
-                                                <td>{{ $produk->asal_negara }}</td>
+                                                <td>{{ $Product->asal_negara }}</td>
                                             </tr>
                                         @endif
-                                        @if($produk->garansi_produk)
+                                        @if($Product->garansi_Product)
                                             <tr>
-                                                <th scope="row"><strong>Garansi Produk:</strong></th>
-                                                <td>{{ $produk->garansi_produk }}</td>
+                                                <th scope="row"><strong>Garansi Product:</strong></th>
+                                                <td>{{ $Product->garansi_Product }}</td>
                                             </tr>
                                         @endif
-                                        @if($produk->sni)
+                                        @if($Product->sni)
                                             <tr>
                                                 <th scope="row"><strong>SNI:</strong></th>
-                                                <td>{{ $produk->sni }}</td>
+                                                <td>{{ $Product->sni }}</td>
                                             </tr>
                                         @endif
-                                        @if($produk->uji_fungsi)
+                                        @if($Product->uji_fungsi)
                                             <tr>
                                                 <th scope="row"><strong>Uji Fungsi:</strong></th>
-                                                <td>{{ $produk->uji_fungsi }}</td>
+                                                <td>{{ $Product->uji_fungsi }}</td>
                                             </tr>
                                         @endif
-                                        @if($produk->memiliki_svlk)
+                                        @if($Product->memiliki_svlk)
                                             <tr>
                                                 <th scope="row"><strong>Memiliki SVLK:</strong></th>
-                                                <td>{{ $produk->memiliki_svlk }}</td>
+                                                <td>{{ $Product->memiliki_svlk }}</td>
                                             </tr>
                                         @endif
-                                        @if($produk->jenis_alat)
+                                        @if($Product->jenis_alat)
                                             <tr>
                                                 <th scope="row"><strong>Jenis Alat:</strong></th>
-                                                <td>{{ $produk->jenis_alat }}</td>
+                                                <td>{{ $Product->jenis_alat }}</td>
                                             </tr>
                                         @endif
-                                        @if($produk->fungsi)
+                                        @if($Product->fungsi)
                                             <tr>
                                                 <th scope="row"><strong>Fungsi:</strong></th>
-                                                <td>{{ $produk->fungsi }}</td>
+                                                <td>{{ $Product->fungsi }}</td>
                                             </tr>
                                         @endif
-                                        @if($produk->spesifikasi_produk)
+                                        @if($Product->spesifikasi_Product)
                                             <tr>
-                                                <th scope="row"><strong>Spesifikasi Produk:</strong></th>
-                                                <td>{{ $produk->spesifikasi_produk }}</td>
+                                                <th scope="row"><strong>Spesifikasi Product:</strong></th>
+                                                <td>{{ $Product->spesifikasi_Product }}</td>
                                             </tr>
                                         @endif
-                                        @if($produk->ramah_lingkungan !== null)
+                                        @if($Product->ramah_lingkungan !== null)
                                             <tr>
                                                 <th scope="row"><strong>Ramah Lingkungan:</strong></th>
-                                                <td>{{ $produk->ramah_lingkungan ? 'Ya' : 'Tidak' }}</td>
+                                                <td>{{ $Product->ramah_lingkungan ? 'Ya' : 'Tidak' }}</td>
                                             </tr>
                                         @endif
-                                        @if($produk->kategori && $produk->kategori->nama)
+                                        @if($Product->Category && $Product->Category->nama)
                                             <tr>
-                                                <th scope="row"><strong>Kategori:</strong></th>
-                                                <td>{{ $produk->kategori->nama }}</td>
+                                                <th scope="row"><strong>Category:</strong></th>
+                                                <td>{{ $Product->Category->nama }}</td>
                                             </tr>
                                         @endif
-                                        @if($produk->subKategori && $produk->subKategori->nama)
+                                        @if($Product->subCategory && $Product->subCategory->nama)
                                             <tr>
-                                                <th scope="row"><strong>Sub Kategori:</strong></th>
-                                                <td>{{ $produk->subKategori->nama }}</td>
+                                                <th scope="row"><strong>Sub Category:</strong></th>
+                                                <td>{{ $Product->subCategory->nama }}</td>
                                             </tr>
                                         @endif
-                                        @if($produk->komoditas && $produk->komoditas->nama)
+                                        @if($Product->komoditas && $Product->komoditas->nama)
                                             <tr>
                                                 <th scope="row"><strong>Komoditas:</strong></th>
-                                                <td>{{ $produk->komoditas->nama }}</td>
+                                                <td>{{ $Product->komoditas->nama }}</td>
                                             </tr>
                                         @endif
                                     </tbody>
@@ -700,8 +700,8 @@
                                 <h6>Ulasan</h6>
 
                                 <!-- Display existing reviews or a message if no reviews are available -->
-                                @if ($produk->reviews->isNotEmpty())
-                                    @foreach ($produk->reviews as $review)
+                                @if ($Product->reviews->isNotEmpty())
+                                    @foreach ($Product->reviews as $review)
                                         <div
                                             class="review-item d-flex align-items-start mb-4 p-3 shadow-sm bg-light rounded">
                                             <div class="review-avatar mr-3">
@@ -769,12 +769,12 @@
                                         </div>
                                     @endforeach
                                 @else
-                                    <p class="text-muted">Belum ada ulasan untuk produk ini</p>
+                                    <p class="text-muted">Belum ada ulasan untuk Product ini</p>
                                 @endif
 
                                 <!-- Review Form -->
                                 @if ($order && $order->status === 'Selesai')
-                                    @if ($produk->reviews->where('user_id', auth()->id())->isEmpty())
+                                    @if ($Product->reviews->where('user_id', auth()->id())->isEmpty())
                                         <div class="card shadow-sm border-0 mb-4">
                                             <div class="card-header text-white" style="background-color: #416bbf;">
                                                 <h5 class="mb-0">Tinggalkan Ulasan</h5>
@@ -834,7 +834,7 @@
                                         </div>
                                     @else
                                         <div class="alert alert-info">
-                                            Anda telah memberikan ulasan untuk produk ini.
+                                            Anda telah memberikan ulasan untuk Product ini.
                                         </div>
                                     @endif
                                 @endif
@@ -900,7 +900,7 @@
 <!-- Product Details Section End -->
 
 
-    @if($produK->isNotEmpty())
+    @if($Product->isNotEmpty())
         <section class="featured spad">
             <div class="container">
                 <div class="row">
@@ -912,7 +912,7 @@
                 </div>
 
                 <div class="row featured__filter" id="MixItUpD27635">
-                    @foreach ($produK as $index => $item)
+                    @foreach ($Product as $index => $item)
                         @php
                             $imagePath = $item->images->isNotEmpty()
                                 ? $item->images->first()->gambar
@@ -920,7 +920,7 @@
                             $bigSaleItem = $item->bigSales->first(); // Ambil Big Sale pertama jika ada
                         @endphp
                         <div class="col-lg-3 col-md-4 col-sm-6 mix oranges fresh-meat">
-                            <div class="featured__item" data-href="{{ route('produk_customer.user.show', $item->id) }}">
+                            <div class="featured__item" data-href="{{ route('Product_customer.user.show', $item->id) }}">
                                 <div class="featured__item__pic"
                                     style="background-image: url('{{ asset($imagePath) }}'); background-size: cover; background-position: center; border-radius: 10px;">
                                 @if ($bigSaleItem && $bigSaleItem->status === 'aktif')
@@ -928,7 +928,7 @@
                                 @endif
 
                                     <ul class="featured__item__pic__hover">
-                                        <li><a href="{{ route('produk_customer.user.show', $item->id) }}"><i
+                                        <li><a href="{{ route('Product_customer.user.show', $item->id) }}"><i
                                                     class="fa fa-info-circle"></i></a></li>
 
                                         @auth
@@ -969,7 +969,7 @@
                             </div>
                         </div>
 
-                        @if ($index == 3 && $produK->count() > 4)
+                        @if ($index == 3 && $Product->count() > 4)
                             <div class="col-lg-12 text-center mt-3">
                                 <a href="{{ route('shop') }}" class="primary-btn rounded">{{ __('messages.selengkapnya') }}</a>
                             </div>

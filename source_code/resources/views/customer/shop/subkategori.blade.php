@@ -133,19 +133,19 @@
                         </style>
 
                         <div class="sidebar__item">
-                        <h4 style="color:#42378C;">{{ __('messages.kategori') }}</h4>
+                        <h4 style="color:#42378C;">{{ __('messages.Category') }}</h4>
                         <ul>
-                            <li><a href="{{ url('/shop') }}">{{ __('messages.all_kategori') }}</a></li> <!-- Default link to shop -->
-                            @foreach ($kategori as $kategoris)
-                                <li><a href="{{ route('shop.category', $kategoris->id) }}">{{ \Illuminate\Support\Str::limit($kategoris->nama, 25, '...') }}</a></li>
+                            <li><a href="{{ url('/shop') }}">{{ __('messages.all_Category') }}</a></li> <!-- Default link to shop -->
+                            @foreach ($Category as $Categorys)
+                                <li><a href="{{ route('shop.category', $Categorys->id) }}">{{ \Illuminate\Support\Str::limit($Categorys->nama, 25, '...') }}</a></li>
                             @endforeach
                         </ul>
                     </div>
                     <div class="sidebar__item">
-                        <h4 style="color:#42378C;">{{ __('messages.subkategori') }}</h4>
+                        <h4 style="color:#42378C;">{{ __('messages.subCategory') }}</h4>
                         <ul>
-                            @foreach ($subkategori as $subKategori)
-                                <li><a href="{{ route('shop.subcategory', $subKategori->id) }}">{{ \Illuminate\Support\Str::limit($subKategori->nama, 40, '...') }}</a>
+                            @foreach ($subCategory as $subCategory)
+                                <li><a href="{{ route('shop.subcategory', $subCategory->id) }}">{{ \Illuminate\Support\Str::limit($subCategory->nama, 40, '...') }}</a>
                                 </li>
                             @endforeach
                         </ul>
@@ -188,21 +188,21 @@
 
                             <div class="col-lg-4 col-md-4">
                                 <div class="filter__found">
-                                    <h6><span>{{ $productCount }}</span> {{ __('messages.produk_ditemukan') }}</h6>
+                                    <h6><span>{{ $productCount }}</span> {{ __('messages.Product_ditemukan') }}</h6>
                                 </div>
                             </div>
 
                             <div class="col-lg-4 col-md-3">
                                 <div class="filter__option">
                                     @if (isset($currentSubcategory))
-                                        <span style="font-size: 10px;">{{ __('messages.subkategori') }}: <b>{{ $currentSubcategory->nama }}</b></span>
+                                        <span style="font-size: 10px;">{{ __('messages.subCategory') }}: <b>{{ $currentSubcategory->nama }}</b></span>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="filter__item">
                         <div class="row">
-                            @forelse($produk as $product)
+                            @forelse($Product as $product)
                                 <div class="col-lg-4 col-md-6 col-sm-6">
                                     <div class="product__item">
                                         @php
@@ -213,7 +213,7 @@
                                         <div class="product__item__pic"
                                             style="background-image: url('{{ asset($imagePath) }}');">
                                             <ul class="product__item__pic__hover">
-                                                <li><a href="{{ route('produk_customer.user.show', $product->id) }}"><i
+                                                <li><a href="{{ route('Product_customer.user.show', $product->id) }}"><i
                                                             class="fa fa-info-circle"></i></a></li>
                                                 @auth
                                                     <!-- Jika pengguna sudah login -->
@@ -229,7 +229,7 @@
                                         </div>
                                         <div class="product__item__text">
                                             <h6><a
-                                                    href="{{ route('produk_customer.user.show', $product->id) }}">{{ \Illuminate\Support\Str::limit($product->nama, 20, '...') }}</a>
+                                                    href="{{ route('Product_customer.user.show', $product->id) }}">{{ \Illuminate\Support\Str::limit($product->nama, 20, '...') }}</a>
                                             </h6>
                                             <h5>Rp{{ number_format($product->harga_tayang, 2) }}</h5>
                                         </div>
@@ -237,16 +237,16 @@
                                 </div>
 
                             @empty
-                                <p>{{ __('messages.tidak_ada_produk') }}</p>
+                                <p>{{ __('messages.tidak_ada_Product') }}</p>
                             @endforelse
                         </div>
                     @else
                         <!-- Section for All Products -->
 
                         <div class="row" id="product-list">
-                            @foreach ($produk as $product)
+                            @foreach ($Product as $product)
                                 <div class="col-lg-4 col-md-6 col-sm-6 product__item-container">
-                                    <div class="product__item" data-href="{{ route('produk_customer.user.show', $product->id) }}">
+                                    <div class="product__item" data-href="{{ route('Product_customer.user.show', $product->id) }}">
                                         @php
                                             $imagePath = $product->images->isNotEmpty()
                                                 ? $product->images->first()->gambar
@@ -256,7 +256,7 @@
                                             style="background-image: url('{{ asset($imagePath) }}');">
                                             <ul class="product__item__pic__hover">
                                                 <li>
-                                                    <a href="{{ route('produk_customer.user.show', $product->id) }}">
+                                                    <a href="{{ route('Product_customer.user.show', $product->id) }}">
                                                         <i class="fa fa-info-circle"></i>
                                                     </a>
                                                 </li>
@@ -277,7 +277,7 @@
                                         </div>
                                         <div class="product__item__text">
                                             <h6>
-                                                <a href="{{ route('produk_customer.user.show', $product->id) }}">
+                                                <a href="{{ route('Product_customer.user.show', $product->id) }}">
                                                     {{ \Illuminate\Support\Str::limit($product->nama, 20, '...') }}
                                                 </a>
                                             </h6>
@@ -323,12 +323,12 @@
 
                         <div class="product__pagination text-center">
                             <!-- Pagination Elements -->
-                            @if ($produk->lastPage() > 1)
-                                @for ($i = 1; $i <= $produk->lastPage(); $i++)
-                                    @if ($i == $produk->currentPage())
+                            @if ($Product->lastPage() > 1)
+                                @for ($i = 1; $i <= $Product->lastPage(); $i++)
+                                    @if ($i == $Product->currentPage())
                                         <span class="">{{ $i }}</span>
                                     @else
-                                        <a href="{{ $produk->url($i) }}">{{ $i }}</a>
+                                        <a href="{{ $Product->url($i) }}">{{ $i }}</a>
                                     @endif
                                 @endfor
                             @endif

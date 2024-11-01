@@ -41,27 +41,10 @@
             </span>
             <h4 class="text-section">transaction</h4>
           </li>
-          @php
-          $userId = Auth::id();
-          $unseenCount = \App\Models\Order::whereDoesntHave('seen_by_users', function($query) use ($userId) {
-              $query->where('user_id', $userId);
-          })->count();
-
-          $unseenUserCount = \App\Models\User::where('role', 0) // Assuming role 0 is for customers
-          ->whereDoesntHave('seenByAdmins', function($query) use ($userId) {
-              $query->where('admin_id', $userId);
-          })
-          ->count();
-      @endphp
-      
-      
           <li class="nav-item">
             <a data-bs-toggle="collapse" href="#tables">
               <i class="fas fa-shopping-cart"></i> 
               <p>Transaksi</p>
-                @if($unseenCount > 0)
-                    <span class="badge badge-success">{{ $unseenCount }}</span>
-                @endif
                 <span class="caret"></span>
             </a>
             <div class="collapse" id="tables">
@@ -78,19 +61,19 @@
           <span class="sidebar-mini-icon">
             <i class="fa fa-ellipsis-h"></i>
           </span>
-          <h4 class="text-section">Produk</h4>
+          <h4 class="text-section">Product</h4>
         </li>
         <li class="nav-item">
           <a data-bs-toggle="collapse" href="#sidebarLayouts">
             <i class="fas fa-box"></i> 
-            <p>Produk</p>
+            <p>Product</p>
             <span class="caret"></span>
           </a>
           <div class="collapse" id="sidebarLayouts">
             <ul class="nav nav-collapse">
               <li>
-                <a href="{{ route('produk.index') }}">
-                  <span class="sub-item">Produk</span>
+                <a href="{{ route('Product.index') }}">
+                  <span class="sub-item">Product</span>
                 </a>
               </li>
             </ul>
@@ -132,9 +115,6 @@
           <a data-bs-toggle="collapse" href="#customer">
             <i class="fas fa-user"></i> <!-- Mengganti ikon menjadi ikon pengguna (user) -->
             <p>Costumer</p>
-            @if($unseenUserCount > 0)
-                            <span class="badge badge-success">{{ $unseenUserCount }}</span>
-                        @endif
             <span class="caret"></span>
           </a>
           <div class="collapse" id="customer">
@@ -182,18 +162,13 @@
             <div class="collapse" id="base">
               <ul class="nav nav-collapse">
                 <li>
-                  <a href="{{ route('admin.masterdata.komoditas.index') }}">
-                    <span class="sub-item">Komoditas</span>
+                  <a href="{{ route('admin.masterdata.Category.index') }}">
+                    <span class="sub-item">Category</span>
                   </a>
                 </li>
                 <li>
-                  <a href="{{ route('admin.masterdata.kategori.index') }}">
-                    <span class="sub-item">Kategori</span>
-                  </a>
-                </li>
-                <li>
-                  <a href="{{ route('admin.masterdata.subkategori.index') }}">
-                    <span class="sub-item">Sub-Kategori</span>
+                  <a href="{{ route('admin.masterdata.subCategory.index') }}">
+                    <span class="sub-item">Sub-Category</span>
                   </a>
                 </li>
                 <li>

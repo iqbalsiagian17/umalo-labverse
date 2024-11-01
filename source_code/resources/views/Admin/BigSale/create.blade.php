@@ -67,7 +67,7 @@
                         <button type="button" class="btn btn-primary" id="nextStep">Next</button>
                     </div>
 
-                    <!-- Step 2: Diskon Persen, Produk, Filter -->
+                    <!-- Step 2: Diskon Persen, Product, Filter -->
                     <div id="step2" style="display: none;">
                         <div class="form-group mb-3">
                             <label for="diskon_persen"><span class="text-danger">*</span> Diskon Persen</label>
@@ -85,14 +85,14 @@
 
 
                         <div class="form-group mb-3">
-                            <label for="searchInput">Cari Produk</label>
-                            <input type="text" id="searchInput" class="form-control" placeholder="Cari produk...">
+                            <label for="searchInput">Cari Product</label>
+                            <input type="text" id="searchInput" class="form-control" placeholder="Cari Product...">
                         </div>
 
                         <div class="form-group mb-3">
-                            <label for="categoryFilter">Filter Berdasarkan Kategori</label>
+                            <label for="categoryFilter">Filter Berdasarkan Category</label>
                             <select id="categoryFilter" class="form-control">
-                                <option value="">Semua Kategori</option>
+                                <option value="">Semua Category</option>
                                 @foreach($categories as $category)
                                     <option value="{{ $category->id }}">{{ $category->nama }}</option>
                                 @endforeach
@@ -100,10 +100,10 @@
                         </div>
 
                         <div class="form-group mb-3">
-                            <label for="products"><span class="text-danger">*</span> Produk</label>
+                            <label for="products"><span class="text-danger">*</span> Product</label>
                             <div class="row" id="productsList">
                                 @foreach($products as $product)
-                                    <div class="col-md-2 col-sm-4 mb-4 product-item" data-category="{{ $product->kategori_id }}">
+                                    <div class="col-md-2 col-sm-4 mb-4 product-item" data-category="{{ $product->Category_id }}">
                                         <div class="card h-100">
                                             <img src="{{ asset($product->images->first()->gambar ?? 'path/to/default/image.jpg') }}" class="card-img-top" alt="{{ $product->nama }}" style="height: 100px; object-fit: cover; border-radius: 10px;">
                                             <div class="card-body p-2">
@@ -146,7 +146,7 @@ document.getElementById('prevStep').addEventListener('click', function() {
     document.getElementById('step1').style.display = 'block';
 });
 
-// Mengaktifkan input harga diskon hanya untuk produk yang dicentang
+// Mengaktifkan input harga diskon hanya untuk Product yang dicentang
 document.querySelectorAll('.form-check-input').forEach(function(checkbox) {
     checkbox.addEventListener('change', function() {
         let hargaDiskonInput = this.closest('.product-item').querySelector('.harga-diskon');
@@ -154,11 +154,11 @@ document.querySelectorAll('.form-check-input').forEach(function(checkbox) {
             hargaDiskonInput.removeAttribute('disabled');
         } else {
             hargaDiskonInput.setAttribute('disabled', 'disabled');
-            hargaDiskonInput.value = ''; // Reset nilai diskon saat produk tidak dipilih
+            hargaDiskonInput.value = ''; // Reset nilai diskon saat Product tidak dipilih
         }
     });
 
-    // Pada halaman edit, pastikan input harga diskon diaktifkan jika produk sudah dipilih sebelumnya
+    // Pada halaman edit, pastikan input harga diskon diaktifkan jika Product sudah dipilih sebelumnya
     if (checkbox.checked) {
         let hargaDiskonInput = checkbox.closest('.product-item').querySelector('.harga-diskon');
         hargaDiskonInput.removeAttribute('disabled');
@@ -173,7 +173,7 @@ document.getElementById('bigsaleForm').addEventListener('submit', function() {
     });
 });
 
-// Pencarian dan filter produk berdasarkan kategori dan nama produk
+// Pencarian dan filter Product berdasarkan Category dan nama Product
 function filterProducts() {
     let filterText = document.getElementById('searchInput').value.toLowerCase();
     let selectedCategory = document.getElementById('categoryFilter').value;

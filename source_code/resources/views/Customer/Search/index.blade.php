@@ -136,20 +136,20 @@
                         </style>
 
                         <div class="sidebar__item">
-                            <h4 style="color:#416bbf;">Kategori</h4>
+                            <h4 style="color:#416bbf;">Category</h4>
                             <ul>
-                                @foreach ($kategori as $kategoris)
-                                    <li><a href="{{ route('shop.category', $kategoris->id) }}">{{ \Illuminate\Support\Str::limit($kategoris->nama, 25, '...') }}</a>
+                                @foreach ($Category as $Categorys)
+                                    <li><a href="{{ route('shop.category', $Categorys->id) }}">{{ \Illuminate\Support\Str::limit($Categorys->nama, 25, '...') }}</a>
                                     </li>
                                 @endforeach
                             </ul>
                         </div>
 
                         <div class="sidebar__item">
-                            <h4 style="color:#42378C;">{{ __('messages.subkategori') }}</h4>
+                            <h4 style="color:#42378C;">{{ __('messages.subCategory') }}</h4>
                             <ul>
-                                @foreach ($subkategori as $subKategori)
-                                    <li><a href="{{ route('shop.subcategory', $subKategori->id) }}">{{ \Illuminate\Support\Str::limit($subKategori->nama, 40, '...') }}</a>
+                                @foreach ($subCategory as $subCategory)
+                                    <li><a href="{{ route('shop.subcategory', $subCategory->id) }}">{{ \Illuminate\Support\Str::limit($subCategory->nama, 40, '...') }}</a>
                                     </li>
                                 @endforeach
                             </ul>
@@ -225,22 +225,22 @@
 
                             <div class="col-lg-4 col-md-4">
                                 <div class="filter__found">
-                                    <h6><span> {{ $productCount }} </span> Produk Ditemukan</h6>
+                                    <h6><span> {{ $productCount }} </span> Product Ditemukan</h6>
                                 </div>
                             </div>
 
                             <div class="col-lg-4 col-md-3">
                                 <div class="filter__option">
-                                    <h6>Produk Ditemukan dari : <span style="font-size: 1em;">{{ $query }}</span></h6>
+                                    <h6>Product Ditemukan dari : <span style="font-size: 1em;">{{ $query }}</span></h6>
                                 </div>
                             </div>
                         </div>
                     </div>
 
                     <div class="row">
-                        @forelse ($produk as $product)
+                        @forelse ($Product as $product)
                         <div class="col-lg-4 col-md-6 col-sm-6 product__item-container">
-                            <div class="product__item" data-href="{{ route('produk_customer.user.show', ['id' => $product->id . '-' . Str::random(10)]) }}">
+                            <div class="product__item" data-href="{{ route('Product_customer.user.show', ['id' => $product->id . '-' . Str::random(10)]) }}">
                                 @php
                                     $imagePath = $product->images->isNotEmpty()
                                         ? $product->images->first()->gambar
@@ -250,7 +250,7 @@
                                     style="background-image: url('{{ asset($imagePath) }}');">
                                     <ul class="product__item__pic__hover">
                                         <li>
-                                            <a href="{{ route('produk_customer.user.show', ['id' => $product->id . '-' . Str::random(10)]) }}">
+                                            <a href="{{ route('Product_customer.user.show', ['id' => $product->id . '-' . Str::random(10)]) }}">
                                                 <i class="fa fa-info-circle"></i>
                                             </a>
                                         </li>
@@ -271,7 +271,7 @@
                                 </div>
                                 <div class="product__item__text">
                                     <h6>
-                                        <a href="{{ route('produk_customer.user.show', ['id' => $product->id . '-' . Str::random(10)]) }}">
+                                        <a href="{{ route('Product_customer.user.show', ['id' => $product->id . '-' . Str::random(10)]) }}">
                                             {{ \Illuminate\Support\Str::limit($product->nama, 20, '...') }}
                                         </a>
                                     </h6>
@@ -327,7 +327,7 @@
     <div id="cart-notification" class="cart-notification" style="display: none;">
         <div class="notification-content">
             <div class="notification-icon">&#10003;</div>
-            <div class="notification-text">Produk telah ditambahkan ke keranjang belanja</div>
+            <div class="notification-text">Product telah ditambahkan ke keranjang belanja</div>
         </div>
     </div>
 

@@ -51,7 +51,7 @@
                                 <th>Aksi</th>
                             </tr>
                         </thead>
-                        <tbody id="produk-table-body">
+                        <tbody id="Product-table-body">
                             @foreach($orders as $index => $order)
                             <tr>
                                 <td>{{ $index + 1 }}</td>

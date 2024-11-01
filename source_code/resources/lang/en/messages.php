@@ -6,8 +6,8 @@ return [
     'shop_now' => 'Shop Now',
     'shop' => 'SHOP',
     'bisa_nego' => 'Negotiable',
-    'produk_terlaris' => 'Best Sellers !!',
-    'produk_terbaru' => 'Latest Products !!',
+    'Product_terlaris' => 'Best Sellers !!',
+    'Product_terbaru' => 'Latest Products !!',
     'selengkapnya' => 'View More',
     'days' => 'Days',
     'hours' => 'Hours',
@@ -17,12 +17,12 @@ return [
     'add'=> 'Add to cart',
     'hubungi_admin' => 'Contact admin for price details',
     'komoditas' => 'Commodities',
-    'kategori' => 'Categories',
+    'Category' => 'Categories',
     'sort_by' => 'Sort By',
     'default' => 'Default',
     'newest' => 'Newest',
     'oldest' => 'Oldest',
-    'produk_ditemukan' => 'Products Found',
+    'Product_ditemukan' => 'Products Found',
     'review' => 'Review',
 
     //header
@@ -91,7 +91,7 @@ return [
     'ecatalog' => 'E-catalog',
     'other_products' => 'Other Products',
     'negotiable' => 'Negotiable',
-    'tidak_ada_produk' => 'No Products Found',
+    'tidak_ada_Product' => 'No Products Found',
 
     //purchase
     'all' => 'All',
@@ -203,10 +203,10 @@ return [
     'register_with_google' => 'Register with Google Account',
     'already_have_account' => 'Already have an account?',
 
-    'all_kategori' => 'All Categories',
+    'all_Category' => 'All Categories',
     'search_empty' => 'Please enter the name of the product you want to search for before continuing the search. Thank You.',
 
-    'subkategori' => 'Subcategory',
+    'subCategory' => 'Subcategory',
     'price_lowest' => 'Price Lowest',
     'price_highest' => 'Price Highest',
 

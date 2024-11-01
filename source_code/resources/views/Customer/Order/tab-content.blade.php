@@ -28,14 +28,14 @@
             @foreach($order->orderItems as $item)
                 <div class="d-flex mb-3">
                     <div style="flex: 1;">
-                        @if($item->produk->images->isNotEmpty())
-                            <img src="{{ asset($item->produk->images->first()->gambar) }}" alt="{{ $item->produk->nama }}" style="width: 250px;" class="rounded">
+                        @if($item->Product->images->isNotEmpty())
+                            <img src="{{ asset($item->Product->images->first()->gambar) }}" alt="{{ $item->Product->nama }}" style="width: 250px;" class="rounded">
                         @else
-                            <img src="https://via.placeholder.com/150" class="img-fluid mb-2" alt="{{ $item->produk->nama }}" style="width: 250px;" class="rounded">
+                            <img src="https://via.placeholder.com/150" class="img-fluid mb-2" alt="{{ $item->Product->nama }}" style="width: 250px;" class="rounded">
                         @endif
                     </div>
                     <div style="flex: 3; margin-left: 20px;">
-                        <h6 class="mb-1"><strong>{{ $item->produk->nama }}</strong></h6>
+                        <h6 class="mb-1"><strong>{{ $item->Product->nama }}</strong></h6>
                         <p class="mb-1"><strong>x{{ $item->jumlah }}</strong></p>
                     </div>
                     <div style="flex: 2; text-align: right;">

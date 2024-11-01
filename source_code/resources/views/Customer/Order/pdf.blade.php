@@ -261,7 +261,7 @@
         @foreach ($order->orderItems as $index => $item)
             <tr>
                 <td>{{ $index + 1 }}</td>
-                <td>{{ $item->produk->nama }}</td>
+                <td>{{ $item->Product->nama }}</td>
                 <td>{{ $item->jumlah }}</td>
                 <td>Rp {{ number_format($item->harga, 0, ',', '.') }}</td>
                 <td>Rp {{ number_format($item->harga * $item->jumlah, 0, ',', '.') }}</td>
@@ -269,7 +269,7 @@
         @endforeach
         @if (in_array($order->status, ['Diterima', 'Packing', 'Pengiriman', 'Selesai']) &&
                 $order->orderItems->contains(function ($item) {
-                    return $item->produk->nego == 'ya';
+                    return $item->Product->nego == 'ya';
                 }))
             <tr>
                 <td colspan="4" style="text-align:right;"><strong>Subtotal Sebelum Nego</strong></td>
@@ -278,7 +278,7 @@
         @endif
         @if (
             $order->orderItems->contains(function ($item) {
-                return $item->produk->nego == 'ya';
+                return $item->Product->nego == 'ya';
             }) && $order->harga_setelah_nego)
             <tr>
                 <td colspan="4" style="text-align:right;"><strong>Harga Setelah Nego</strong></td>

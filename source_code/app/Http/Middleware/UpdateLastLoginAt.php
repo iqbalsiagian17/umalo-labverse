@@ -18,7 +18,7 @@ class UpdateLastLoginAt
     public function handle($request, Closure $next)
     {
         if (Auth::check()) {
-            DB::table('users')
+            DB::table('t_users')
                 ->where('id', Auth::user()->id)
                 ->update(['last_login_at' => now()]);
         }

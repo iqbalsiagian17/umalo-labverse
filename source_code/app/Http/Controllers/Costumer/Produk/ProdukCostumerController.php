@@ -1,35 +1,35 @@
 <?php
 
-namespace App\Http\Controllers\Costumer\Produk;
+namespace App\Http\Controllers\Costumer\Product;
 
 use App\Http\Controllers\Controller;
-use App\Models\Kategori;
+use App\Models\Category;
 use App\Models\Komoditas;
-use App\Models\Produk;
+use App\Models\Product;
 use Illuminate\Http\Request;
 use App\Models\Order;
 use App\Models\PPN;
-use App\Models\SubKategori;
+use App\Models\SubCategory;
 use Illuminate\Support\Facades\DB;
 
-class ProdukCostumerController extends Controller
+class ProductCostumerController extends Controller
 {
     public function userShow($id)
 {
-    $produk = Produk::with(['images', 'kategori', 'subKategori', 'komoditas', 'bigSales', 'reviews.user'])->findOrFail($id);
-    $images = $produk->images;
+    $Product = Product::with(['images', 'Category', 'subCategory', 'komoditas', 'bigSales', 'reviews.user'])->findOrFail($id);
+    $images = $Product->images;
     $ppn = PPN::firstOrFail(); // Assuming there's always at least one PPN record
 
 
-    $bigSale = $produk->bigSales->first();
-    $bigSaleItem = $produk->bigSales()->where('status', 'aktif')->first();
-    $averageRating = $produk->reviews()->avg('rating');
-    $totalRatings = $produk->reviews()->count();
+    $bigSale = $Product->bigSales->first();
+    $bigSaleItem = $Product->bigSales()->where('status', 'aktif')->first();
+    $averageRating = $Product->reviews()->avg('rating');
+    $totalRatings = $Product->reviews()->count();
 
-    $produK = Produk::where('id', '!=', $id)
-                    ->where(function ($query) use ($produk) {
-                        $query->where('komoditas_id', $produk->komoditas_id)
-                              ->orWhere('kategori_id', $produk->kategori_id);
+    $Product = Product::where('id', '!=', $id)
+                    ->where(function ($query) use ($Product) {
+                        $query->where('komoditas_id', $Product->komoditas_id)
+                              ->orWhere('Category_id', $Product->Category_id);
                     })
                     ->has('images')
                     ->limit(5)
@@ -38,7 +38,7 @@ class ProdukCostumerController extends Controller
     // Get the latest completed order for this product by the logged-in user
     $order = Order::where('user_id', auth()->id())
                   ->whereHas('orderItems', function ($query) use ($id) {
-                      $query->where('produk_id', $id);
+                      $query->where('Product_id', $id);
                   })
                   ->where('status', 'Selesai')
                   ->latest()
@@ -47,10 +47,10 @@ class ProdukCostumerController extends Controller
                   $userId = auth()->id();
                   $isFavorite = DB::table('favorites')
                                   ->where('user_id', $userId)
-                                  ->where('produk_id', $id)
+                                  ->where('Product_id', $id)
                                   ->exists();
 
-    return view('customer.produk.show', compact('produk', 'images', 'produK', 'bigSale','bigSaleItem', 'order','averageRating','totalRatings' ,'isFavorite','ppn'));
+    return view('customer.Product.show', compact('Product', 'images', 'Product', 'bigSale','bigSaleItem', 'order','averageRating','totalRatings' ,'isFavorite','ppn'));
 }
 
 
@@ -63,11 +63,11 @@ public function search(Request $request)
     $query = $request->input('query');
     $sort = $request->get('sort'); // Get the sort parameter from the request
 
-    $subkategori = SubKategori::all();
-    $kategori = Kategori::all();
+    $subCategory = SubCategory::all();
+    $Category = Category::all();
 
     // Start the query for searching products
-    $produk = Produk::where(function ($q) use ($query) {
+    $Product = Product::where(function ($q) use ($query) {
         $q->where('nama', 'LIKE', "%{$query}%")
           ->orWhere('merk', 'LIKE', "%{$query}%");
     });
@@ -77,31 +77,31 @@ public function search(Request $request)
     $maxPrice = preg_replace('/\D/', '', $request->input('max_price'));
 
     if (!empty($minPrice)) {
-        $produk->where('harga_tayang', '>=', (int)$minPrice);
+        $Product->where('harga_tayang', '>=', (int)$minPrice);
     }
     if (!empty($maxPrice)) {
-        $produk->where('harga_tayang', '<=', (int)$maxPrice);
+        $Product->where('harga_tayang', '<=', (int)$maxPrice);
     }
 
     // Apply sorting logic
     if ($sort == 'newest') {
-        $produk->orderBy('created_at', 'desc');
+        $Product->orderBy('created_at', 'desc');
     } elseif ($sort == 'oldest') {
-        $produk->orderBy('created_at', 'asc');
+        $Product->orderBy('created_at', 'asc');
     } elseif ($sort == 'price_lowest') {
-        $produk->orderBy('harga_tayang', 'asc');
+        $Product->orderBy('harga_tayang', 'asc');
     } elseif ($sort == 'price_highest') {
-        $produk->orderBy('harga_tayang', 'desc');
+        $Product->orderBy('harga_tayang', 'desc');
     }
 
     // Execute the query and paginate the results
-    $produk = $produk->paginate(9);
+    $Product = $Product->paginate(9);
 
     // Count the number of products found
-    $productCount = $produk->total();
+    $productCount = $Product->total();
 
     // Return the search results to a view
-    return view('customer.search.index', compact('produk', 'query', 'subkategori', 'kategori', 'productCount'));
+    return view('customer.search.index', compact('Product', 'query', 'subCategory', 'Category', 'productCount'));
 }
 
 

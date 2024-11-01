@@ -9,12 +9,12 @@ class BigSale extends Model
 {
     use HasFactory;
 
-    protected $table = 'big_sale';
+    protected $table = 't_big_sale';
 
-    protected $fillable = ['judul', 'mulai', 'berakhir', 'status', 'image'];
+    protected $fillable = ['title', 'start', 'end', 'status', 'image'];
 
-    public function produk()
+    public function Product()
     {
-        return $this->belongsToMany(Produk::class)->withPivot('harga_diskon');
+        return $this->belongsToMany(Product::class)->withPivot('harga_diskon');
     }
 }

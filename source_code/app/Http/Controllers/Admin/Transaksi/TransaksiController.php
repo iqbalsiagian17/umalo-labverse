@@ -13,7 +13,7 @@ use App\Services\InvoiceService;
 class TransaksiController extends Controller
 {
     public function index(Request $request)
-{
+    {
     // Ambil input pencarian
     $searchName = $request->input('search_name');
     $searchInvoice = $request->input('search_invoice');
@@ -74,7 +74,7 @@ class TransaksiController extends Controller
     if ($request->has('subtotal')) {
         // Loop through each order item
         foreach ($order->orderItems as $item) {
-            if ($item->produk->nego == 'ya') {
+            if ($item->Product->nego == 'ya') {
                 // If the product is negotiable, set harga_setelah_nego
                 $order->harga_setelah_nego = $request->input('subtotal');
             } else {
@@ -191,7 +191,7 @@ class TransaksiController extends Controller
         // Handle the negotiated price (subtotal) update
         if ($request->has('subtotal')) {
             foreach ($order->orderItems as $item) {
-                if ($item->produk->nego == 'ya') {
+                if ($item->Product->nego == 'ya') {
                     $order->harga_setelah_nego = $request->input('subtotal');
                 } else {
                     $order->harga_setelah_nego = null;

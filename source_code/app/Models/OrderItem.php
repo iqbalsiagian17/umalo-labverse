@@ -1,4 +1,4 @@
-<?php
+<?php 
 
 namespace App\Models;
 
@@ -9,23 +9,33 @@ class OrderItem extends Model
 {
     use HasFactory;
 
+    protected $table = 't_ord_items';
+
+
     protected $fillable = [
         'order_id',
-        'produk_id',
-        'jumlah',
-        'harga',
+        'product_id',
+        'quantity',
+        'price',
+        'total',
     ];
 
-    // Definisikan relasi dengan Order
     public function order()
     {
-        return $this->belongsTo(Order::class, 'order_id');
+        return $this->belongsTo(Order::class);
     }
 
-    // Definisikan relasi dengan Produk jika diperlukan
-    public function produk()
+    public function product()
     {
-        return $this->belongsTo(Produk::class, 'produk_id');
+        return $this->belongsTo(Product::class);
+    }
+
+    public function completedOrderCount()
+    {
+        return $this->hasMany(OrderItem::class, 'product_id')
+                    ->whereHas('t_orders', function($query) {
+                        $query->where('status', 'completed');
+                    })
+                    ->count();
     }
 }
-

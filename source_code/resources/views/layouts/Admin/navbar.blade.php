@@ -149,18 +149,6 @@
               </ul>
             </li> --}}
 
-            @php
-    $unseenOrders = \App\Models\Order::whereDoesntHave('seen_by_users', function($query) {
-        $query->where('user_id', Auth::id());
-    })->get();
-
-    $unseenUsers = \App\Models\User::where('role', 0) // Assuming role 0 is for customers
-        ->whereDoesntHave('seenByAdmins', function($query) {
-            $query->where('admin_id', Auth::id());
-        })
-        ->get();
-@endphp
-
 <li class="nav-item topbar-icon dropdown hidden-caret">
     <a
         class="nav-link dropdown-toggle"
@@ -172,21 +160,18 @@
         aria-expanded="false"
     >
         <i class="fa fa-bell"></i>
-        @if(count($unseenOrders) > 0 || count($unseenUsers) > 0)
-            <span class="notification">{{ count($unseenOrders) + count($unseenUsers) }}</span>
-        @endif
     </a>
     <ul class="dropdown-menu notif-box animated fadeIn" aria-labelledby="notifDropdown">
         <li>
             <div class="dropdown-title">
-                You have {{ count($unseenOrders) + count($unseenUsers) }} new notifications
+                You have  new notifications
             </div>
         </li>
         <li>
             <div class="notif-scroll scrollbar-outer">
                 <div class="notif-center">
                     <!-- Unseen Orders -->
-                    @foreach($unseenOrders as $order)
+{{--                     @foreach($unseenOrders as $order)
                         <a href="{{ route('transaksi.show', $order->id) }}">
                             <div class="notif-icon notif-primary">
                                 <i class="fa fa-shopping-cart"></i>
@@ -210,7 +195,7 @@
                             </div>
                         </a>
                     @endforeach
-                </div>
+ --}}                </div>
             </div>
         </li>
         <li>
@@ -256,12 +241,12 @@
                             <span class="text">Transaksi</span>
                         </div>
                     </a>                    
-                    <a class="col-6 col-md-4 p-0" href="{{ route('produk.create') }}">
+                    <a class="col-6 col-md-4 p-0" href="{{ route('Product.create') }}">
                       <div class="quick-actions-item">
                           <div class="avatar-item bg-info rounded-circle">
                               <i class="fas fa-plus-circle"></i>
                           </div>
-                          <span class="text">Create Produk</span>
+                          <span class="text">Create Product</span>
                       </div>
                   </a>
                   
@@ -283,12 +268,12 @@
                         </div>
                     </a>
                     
-                    <a class="col-6 col-md-4 p-0" href="{{ route('produk.index') }}">
+                    <a class="col-6 col-md-4 p-0" href="{{ route('Product.index') }}">
                       <div class="quick-actions-item">
                           <div class="avatar-item bg-secondary rounded-circle">
                               <i class="fas fa-boxes"></i>
                           </div>
-                          <span class="text">Produk</span>
+                          <span class="text">Product</span>
                       </div>
                   </a>
                   

@@ -2,7 +2,7 @@
 namespace App\Http\Controllers\Costumer\Favorite;
 
 use App\Http\Controllers\Controller;
-use App\Models\Produk;
+use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -15,14 +15,14 @@ class FavoriteController extends Controller
     
         // Get the user's favorite products with related images
         $favorites = DB::table('favorites')
-                        ->join('produk', 'favorites.produk_id', '=', 'produk.id')
+                        ->join('Product', 'favorites.Product_id', '=', 'Product.id')
                         ->where('favorites.user_id', $userId)
-                        ->select('produk.*')
+                        ->select('Product.*')
                         ->get();
     
         // Eager load the images for each product
         foreach ($favorites as $favorite) {
-            $favorite->images = Produk::find($favorite->id)->images()->get();
+            $favorite->images = Product::find($favorite->id)->images()->get();
         }
         
     
@@ -36,23 +36,23 @@ class FavoriteController extends Controller
         public function toggleFavorite(Request $request, $productId)
     {
         $userId = Auth::id();  // Get the authenticated user's ID
-        $product = Produk::find($productId);  // Find the product
+        $product = Product::find($productId);  // Find the product
 
         if (!$product) {
-            return response()->json(['message' => 'Produk tidak ditemukan'], 404);
+            return response()->json(['message' => 'Product tidak ditemukan'], 404);
         }
 
         // Check if the product is already favorited by the user
         $exists = DB::table('favorites')
                     ->where('user_id', $userId)
-                    ->where('produk_id', $productId)
+                    ->where('Product_id', $productId)
                     ->exists();
 
         if ($exists) {
             // Remove from favorites
             DB::table('favorites')
                 ->where('user_id', $userId)
-                ->where('produk_id', $productId)
+                ->where('Product_id', $productId)
                 ->delete();
 
             return response()->json(['message' => 'Removed from favorites']);
@@ -60,7 +60,7 @@ class FavoriteController extends Controller
             // Add to favorites
             DB::table('favorites')->insert([
                 'user_id' => $userId,
-                'produk_id' => $productId,
+                'Product_id' => $productId,
                 'created_at' => now(),
                 'updated_at' => now(),
             ]);
@@ -76,14 +76,14 @@ class FavoriteController extends Controller
         // Check if the product is in the user's favorites
         $exists = DB::table('favorites')
                     ->where('user_id', $userId)
-                    ->where('produk_id', $productId)
+                    ->where('Product_id', $productId)
                     ->exists();
 
         if ($exists) {
             // Remove the product from the favorites table
             DB::table('favorites')
                 ->where('user_id', $userId)
-                ->where('produk_id', $productId)
+                ->where('Product_id', $productId)
                 ->delete();
 
             return response()->json(['message' => 'Removed from favorites']);
@@ -96,10 +96,10 @@ class FavoriteController extends Controller
     public function moveToCart($productId)
 {
     $userId = Auth::id();
-    $product = Produk::find($productId);
+    $product = Product::find($productId);
 
     if (!$product) {
-        return response()->json(['message' => 'Produk tidak ditemukan'], 404);
+        return response()->json(['message' => 'Product tidak ditemukan'], 404);
     }
 
     // Add product to session cart
@@ -124,7 +124,7 @@ class FavoriteController extends Controller
     // Remove product from favorites table directly
     DB::table('favorites')
         ->where('user_id', $userId)
-        ->where('produk_id', $productId)
+        ->where('Product_id', $productId)
         ->delete();
 
     return response()->json(['message' => 'Moved to cart']);

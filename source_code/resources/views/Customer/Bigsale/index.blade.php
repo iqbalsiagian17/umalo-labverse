@@ -7,12 +7,12 @@
             <div class="col-lg-3 col-md-5">
                 <div class="sidebar">
                     <div class="sidebar__item">
-                        <h4 style="color:#42378C;">{{ __('messages.kategori') }}</h4>
+                        <h4 style="color:#42378C;">{{ __('messages.Category') }}</h4>
                         <ul>
-                            @foreach ($kategori as $kategoris)
+                            @foreach ($Category as $Categorys)
                                 <li>
-                                    <a href="{{ route('shop.category.discounted', $kategoris->id) }}">
-                                        {{ $kategoris->nama }}
+                                    <a href="{{ route('shop.category.discounted', $Categorys->id) }}">
+                                        {{ $Categorys->nama }}
                                     </a>
                                 </li>
                             @endforeach
@@ -76,7 +76,7 @@
                                         <span class="nego-badge">{{ __('messages.bisa_nego') }}</span>
                                     @endif
                                     <ul class="product__item__pic__hover">
-                                        <li><a href="{{ route('produk_customer.user.show', $product->id) }}?source={{ Str::random(10) }}"><i
+                                        <li><a href="{{ route('Product_customer.user.show', $product->id) }}?source={{ Str::random(10) }}"><i
                                                     class="fa fa-info-circle"></i></a></li>
                                         @auth
                                             <!-- Jika pengguna sudah login -->
@@ -89,7 +89,7 @@
                                     </ul>
                                 </div>
                                 <div class="product__item__text">
-                                    <h6><a href="{{ route('produk_customer.user.show', $product->id) }}?source={{ Str::random(10) }}">{{ \Illuminate\Support\Str::limit($product->nama, 30, '...') }}</a>
+                                    <h6><a href="{{ route('Product_customer.user.show', $product->id) }}?source={{ Str::random(10) }}">{{ \Illuminate\Support\Str::limit($product->nama, 30, '...') }}</a>
                                     </h6>
                                     <span style="text-decoration: line-through; color: #ff0000;">
                                         <b>Rp{{ number_format($product->harga_tayang, 0, ',', '.') }}</b>

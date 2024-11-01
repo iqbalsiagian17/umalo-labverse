@@ -71,7 +71,7 @@
                         <button type="button" class="btn btn-primary" id="nextStep">Next</button>
                     </div>
 
-                    <!-- Step 2: Diskon Persen, Produk, Filter -->
+                    <!-- Step 2: Diskon Persen, Product, Filter -->
                     <div id="step2" style="display: none;">
                         <div class="form-group mb-3">
                             <label for="diskon_persen">Diskon Persen</label>
@@ -82,7 +82,7 @@
                                 </div>
                             </div>
                             <small class="form-text text-muted">
-                                *Jika Ingin menambahkan produk ke dalam event big sale, maka input ulang jumlah persen diskon.
+                                *Jika Ingin menambahkan Product ke dalam event big sale, maka input ulang jumlah persen diskon.
                             </small>
                             @if ($errors->has('diskon_persen'))
                                 <small class="text-danger">{{ $errors->first('diskon_persen') }}</small>
@@ -90,14 +90,14 @@
                         </div>
 
                         <div class="form-group mb-3">
-                            <label for="searchInput">Cari Produk</label>
-                            <input type="text" id="searchInput" class="form-control" placeholder="Cari produk...">
+                            <label for="searchInput">Cari Product</label>
+                            <input type="text" id="searchInput" class="form-control" placeholder="Cari Product...">
                         </div>
 
                         <div class="form-group mb-3">
-                            <label for="categoryFilter">Filter Berdasarkan Kategori</label>
+                            <label for="categoryFilter">Filter Berdasarkan Category</label>
                             <select id="categoryFilter" class="form-control">
-                                <option value="">Semua Kategori</option>
+                                <option value="">Semua Category</option>
                                 @foreach($categories as $category)
                                     <option value="{{ $category->id }}">{{ $category->nama }}</option>
                                 @endforeach
@@ -105,20 +105,20 @@
                         </div>
 
                         <div class="form-group mb-3">
-                            <label for="products">Produk</label>
+                            <label for="products">Product</label>
                             <div class="row" id="productsList">
                                 @foreach($products as $product)
-                                    <div class="col-md-2 col-sm-4 mb-4 product-item" data-category="{{ $product->kategori_id }}">
+                                    <div class="col-md-2 col-sm-4 mb-4 product-item" data-category="{{ $product->Category_id }}">
                                         <div class="card h-100">
                                             <img src="{{ asset($product->images->first()->gambar ?? 'path/to/default/image.jpg') }}" class="card-img-top" alt="{{ $product->nama }}" style="height: 100px; object-fit: cover; border-radius: 10px;">
                                             <div class="card-body p-2">
                                                 <div class="d-flex align-items-start">
-                                                    <input type="checkbox" class="form-check-input" id="product-{{ $product->id }}" name="products[{{ $product->id }}]" value="{{ $product->id }}" {{ $bigSale->produk->contains($product->id) ? 'checked' : '' }}>
+                                                    <input type="checkbox" class="form-check-input" id="product-{{ $product->id }}" name="products[{{ $product->id }}]" value="{{ $product->id }}" {{ $bigSale->Product->contains($product->id) ? 'checked' : '' }}>
                                                     <label class="form-check-label ml-2" for="product-{{ $product->id }}" style="word-wrap: break-word; white-space: normal;">
                                                         {{ $product->nama }}
                                                     </label>
                                                 </div>
-                                                <input type="text" class="form-control mt-2 harga-diskon" data-harga-tayang="{{ $product->harga_tayang }}" name="harga_diskon[{{ $product->id }}]" placeholder="Harga Diskon" value="{{ old('harga_diskon.'.$product->id, $bigSale->produk->find($product->id)->pivot->harga_diskon ?? '') }}" {{ $bigSale->produk->contains($product->id) ? '' : 'disabled' }}>
+                                                <input type="text" class="form-control mt-2 harga-diskon" data-harga-tayang="{{ $product->harga_tayang }}" name="harga_diskon[{{ $product->id }}]" placeholder="Harga Diskon" value="{{ old('harga_diskon.'.$product->id, $bigSale->Product->find($product->id)->pivot->harga_diskon ?? '') }}" {{ $bigSale->Product->contains($product->id) ? '' : 'disabled' }}>
                                                 @if ($errors->has('harga_diskon.'.$product->id))
                                                     <small class="text-danger">{{ $errors->first('harga_diskon.'.$product->id) }}</small>
                                                 @endif
@@ -163,7 +163,7 @@
         });
     });
 
-    // Pencarian dan filter kategori
+    // Pencarian dan filter Category
     function filterProducts() {
         let filterText = document.getElementById('searchInput').value.toLowerCase();
         let selectedCategory = document.getElementById('categoryFilter').value;
