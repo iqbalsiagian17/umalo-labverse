@@ -24,13 +24,13 @@ class OrderController extends Controller
     }
     public function show($id)
     {
-        $order = Order::with('orderItems.produk')->findOrFail($id);
+        $order = Order::with('orderItems.Product')->findOrFail($id);
         return view('customer.order.detail-pesanan', compact('order'));
     }
 
     public function contract($id)
     {
-        $order = Order::with('orderItems.produk')->findOrFail($id);
+        $order = Order::with('orderItems.Product')->findOrFail($id);
 
         return view('customer.order.contract', compact('order'));
     }
@@ -93,7 +93,7 @@ class OrderController extends Controller
     public function generatePdf($id)
     {
         // Retrieve the order along with related items, user details, and addresses
-        $order = Order::with(['orderItems.produk', 'user.userDetail', 'user.addresses'])->findOrFail($id);
+        $order = Order::with(['orderItems.Product', 'user.userDetail', 'user.addresses'])->findOrFail($id);
 
         // Retrieve all Materai records
 
@@ -104,7 +104,7 @@ class OrderController extends Controller
         $userAddresses = $order->user->addresses;
 
         // Generate the invoice number
-$invoiceNumber = $order->invoice_number;
+        $invoiceNumber = $order->invoice_number;
 
         // Handle case where invoice_number is not set
         if (!$invoiceNumber) {
@@ -273,7 +273,7 @@ $invoiceNumber = $order->invoice_number;
     }
     public function submitReview(Request $request, $id)
     {
-        $order = Order::with('orderItems.produk')->findOrFail($id);
+        $order = Order::with('orderItems.Product')->findOrFail($id);
 
         if ($order->status !== 'Selesai') {
             return redirect()->route('order.show', $id)->with('error', 'Anda hanya dapat mengulas setelah pesanan selesai.');
@@ -308,7 +308,7 @@ $invoiceNumber = $order->invoice_number;
             }
             // dd($images, $videos);
 
-            $orderItem->produk->reviews()->create([
+            $orderItem->Product->reviews()->create([
                 'user_id' => auth()->id(),
                 'content' => $request->input('review'),
                 'rating' => $request->input('rating'),
@@ -316,7 +316,7 @@ $invoiceNumber = $order->invoice_number;
                 'videos' => $videos ? json_encode($videos, JSON_UNESCAPED_SLASHES) : null, // Ensure proper JSON encoding
             ]);
 
-            return redirect()->route('product.show', $orderItem->produk->id)->with('success', 'Ulasan berhasil dikirim.');
+            return redirect()->route('product.show', $orderItem->Product->id)->with('success', 'Ulasan berhasil dikirim.');
         }
 
         return redirect()->route('order.show', $id)->with('error', 'Terjadi kesalahan saat mengirim ulasan.');

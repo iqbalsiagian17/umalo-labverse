@@ -11,7 +11,7 @@ class Qa extends Model
     protected $table = 'qas';
 
     protected $fillable = [
-        'pertanyaan',
-        'jawaban',
+        'question',
+        'answer',
     ];
 }

@@ -8,11 +8,11 @@ class Favorite extends Model
 {
     use HasFactory;
 
-    protected $table = 'favorites';
+    protected $table = 't_favorites';
 
     protected $fillable = [
         'user_id',
-        'produk_id',
+        'product_id',
     ];
 
     // Relationship to User
@@ -24,6 +24,6 @@ class Favorite extends Model
     // Relationship to Product
     public function product()
     {
-        return $this->belongsTo(Produk::class, 'produk_id');
+        return $this->belongsTo(Product::class, 'product_id');
     }
 }

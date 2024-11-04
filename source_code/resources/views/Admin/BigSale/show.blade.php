@@ -31,12 +31,12 @@
 
             <hr>
 
-            <h2 class="mb-4">Produk</h2>
-            @if($bigSale->produk->isEmpty())
-                <p class="text-muted">Tidak ada produk yang terdaftar dalam Big Sale ini.</p>
+            <h2 class="mb-4">Product</h2>
+            @if($bigSale->Product->isEmpty())
+                <p class="text-muted">Tidak ada Product yang terdaftar dalam Big Sale ini.</p>
             @else
                 <div class="row">
-                    @foreach($bigSale->produk as $product)
+                    @foreach($bigSale->Product as $product)
                         <div class="col-md-4">
                             <div class="card mb-4">
                                 <img src="{{ asset($product->images->first()->gambar ?? 'path/to/default/image.jpg') }}" class="card-img-top" alt="{{ $product->nama }}" style="height: 150px; object-fit: cover;">

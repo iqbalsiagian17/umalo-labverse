@@ -4,14 +4,14 @@ use App\Http\Controllers\Admin\BigSale\BigsaleController;
 use App\Http\Controllers\Auth\SocialiteController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
-use App\Http\Controllers\Admin\MasterData\KategoriController;
-use App\Http\Controllers\Admin\MasterData\SubKategoriController;
+use App\Http\Controllers\Admin\MasterData\CategoryController;
+use App\Http\Controllers\Admin\MasterData\SubCategoryController;
 use App\Http\Controllers\Admin\MasterData\KomoditasController;
-use App\Http\Controllers\Admin\Produk\ProdukController;
+use App\Http\Controllers\Admin\Product\ProductController;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Admin\Slider\SliderController;
 use App\Http\Controllers\Costumer\User\UserDetailController;
-use App\Http\Controllers\Costumer\Produk\ProdukCostumerController;
+use App\Http\Controllers\Costumer\Product\ProductCostumerController;
 use App\Http\Controllers\Admin\BigSale;
 use App\Http\Controllers\Admin\MasterData\MateraiController;
 use App\Http\Controllers\Admin\MasterData\PPNController;
@@ -27,19 +27,6 @@ use App\Http\Controllers\Costumer\QnA\QnaController;
 use App\Http\Controllers\Costumer\Shop\ShopController;
 use App\Http\Controllers\LanguageController;
 
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider and all of them will
-| be assigned to the "web" middleware group. Make something great!
-|
-*/
-
-
-
 Auth::routes();
 
 Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
@@ -47,9 +34,9 @@ Route::get('/shop', [App\Http\Controllers\Costumer\Shop\ShopController::class, '
 Route::get('/shop/category/{id}', [App\Http\Controllers\Costumer\Shop\ShopController::class, 'filterByCategory'])->name('shop.category');
 Route::get('/shop/subcategory/{id}', [ShopController::class, 'filterBySubcategory'])->name('shop.subcategory');
 Route::get('/shop/price-range', [ShopController::class, 'filterByPriceRange'])->name('shop.priceRange');
-Route::get('/product/lab/{id}', [ProdukCostumerController::class, 'userShow'])->name('produk_customer.user.show');
-Route::get('/search', [ProdukCostumerController::class, 'search'])->name('produk.search');
-Route::get('/product/{id}', [ProdukCostumerController::class, 'userShow'])->name('product.show');
+Route::get('/product/lab/{id}', [ProductCostumerController::class, 'userShow'])->name('Product_customer.user.show');
+Route::get('/search', [ProductCostumerController::class, 'search'])->name('Product.search');
+Route::get('/product/{id}', [ProductCostumerController::class, 'userShow'])->name('product.show');
 Route::get('/faq', [QnaController::class, 'index'])->name('faq');
 Route::get('/shop/rating/{rating}', [ShopController::class, 'filterByRating'])->name('shop.rating');
 Route::get('/order/{id}/generate-pdf', [OrderController::class, 'generatePdf'])->name('order.generate_pdf');
@@ -130,10 +117,16 @@ Route::middleware(['auth', 'user-access:costumer'])->group(function () {
 //Admin Routes List
 Route::middleware(['auth', 'user-access:admin'])->group(function () {
     Route::get('/dashboard', [HomeController::class, 'dashboard'])->name('dashboard');
-
-    Route::group(['middleware' => ['check.big.sale']], function () {
-        // Route yang memerlukan pengecekan Big Sale
-        Route::resource('produk', ProdukController::class);
+    
+    Route::get('admin/product', [ProductController::class, 'index'])->name('admin.product.index');
+    Route::get('admin/product/create', [ProductController::class, 'create'])->name('admin.product.create');
+    Route::post('admin/product', [ProductController::class, 'store'])->name('admin.product.store');
+    Route::get('admin/product/{product}', [ProductController::class, 'show'])->name('admin.product.show');
+    Route::get('admin/product/{product}/edit', [ProductController::class, 'edit'])->name('admin.product.edit');
+    Route::put('admin/product/{product}', [ProductController::class, 'update'])->name('admin.product.update');
+    Route::delete('admin/product/{product}', [ProductController::class, 'destroy'])->name('admin.product.destroy');
+    Route::post('/admin/product/update-status/{product}', [ProductController::class, 'updateStatus'])->name('product.update-status');
+    Route::get('get-subcategories/{category_id}', [ProductController::class, 'getSubcategories']);
     });
 
     Route::resource('bigsale', BigsaleController::class);
@@ -144,19 +137,17 @@ Route::middleware(['auth', 'user-access:admin'])->group(function () {
     Route::put('/users/{id}/password', [UserController::class, 'updatePassword'])->name('users.update.password');
 
 
-    Route::get('admin/produk/getSubKategori/{kategoriId}', [ProdukController::class, 'getSubKategori']);
-    Route::post('/produk/update-status/{id}', [ProdukController::class, 'updateStatus'])->name('produk.update-status');
+    Route::get('admin/Product/getSubCategory/{CategoryId}', [ProductController::class, 'getSubCategory']);
+    Route::post('/Product/update-status/{id}', [ProductController::class, 'updateStatus'])->name('Product.update-status');
     Route::put('/transaksi/{id}/updateEdit', [TransaksiController::class, 'updateEdit'])->name('transaksi.updateEdit');
 
     Route::prefix('admin/masterdata')->name('admin.masterdata.')->group(function () {
-        Route::resource('kategori', KategoriController::class);
-        Route::resource('subkategori', SubKategoriController::class);
-        Route::resource('komoditas', KomoditasController::class)->parameters(['komoditas' => 'komoditas']);
+        Route::resource('Category', CategoryController::class);
+        Route::resource('subCategory', SubCategoryController::class);
         Route::resource('ppn', PPNController::class);
         Route::resource('materai', MateraiController::class);
 
     });
-});
 
 
 

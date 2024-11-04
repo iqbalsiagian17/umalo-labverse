@@ -40,10 +40,10 @@
                 </optgroup>
         
                 <!-- Product URLs Group -->
-                <optgroup label="Halaman Detail Produk">
+                <optgroup label="Halaman Detail Product">
                     @foreach($products as $product)
-                        <option value="{{ route('produk_customer.user.show', ['id' => $product->id]) }}"
-                            {{ $slider->url == route('produk_customer.user.show', ['id' => $product->id]) ? 'selected' : '' }}>
+                        <option value="{{ route('Product_customer.user.show', ['id' => $product->id]) }}"
+                            {{ $slider->url == route('Product_customer.user.show', ['id' => $product->id]) ? 'selected' : '' }}>
                             Product: {{ $product->nama }}
                         </option>
                     @endforeach

@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Admin\Slider;
 
 use App\Http\Controllers\Controller;
-use App\Models\Produk;
+use App\Models\Product;
 use App\Models\Slider;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
@@ -31,7 +31,7 @@ class SliderController extends Controller
             'shop' => route('shop'),
         ];
 
-        $products = Produk::all();
+        $products = Product::all();
 
 
         return view('admin.slider.create', compact('routeOptions','products'));
@@ -100,7 +100,7 @@ class SliderController extends Controller
             'shop' => route('shop'),
         ];
         
-        $products = Produk::all();
+        $products = Product::all();
 
         return view('admin.slider.edit', compact('slider', 'routeOptions', 'products'));
     }

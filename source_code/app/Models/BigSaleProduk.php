@@ -5,12 +5,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class BigSaleProduk extends Model
+class BigSaleProduct extends Model
 {
     use HasFactory;
 
-    protected $table = 'big_sale_produk';
+    protected $table = 't_big_sale_Product';
 
-    protected $fillable = ['big_sale_id', 'produk_id', 'harga_diskon'];
+    protected $fillable = ['big_sale_id', 'product_id', 'discount_price'];
 
 }

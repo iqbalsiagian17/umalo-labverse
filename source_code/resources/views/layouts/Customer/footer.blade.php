@@ -67,8 +67,9 @@
                             <img src="{{ asset('assets/images/AGS-logo.png') }}" alt="" style="width: 100%; height: 100px; margin-bottom: 10px;">
                         </a>
                         <a href="./index.html">
-                            <img src="{{ asset('assets/images/logo-nobg.png') }}" alt="" style="width: 100%; height: 100px;">
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c9/100%25_Cinta_Indonesia_Logo.svg/1200px-100%25_Cinta_Indonesia_Logo.svg.png" alt="" style="width: 100%; height: 100px;">
                         </a>
+                        
                     </div>
                 </div>
             </div>

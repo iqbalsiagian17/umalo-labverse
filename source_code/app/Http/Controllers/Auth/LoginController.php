@@ -78,7 +78,7 @@ class LoginController extends Controller
 
         // Update the last login time
         $user = Auth::user();
-        DB::table('users')
+        DB::table('t_users')
             ->where('id', $user->id)
             ->update(['last_login_at' => now()]);
 
@@ -127,7 +127,7 @@ public function logout(Request $request)
 
     // Update the last_login_at to now to indicate they are no longer online
     if ($user) {
-        DB::table('users')
+        DB::table('t_users')
             ->where('id', $user->id)
             ->update(['last_login_at' => now()]);
     }

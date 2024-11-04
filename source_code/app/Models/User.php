@@ -19,13 +19,17 @@ class User extends Authenticatable
      *
      * @var array<int, string>
      */
+
+    protected $table = 't_users';
+
     protected $fillable = [
         'name',
         'email',
         'password',
         'role',
-        'foto_profile'
-
+        'foto_profile',
+        'phone_number',
+        'company',
 
     ];
 
@@ -61,24 +65,9 @@ class User extends Authenticatable
         return $this->hasMany(Socialite::class);
     }
 
-    public function userDetail()
-    {
-        return $this->hasOne(UserDetail::class);
-    }
     public function orders()
     {
         return $this->hasMany(Order::class);
-    }
-
-    // User.php
-    public function seenByAdmins()
-    {
-        return $this->belongsToMany(User::class, 'user_seen_by_admin', 'user_id', 'admin_id')->withTimestamps();
-    }
-
-    public function newUsersSeenByAdmin()
-    {
-        return $this->belongsToMany(User::class, 'user_seen_by_admin', 'admin_id', 'user_id')->withTimestamps();
     }
 
     public function addresses()
@@ -88,7 +77,7 @@ class User extends Authenticatable
 
     public function favorites()
     {
-        return $this->belongsToMany(Produk::class, 'favorites', 'user_id', 'produk_id')
+        return $this->belongsToMany(Product::class, 't_favorites', 'user_id', 'Product_id')
                     ->withTimestamps();
     }
     

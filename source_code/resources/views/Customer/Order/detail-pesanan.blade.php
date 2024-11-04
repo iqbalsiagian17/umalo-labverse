@@ -28,7 +28,7 @@
                             <strong>{{ __('messages.total_price') }}:</strong>
                             @if (
                                 $order->orderItems->contains(function ($item) {
-                                    return $item->produk->nego == 'ya';
+                                    return $item->Product->nego == 'ya';
                                 }) &&
                                     $order->harga_setelah_nego &&
                                     $order->harga_setelah_nego != $order->harga_total)
@@ -83,7 +83,7 @@
                         <tbody>
                             @foreach ($order->orderItems as $index => $item)
                                 <tr>
-                                    <td>{{ $index + 1 }}. {{ $item->produk->nama }}</td>
+                                    <td>{{ $index + 1 }}. {{ $item->Product->nama }}</td>
                                     <td class="text-center">{{ $item->jumlah }}</td>
                                     <td class="text-right">{{ 'Rp ' . number_format($item->harga, 0, ',', '.') }}</td>
                                     <td class="text-right">
@@ -92,7 +92,7 @@
                             @endforeach
 
                             @if (in_array($order->status, ['Diterima', 'Packing', 'Pengiriman', 'Selesai']) && $order->orderItems->contains(function ($item) {
-                                return $item->produk->nego == 'ya';
+                                return $item->Product->nego == 'ya';
                             }))
                                 <!-- Subtotal before negotiation -->
                                 <tr>
@@ -159,7 +159,7 @@
                 <div class="mt-4">
                     @if (
                         $order->orderItems->contains(function ($item) {
-                            return $item->produk->nego == 'ya';
+                            return $item->Product->nego == 'ya';
                         }))
                         @if ($order->status == 'Negosiasi' && $order->whatsapp_number)
                             <div class="alert alert-info">
@@ -367,7 +367,7 @@
                 <!-- Link to Review Section -->
                 @if ($order->status == 'Selesai')
                     <div class="mt-4 text-center">
-                        <a href="{{ route('product.show', $order->orderItems->first()->produk->id) }}#tabs-3"
+                        <a href="{{ route('product.show', $order->orderItems->first()->Product->id) }}#tabs-3"
                             class="btn btn-success">
                             {{ __('messages.review') }}
                         </a>

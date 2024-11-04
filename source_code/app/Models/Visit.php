@@ -14,6 +14,9 @@ class Visit extends Model
      *
      * @var array
      */
+
+     protected $table = 't_visits';
+     
     protected $fillable = [
         'user_id',
         'visited_at',

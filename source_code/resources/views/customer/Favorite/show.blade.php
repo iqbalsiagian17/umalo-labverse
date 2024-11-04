@@ -45,7 +45,7 @@
                                     <td class="align-middle text-center">
                                         <div class="d-flex justify-content-center">
                                             <!-- View Details Icon -->
-                                            <a href="{{ route('produk_customer.user.show', $favorite->id) }}" class="btn btn-primary mr-2" title="{{ __('messages.view_details') }}">
+                                            <a href="{{ route('Product_customer.user.show', $favorite->id) }}" class="btn btn-primary mr-2" title="{{ __('messages.view_details') }}">
                                                 <i class="fa fa-eye"></i> <!-- Font Awesome eye icon for view details -->
                                             </a>
 

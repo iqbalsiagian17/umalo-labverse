@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Costumer\Cart;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\Produk;
+use App\Models\Product;
 use App\Models\Order;
 use App\Models\OrderItem;
 
@@ -19,16 +19,16 @@ class CartController extends Controller
         }
         
         foreach ($cart as $id => $details) {
-            $product = Produk::find($id);
+            $product = Product::find($id);
             if ($product && $details['quantity'] > $product->stok) {
-                return redirect()->route('cart.view')->with('error', 'Kuantitas untuk produk ' . $product->nama . ' melebihi stok yang tersedia.');
+                return redirect()->route('cart.view')->with('error', 'Kuantitas untuk Product ' . $product->nama . ' melebihi stok yang tersedia.');
             }
         }
     
         // Determine initial status based on product negotiation availability
         $initialStatus = 'Menunggu Konfirmasi Admin';
         foreach ($cart as $id => $details) {
-            $product = Produk::find($id);
+            $product = Product::find($id);
             if ($product && $product->nego == 'ya') {
                 $initialStatus = 'Menunggu Konfirmasi Admin untuk Negosiasi';
                 break;
@@ -37,7 +37,7 @@ class CartController extends Controller
     
         $totalHarga = 0;
         foreach ($cart as $id => $details) {
-            $product = Produk::with(['bigSales' => function ($query) {
+            $product = Product::with(['bigSales' => function ($query) {
                 $query->where('status', 'aktif')
                       ->whereDate('mulai', '<=', now())
                       ->whereDate('berakhir', '>=', now());
@@ -63,7 +63,7 @@ class CartController extends Controller
         ]);
     
         foreach ($cart as $id => $details) {
-            $product = Produk::with(['bigSales' => function ($query) {
+            $product = Product::with(['bigSales' => function ($query) {
                 $query->where('status', 'aktif')
                       ->whereDate('mulai', '<=', now())
                       ->whereDate('berakhir', '>=', now());
@@ -81,7 +81,7 @@ class CartController extends Controller
     
             OrderItem::create([
                 'order_id' => $order->id,
-                'produk_id' => $id,
+                'Product_id' => $id,
                 'jumlah' => $details['quantity'],
                 'harga' => $harga,
             ]);
@@ -107,14 +107,14 @@ class CartController extends Controller
 public function add(Request $request, $id)
 {
     // Fetch the product along with any active big sales
-    $product = Produk::with(['bigSales' => function ($query) {
+    $product = Product::with(['bigSales' => function ($query) {
         $query->where('status', 'aktif')
               ->whereDate('mulai', '<=', now())
               ->whereDate('berakhir', '>=', now());
     }])->find($id);
 
     if (!$product) {
-        return response()->json(['success' => false, 'message' => 'Produk tidak ditemukan!'], 404);
+        return response()->json(['success' => false, 'message' => 'Product tidak ditemukan!'], 404);
     }
 
     $quantity = $request->input('quantity', 1);
@@ -205,7 +205,7 @@ public function add(Request $request, $id)
         unset($cart[$id]);
         session()->put('cart', $cart);
 
-        return redirect()->route('cart.view')->with('success', 'Produk berhasil dihapus dari keranjang!');
+        return redirect()->route('cart.view')->with('success', 'Product berhasil dihapus dari keranjang!');
     }
 
     

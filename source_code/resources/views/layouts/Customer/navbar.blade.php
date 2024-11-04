@@ -96,6 +96,10 @@
     </div>
     <!-- Humberger End -->
 
+
+
+
+
     <!-- Header Section Begin -->
     <header class="header">
         <div class="header__top">
@@ -153,7 +157,7 @@
                     <div class="col-lg-6">
                         <div class="hero__search mb-3">
                             <div class="hero__search__form">
-                                <form id="searchForm" action="{{ route('produk.search') }}" method="GET">
+                                <form id="searchForm" action="{{ route('Product.search') }}" method="GET">
                                     <input type="text" name="query" id="searchQuery" placeholder="{{ __('messages.search_product') }}" value="{{ request('query') }}">
                                     <button type="submit" class="site-btn rounded">{{ __('messages.search') }}</button>
                                 </form>

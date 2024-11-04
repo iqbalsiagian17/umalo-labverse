@@ -48,9 +48,9 @@
                             </optgroup>
                     
                             <!-- Product URLs Group -->
-                            <optgroup label="Halaman Detail Produk">
+                            <optgroup label="Halaman Detail Product">
                                 @foreach($products as $product)
-                                    <option value="{{ route('produk_customer.user.show', ['id' => $product->id]) }}">
+                                    <option value="{{ route('Product_customer.user.show', ['id' => $product->id]) }}">
                                         Product: {{ $product->nama }}
                                     </option>
                                 @endforeach

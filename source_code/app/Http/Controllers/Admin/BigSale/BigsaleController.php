@@ -4,8 +4,8 @@ namespace App\Http\Controllers\Admin\BigSale;
 
 use App\Http\Controllers\Controller;
 use App\Models\BigSale;
-use App\Models\Kategori;
-use App\Models\Produk;
+use App\Models\Category;
+use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
@@ -17,7 +17,7 @@ class BigsaleController extends Controller
      */
     public function index()
     {
-        $bigSales = BigSale::with('produk')->orderBy('created_at', 'asc')->paginate(10);
+        $bigSales = BigSale::with('Product')->orderBy('created_at', 'asc')->paginate(10);
         return view('admin.bigsale.index', compact('bigSales'));
     }
 
@@ -26,8 +26,8 @@ class BigsaleController extends Controller
      */
     public function create()
     {
-        $products = Produk::all();
-        $categories = Kategori::all();
+        $products = Product::all();
+        $categories = Category::all();
 
         return view('admin.bigsale.create', compact('products','categories'));
     }
@@ -71,16 +71,16 @@ class BigsaleController extends Controller
         // Attach products if any
         if ($request->has('products')) {
             foreach ($request->products as $product_id => $value) {
-                $produk = Produk::findOrFail($product_id);
+                $Product = Product::findOrFail($product_id);
                 $harga_diskon = $request->input("harga_diskon.{$product_id}");
 
                 if ($harga_diskon) {
-                    $bigSale->produk()->attach($product_id, ['harga_diskon' => $harga_diskon]);
+                    $bigSale->Product()->attach($product_id, ['harga_diskon' => $harga_diskon]);
                 }
 
                 // Update nego status to "tidak" if it was "ya"
-                if ($produk->nego === 'ya') {
-                    $produk->update(['nego' => 'tidak']);
+                if ($Product->nego === 'ya') {
+                    $Product->update(['nego' => 'tidak']);
                 }
             }
         }
@@ -96,7 +96,7 @@ class BigsaleController extends Controller
      */
     public function show(string $id)
     {
-        $bigSale = BigSale::with('produk')->findOrFail($id);
+        $bigSale = BigSale::with('Product')->findOrFail($id);
         return view('admin.bigsale.show', compact('bigSale'));
     }
 
@@ -108,8 +108,8 @@ class BigsaleController extends Controller
         $bigSale = BigSale::findOrFail($id);
         $bigSale->mulai = \Carbon\Carbon::parse($bigSale->mulai);
         $bigSale->berakhir = \Carbon\Carbon::parse($bigSale->berakhir);
-        $products = Produk::all();
-        $categories = Kategori::all();
+        $products = Product::all();
+        $categories = Category::all();
         return view('admin.bigsale.edit', compact('bigSale', 'products','categories'));
     }
 
@@ -171,7 +171,7 @@ class BigsaleController extends Controller
         }
 
         // Sync the products with the Big Sale
-        $bigSale->produk()->sync($products);
+        $bigSale->Product()->sync($products);
 
         return redirect()->route('bigsale.index')->with('success', 'Big Sale updated successfully.');
     }
