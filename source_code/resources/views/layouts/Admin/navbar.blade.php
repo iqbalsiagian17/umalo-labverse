@@ -241,7 +241,7 @@
                             <span class="text">Transaksi</span>
                         </div>
                     </a>                    
-                    <a class="col-6 col-md-4 p-0" href="{{ route('Product.create') }}">
+                    <a class="col-6 col-md-4 p-0" href="{{ route('admin.product.create') }}">
                       <div class="quick-actions-item">
                           <div class="avatar-item bg-info rounded-circle">
                               <i class="fas fa-plus-circle"></i>
@@ -268,7 +268,7 @@
                         </div>
                     </a>
                     
-                    <a class="col-6 col-md-4 p-0" href="{{ route('Product.index') }}">
+                    <a class="col-6 col-md-4 p-0" href="{{ route('admin.product.index') }}">
                       <div class="quick-actions-item">
                           <div class="avatar-item bg-secondary rounded-circle">
                               <i class="fas fa-boxes"></i>

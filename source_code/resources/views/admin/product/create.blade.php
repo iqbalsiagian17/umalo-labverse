@@ -39,7 +39,7 @@
                     </div>
                 </div>
 
-                <form action="{{ route('Product.store') }}" method="POST" enctype="multipart/form-data" onsubmit="removeFormatAndSubmit(this)">
+                <form action="{{ route('admin.product.store') }}" method="POST" enctype="multipart/form-data" onsubmit="removeFormatAndSubmit(this)">
                     @csrf 
                 
                     <div class="tab-content" id="productFormContent">

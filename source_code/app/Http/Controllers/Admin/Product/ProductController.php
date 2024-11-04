@@ -148,7 +148,7 @@ class ProductController extends Controller
         }
     }
 
-    return redirect()->route('Product.index')->with('success', 'Product created successfully.');
+    return redirect()->route('product.index')->with('success', 'Product created successfully.');
 }
 
 
@@ -157,28 +157,41 @@ class ProductController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Product $product)
+    public function show($id)
     {
-        // Load gambar dan video terkait untuk ditampilkan
-        $product->load('images', 'videos');
+        $product = Product::with(['images', 'videos', 'productList'])->find($id);
+        
+        if (!$product) {
+            abort(404, 'Product not found');
+        }
         
         return view('admin.product.show', compact('product'));
     }
+    
+    
+    
 
     /**
      * Show the form for editing the specified resource.
      */
 
-     public function edit(Product $product)
-     {
-        $categories = Category::all();
-        $subcategories = Subcategory::all(); // Mengambil semua subkategori
-        $product->load('images', 'videos');    
+     public function edit($id)
+    {
+        $product = Product::findOrFail($id); // Fetch product by ID
+        $categories = Category::with('subcategories')->get(); // Eager load subcategories within each category
+        $subcategories = Subcategory::all(); // Fetch all subcategories independently
+        $product->load('images', 'videos'); // Load related images and videos
+
         return view('admin.product.edit', compact('product', 'categories', 'subcategories'));
     }
 
-    public function update(Request $request, Product $product)
-    {
+     
+     
+
+     public function update(Request $request, $id)
+     {
+        $product = Product::findOrFail($id); // Fetch product by ID
+
         // Validate the request data
         $request->validate([
             'name' => 'required|string|max:255',
@@ -195,15 +208,16 @@ class ProductController extends Controller
             'function_test' => 'nullable|string|max:255',
             'sni' => 'nullable|string|max:255',
             'has_svlk' => 'nullable',
+            'status' => 'required',
             'tool_type' => 'nullable|string|max:255',
             'function' => 'nullable|string|max:255',
             'product_specifications' => 'required|string',
-            'is_price_displayed' => 'required|boolean',
-            'price' => 'required|numeric',
+            'is_price_displayed' => 'required|in:yes,no',
+            'price' => 'required|numeric|min:0',
             'discount_price' => 'nullable|numeric|min:0|lt:price|required_if:is_discount,1',
-            'e_catalog_link' => 'nullable|url',
-            'category_id' => 'required|exists:t_category,id',
-            'subcategory_id' => 'required|exists:t_sub_category,id',
+            'e_catalog_link' => 'nullable',
+            'category_id' => 'required|exists:t_p_category,id',
+            'subcategory_id' => 'required|exists:t_p_sub_category,id',
             'image.*' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:15000',
         ]);
 
@@ -229,9 +243,8 @@ class ProductController extends Controller
             'has_svlk' => $request->has_svlk,
             'tool_type' => $request->tool_type,
             'function' => $request->function,
+            'status' => $request->status,
             'product_specifications' => $request->product_specifications,
-            'status' => 'Unpublished',
-            'negotiable' => $request->negotiable ?? false,
             'is_price_displayed' => $request->is_price_displayed,
             'price' => $request->price,
             'discount_price' => $request->is_discount ? $request->discount_price : null,
@@ -241,17 +254,31 @@ class ProductController extends Controller
         ]);
 
         // Update images if new ones are uploaded
-        if ($request->hasFile('image')) {
-            foreach ($request->file('image') as $imgproduct) {
+        if ($request->hasFile('images')) {
+            foreach ($request->file('images') as $imgproduct) {
                 $slug = Str::slug(pathinfo($imgproduct->getClientOriginalName(), PATHINFO_FILENAME));
                 $newImageName = time() . '_' . $slug . '.' . $imgproduct->getClientOriginalExtension();
                 $imgproduct->move('uploads/product/', $newImageName);
-
+        
                 // Save new image and associate with product
                 $productImage = new ProductImage;
                 $productImage->product_id = $product->id;
                 $productImage->images = 'uploads/product/' . $newImageName;
                 $productImage->save();
+            }
+        }
+        
+
+        if ($request->filled('deleted_images')) {
+            $deletedImageIds = explode(',', $request->input('deleted_images'));
+    
+            // Find and delete images from storage
+            $imagesToDelete = ProductImage::whereIn('id', $deletedImageIds)->get();
+            foreach ($imagesToDelete as $image) {
+                if (file_exists(public_path($image->images))) {
+                    unlink(public_path($image->images)); // Delete from storage
+                }
+                $image->delete(); // Delete from database
             }
         }
 
@@ -276,7 +303,7 @@ class ProductController extends Controller
             }
         }
 
-        return redirect()->route('Product.index')->with('success', 'Product updated successfully.');
+        return redirect()->route('admin.product.index')->with('success', 'Product updated successfully.');
     }
 
     public function destroy($id)
@@ -294,13 +321,13 @@ class ProductController extends Controller
         }
 
         // Delete associated details
-        ProductList::where('Product_id', $Product->id)->delete();
+        ProductList::where('product_id', $Product->id)->delete();
 
         // Delete the product
         $Product->delete();
 
         // Redirect back with a success message
-        return redirect()->route('Product.index')->with('success', 'Product deleted successfully.');
+        return redirect()->route('product.index')->with('success', 'Product deleted successfully.');
     }
 
 
@@ -324,9 +351,9 @@ class ProductController extends Controller
             $Product->status = $request->input('status');
             $Product->save();
 
-            return redirect()->route('Product.show', $Product->id)->with('success', 'Status berhasil diperbarui');
+            return redirect()->route('admin.product.show', $Product->id)->with('success', 'Status berhasil diperbarui');
         } catch (\Exception $e) {
-            return redirect()->route('Product.show', $Product->id)->with('error', 'Terjadi kesalahan saat memperbarui status: ' . $e->getMessage());
+            return redirect()->route('admin.product.show', $Product->id)->with('error', 'Terjadi kesalahan saat memperbarui status: ' . $e->getMessage());
         }
     }
 

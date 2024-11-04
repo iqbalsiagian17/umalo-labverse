@@ -118,9 +118,15 @@ Route::middleware(['auth', 'user-access:costumer'])->group(function () {
 Route::middleware(['auth', 'user-access:admin'])->group(function () {
     Route::get('/dashboard', [HomeController::class, 'dashboard'])->name('dashboard');
     
-        Route::resource('Product', ProductController::class);
-        Route::get('get-subcategories/{category_id}', [ProductController::class, 'getSubcategories']);
-
+    Route::get('admin/product', [ProductController::class, 'index'])->name('admin.product.index');
+    Route::get('admin/product/create', [ProductController::class, 'create'])->name('admin.product.create');
+    Route::post('admin/product', [ProductController::class, 'store'])->name('admin.product.store');
+    Route::get('admin/product/{product}', [ProductController::class, 'show'])->name('admin.product.show');
+    Route::get('admin/product/{product}/edit', [ProductController::class, 'edit'])->name('admin.product.edit');
+    Route::put('admin/product/{product}', [ProductController::class, 'update'])->name('admin.product.update');
+    Route::delete('admin/product/{product}', [ProductController::class, 'destroy'])->name('admin.product.destroy');
+    Route::post('/admin/product/update-status/{product}', [ProductController::class, 'updateStatus'])->name('product.update-status');
+    Route::get('get-subcategories/{category_id}', [ProductController::class, 'getSubcategories']);
     });
 
     Route::resource('bigsale', BigsaleController::class);

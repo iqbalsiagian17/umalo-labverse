@@ -13,7 +13,7 @@
         </div>
     @endif
 
-    <form action="{{ route('Product.update', $Product->id) }}" method="POST" enctype="multipart/form-data">
+    <form action="{{ route('admin.product.update', $product->id) }}" method="POST" enctype="multipart/form-data" onsubmit="removeFormatAndSubmit(this)">
         @csrf
         @method('PUT')
 
@@ -33,7 +33,7 @@
                                 <a class="nav-link" id="details-tab" data-toggle="tab" href="#details" role="tab" aria-controls="details" aria-selected="false">Details</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" id="images-tab" data-toggle="tab" href="#images" role="tab" aria-controls="images" aria-selected="false">Product List</a>
+                                <a class="nav-link" id="product-list-tab" data-bs-toggle="tab" href="#product-list" role="tab" aria-controls="product-list" aria-selected="false">Product List</a>
                             </li>
                         </ul>
 
@@ -43,92 +43,87 @@
                         <!-- General Information Tab -->
                         <div class="tab-pane fade show active" id="general" role="tabpanel" aria-labelledby="general-tab">
                             <div class="form-group">
-                                <label for="nama">Nama Product:</label>
-                                <input type="text" name="nama" class="form-control" value="{{ $Product->nama }}" required>
-                                @if ($errors->has('nama'))
-                                    <small class="text-danger">{{ $errors->first('nama') }}</small>
+                                <label for="name">Nama Product:</label>
+                                <input type="text" name="name" class="form-control" value="{{ $product->name }}" required>
+                                @if ($errors->has('name'))
+                                    <small class="text-danger">{{ $errors->first('name') }}</small>
                                 @endif
                             </div>
                             <div class="form-group">
-                                <label for="nego">Bisa Nego:</label>
-                                <select name="nego" class="form-control" required>
-                                    <option value="tidak" {{ old('nego', $Product->nego) == 'tidak' ? 'selected' : '' }}>Tidak</option>
-                                    <option value="ya" {{ old('nego', $Product->nego) == 'ya' ? 'selected' : '' }}>Ya</option>
+                                <label for="is_price_displayed">Harga Ditampilkan:</label>
+                                <select name="is_price_displayed" class="form-control" required>
+                                    <option value="yes" {{ old('is_price_displayed', $product->is_price_displayed) == 'yes' ? 'selected' : '' }}>Ya</option>
+                                    <option value="no" {{ old('is_price_displayed', $product->is_price_displayed) == 'no' ? 'selected' : '' }}>Tidak</option>
                                 </select>
-                                @if ($errors->has('nego'))
-                                    <small class="text-danger">{{ $errors->first('nego') }}</small>
+                                @if ($errors->has('is_price_displayed'))
+                                    <small class="text-danger">{{ $errors->first('is_price_displayed') }}</small>
                                 @endif
                             </div>
-                            <div class="form-group">
-                                <label for="harga_ditampilkan">Harga Ditampilkan:</label>
-                                <select name="harga_ditampilkan" class="form-control" required>
-                                    <option value="ya" {{ old('harga_ditampilkan', $Product->harga_ditampilkan) == 'ya' ? 'selected' : '' }}>Ya</option>
-                                    <option value="tidak" {{ old('harga_ditampilkan', $Product->harga_ditampilkan) == 'tidak' ? 'selected' : '' }}>Tidak</option>
+                            
+                            
+                            <div class="form-group"> <!-- Fixed typo here -->
+                                <label for="status">Status Produk:</label>
+                                <select name="status" class="form-control" required>
+                                    <option value="publish" {{ old('status', $product->status) == 'publish' ? 'selected' : '' }}>publish</option>
+                                    <option value="archive" {{ old('status', $product->status) == 'archive' ? 'selected' : '' }}>archive</option>
                                 </select>
-                                @if ($errors->has('harga_ditampilkan'))
-                                    <small class="text-danger">{{ $errors->first('harga_ditampilkan') }}</small>
-                                @endif
+                                @if ($errors->has('status'))
+                                    <small class="text-danger">{{ $errors->first('status') }}</small>
+                                @endif  
                             </div>
+                            
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="col-form-label" for="price"><span class="text-danger">*</span> Harga Produk:</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text">Rp</span>
+                                            <input type="text" name="price" class="form-control" id="price" placeholder="Harga Produk" 
+                                                   value="{{ old('price', number_format($product->price, 0, '', '.')) }}" oninput="formatNumber(this)" required>
+                                        </div>
+                                        @if ($errors->has('price'))
+                                            <small class="text-danger">{{ $errors->first('price') }}</small>
+                                        @endif
+                                    </div>
+                                </div>
+                            
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="col-form-label" for="discount_price">Harga Diskon:</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text">Rp</span>
+                                            <input type="text" name="discount_price" class="form-control" id="discount_price" placeholder="Harga Diskon" 
+                                                   value="{{ old('discount_price', number_format($product->discount_price, 0, '', '.')) }}" 
+                                                   oninput="formatNumber(this)" {{ old('allow_discount', $product->discount_price ? true : false) ? '' : 'disabled' }}>
+                                        </div>
+                                        @if ($errors->has('discount_price'))
+                                            <small class="text-danger">{{ $errors->first('discount_price') }}</small>
+                                        @endif
+                                        <small class="form-text text-muted">Jika Anda ingin mematikan harga potongan, cukup ubah jadi 0,00.</small>
+                                    </div>
+                            
+                                    <!-- Checkbox for allowing discount input -->
+                                    <div class="form-group form-check mt-2">
+                                        <input type="checkbox" class="form-check-input" id="allow_discount" name="allow_discount"
+                                               {{ old('allow_discount', $product->discount_price ? true : false) ? 'checked' : '' }}>
+                                        <label class="form-check-label" for="allow_discount">Izinkan Pengisian Harga Diskon</label>
+                                    </div>
+                                </div>
+                            </div>
+                            
                             <div class="form-group">
-                                <label for="harga_tayang">Harga Product:</label>
-                                <input type="number" step="0.01" name="harga_tayang" class="form-control" value="{{ $Product->harga_tayang }}" required>
-                                @if ($errors->has('harga_tayang'))
-                                    <small class="text-danger">{{ $errors->first('harga_tayang') }}</small>
-                                @endif
-                            </div>
-                            <div class="form-group">
-                                <label for="harga_potongan">Harga Diskon:</label>
-                                <input type="number" step="0.01" name="harga_potongan" class="form-control"
-                                       value="{{ old('harga_potongan', $Product->harga_potongan) }}" id="harga_potongan"
-                                       {{ old('allow_discount', $Product->harga_potongan ? true : false) ? '' : 'disabled' }}>
-                                @if ($errors->has('harga_potongan'))
-                                    <small class="text-danger">{{ $errors->first('harga_potongan') }}</small>
-                                @endif
-                                <small class="form-text text-muted">Jika Anda ingin mematikan harga potongan, cukup ubah jadi 0,00.</small>
-                            </div>
-
-
-                            <div class="form-group form-check">
-                                <input type="checkbox" class="form-check-input" id="allow_discount" name="allow_discount"
-                                       {{ old('allow_discount', $Product->harga_potongan ? 'checked' : '') ? 'checked' : '' }}>
-                                <label class="form-check-label" for="allow_discount">Izinkan Pengisian Harga Diskon</label>
-                            </div>
-
-                            <script>
-                                document.addEventListener('DOMContentLoaded', function() {
-                                    const allowDiscountCheckbox = document.getElementById('allow_discount');
-                                    const hargaDiskonInput = document.getElementById('harga_potongan');
-
-                                    // Toggle the disabled state of the input field based on the checkbox state
-                                    allowDiscountCheckbox.addEventListener('change', function() {
-                                        if (this.checked) {
-                                            hargaDiskonInput.disabled = false;
-                                        } else {
-                                            hargaDiskonInput.disabled = true;
-                                            hargaDiskonInput.value = ''; // Clear the input if unchecked
-                                        }
-                                    });
-
-                                    // Trigger the change event on page load to set the initial state
-                                    allowDiscountCheckbox.dispatchEvent(new Event('change'));
-                                });
-                            </script>
-
-
-
-                            <div class="form-group">
-                                <label for="spesifikasi_Product">Spesifikasi Product:</label>
-                                <textarea name="spesifikasi_Product" id="spesifikasi_Product" class="form-control" required>
-                                    {{ old('spesifikasi_Product', $Product->spesifikasi_Product) }}
+                                <label for="product_specifications">Spesifikasi Product:</label>
+                                <textarea name="product_specifications" id="product_specifications" class="form-control" required>
+                                    {{ old('product_specifications', $product->product_specifications) }}
                                 </textarea>
-                                @if ($errors->has('spesifikasi_Product'))
-                                    <small class="text-danger">{{ $errors->first('spesifikasi_Product') }}</small>
+                                @if ($errors->has('product_specifications'))
+                                    <small class="text-danger">{{ $errors->first('product_specifications') }}</small>
                                 @endif
                             </div>
 
                             <script>
                                 $(document).ready(function() {
-                                    $('#spesifikasi_Product').summernote({
+                                    $('#product_specifications').summernote({
                                         height: 200, // Set tinggi editor
                                         placeholder: 'Masukkan spesifikasi Product...',
                                         toolbar: [
@@ -148,100 +143,95 @@
 
 
                             <div class="form-group">
-                                <label for="link_ekatalog">Link E-katalog:</label>
-                                <input type="text" name="link_ekatalog" class="form-control" value="{{ old('link_ekatalog', $Product->link_ekatalog) }}" required>
-                                @if ($errors->has('link_ekatalog'))
-                                    <small class="text-danger">{{ $errors->first('link_ekatalog') }}</small>
+                                <label for="e_catalog_link">Link E-katalog:</label>
+                                <input type="text" name="e_catalog_link" class="form-control" value="{{ old('e_catalog_link', $product->e_catalog_link) }}" required>
+                                @if ($errors->has('e_catalog_link'))
+                                    <small class="text-danger">{{ $errors->first('e_catalog_link') }}</small>
                                 @endif
                             </div>
 
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="masa_berlaku_Product">Masa Berlaku Product:</label>
-                                    <input type="date" name="masa_berlaku_Product" class="form-control" value="{{ $Product->masa_berlaku_Product }}" required>
-                                    @if ($errors->has('masa_berlaku_Product'))
-                                        <small class="text-danger">{{ $errors->first('masa_berlaku_Product') }}</small>
+                                    <label for="product_expiration_date">Masa Berlaku Product:</label>
+                                    <input type="date" name="product_expiration_date" class="form-control" value="{{ $product->product_expiration_date }}" required>
+                                    @if ($errors->has('product_expiration_date'))
+                                        <small class="text-danger">{{ $errors->first('product_expiration_date') }}</small>
                                     @endif
                                 </div>
                             </div>
 
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="stok">Stok:</label>
-                                    <input type="number" name="stok" class="form-control" value="{{ $Product->stok }}" required>
-                                    @if ($errors->has('stok'))
-                                        <small class="text-danger">{{ $errors->first('stok') }}</small>
+                                    <label for="stock">stock:</label>
+                                    <input type="number" name="stock" class="form-control" value="{{ $product->stock }}" required>
+                                    @if ($errors->has('stock'))
+                                        <small class="text-danger">{{ $errors->first('stock') }}</small>
                                     @endif
                                 </div>
                             </div>
                         </div>
 
                         <div class="row">
-                            <div class="col-md-4">
+                            <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="komoditas_id">Komoditas:</label>
-                                    <select name="komoditas_id" class="form-control" required>
-                                        @foreach($komoditas as $k)
-                                            <option value="{{ $k->id }}" {{ $Product->komoditas_id == $k->id ? 'selected' : '' }}>{{ $k->nama }}</option>
-                                        @endforeach
-                                    </select>
-                                    @if ($errors->has('komoditas_id'))
-                                        <small class="text-danger">{{ $errors->first('komoditas_id') }}</small>
-                                    @endif
-                                </div>
-                            </div>
-
-                            <div class="col-md-4">
-                                <div class="form-group">
-                                    <label for="Category_id">Category:</label>
-                                    <select name="Category_id" id="Category_id" class="form-control" required>
+                                    <label for="category_id">Category:</label>
+                                    <select name="category_id" id="category_id" class="form-control" required>
                                         <option value="">Pilih Category</option>
-                                        @foreach($Categorys as $Category)
-                                            <option value="{{ $Category->id }}" {{ $Product->Category_id == $Category->id ? 'selected' : '' }}>{{ $Category->nama }}</option>
+                                        @foreach($categories as $category)
+                                            <option value="{{ $category->id }}" 
+                                                {{ old('category_id', $product->category_id) == $category->id ? 'selected' : '' }}>
+                                                {{ $category->name }}
+                                            </option>
                                         @endforeach
                                     </select>
-                                    @if ($errors->has('Category_id'))
-                                        <small class="text-danger">{{ $errors->first('Category_id') }}</small>
+                                    @if ($errors->has('category_id'))
+                                        <small class="text-danger">{{ $errors->first('category_id') }}</small>
                                     @endif
                                 </div>
                             </div>
-
-                            <div class="col-md-4">
+                        
+                            <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="sub_Category_id">Sub Category:</label>
-                                    <select name="sub_Category_id" id="sub_Category_id" class="form-control" required>
+                                    <label for="subcategory_id">Sub Category:</label>
+                                    <select name="subcategory_id" id="subcategory_id" class="form-control" required>
                                         <option value="">Pilih Sub Category</option>
-                                        @foreach($Categorys as $Category)
-                                            @foreach($Category->subCategory as $subCategory)
-                                                <option value="{{ $subCategory->id }}" data-Category-id="{{ $Category->id }}" {{ old('sub_Category_id', $Product->sub_Category_id) == $subCategory->id ? 'selected' : '' }}>
-                                                    {{ $subCategory->nama }}
+                                        @foreach($categories as $category)
+                                            @foreach($category->subcategories as $subcategory)
+                                                <option value="{{ $subcategory->id }}" data-category-id="{{ $category->id }}" 
+                                                    {{ old('subcategory_id', $product->subcategory_id) == $subcategory->id ? 'selected' : '' }}>
+                                                    {{ $subcategory->name }}
                                                 </option>
                                             @endforeach
                                         @endforeach
                                     </select>
-                                    @if ($errors->has('sub_Category_id'))
-                                        <small class="text-danger">{{ $errors->first('sub_Category_id') }}</small>
+                                    
+                                    @if ($errors->has('subcategory_id'))
+                                        <small class="text-danger">{{ $errors->first('subcategory_id') }}</small>
                                     @endif
                                 </div>
                             </div>
                         </div>
+                        
+                        
+                        
 
                         <div class="form-group">
-                            <label for="gambar">Gambar Product:</label>
-                            <input type="file" name="gambar[]" id="gambar[]" class="form-control" multiple>
-
+                            <label for="images">Images Product:</label>
+                            <input type="file" name="images[]" id="images" class="form-control" multiple>
+                        
                             <div class="mt-2 d-flex flex-wrap">
-                                @foreach($Product->images as $image)
-                                    <div class="position-relative" style="margin-right: 10px;">
-                                        <img src="{{ asset($image->gambar) }}" alt="Gambar Product" style="width: 100px; height: 100px;">
+                                @foreach($product->images as $image)
+                                    <div id="image-{{ $image->id }}" class="position-relative" style="margin-right: 10px;">
+                                        <img src="{{ asset($image->images) }}" alt="Images Product" style="width: 100px; height: 100px;">
                                         <button type="button" class="btn btn-danger btn-sm position-absolute" style="top: 0; right: 0;" onclick="removeImage({{ $image->id }})">Hapus</button>
                                     </div>
                                 @endforeach
                             </div>
-
+                        
                             <input type="hidden" name="deleted_images" id="deleted_images">
                         </div>
+                        
 
                         <button type="submit" class="btn btn-primary mt-3">Simpan</button>
                     </div>
@@ -258,75 +248,50 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label for="unit_pengukuran">Unit Pengukuran:</label>
-                                        <select name="unit_pengukuran" class="form-control">
-                                            <option value="set" {{ $Product->unit_pengukuran == 'set' ? 'selected' : '' }}>Set</option>
-                                            <option value="paket" {{ $Product->unit_pengukuran == 'paket' ? 'selected' : '' }}>Paket</option>
+                                        <label for="measurement_unit">Unit Pengukuran:</label>
+                                        <select name="measurement_unit" class="form-control">
+                                            <option value="set" {{ $product->measurement_unit == 'set' ? 'selected' : '' }}>Set</option>
+                                            <option value="paket" {{ $product->measurement_unit == 'paket' ? 'selected' : '' }}>Paket</option>
                                         </select>
-                                        @if ($errors->has('unit_pengukuran'))
-                                            <small class="text-danger">{{ $errors->first('unit_pengukuran') }}</small>
+                                        @if ($errors->has('measurement_unit'))
+                                            <small class="text-danger">{{ $errors->first('measurement_unit') }}</small>
                                         @endif
                                     </div>
                                 </div>
 
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label for="jenis_alat">Jenis Alat:</label>
-                                        <input type="text" name="jenis_alat" class="form-control" value="{{ $Product->jenis_alat }}">
-                                        @if ($errors->has('jenis_alat'))
-                                            <small class="text-danger">{{ $errors->first('jenis_alat') }}</small>
+                                        <label for="kbki_code">Kode KBLI:</label>
+                                        <input type="number" name="kbki_code" class="form-control" value="{{ $product->kbki_code }}">
+                                        @if ($errors->has('kbki_code'))
+                                            <small class="text-danger">{{ $errors->first('kbki_code') }}</small>
                                         @endif
                                     </div>
                                 </div>
+
+                                
                             </div>
 
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label for="nilai_tkdn">Nilai TKDN:</label>
-                                        <input type="number" step="0.01" name="nilai_tkdn" class="form-control" value="{{ $Product->nilai_tkdn }}">
-                                        @if ($errors->has('nilai_tkdn'))
-                                            <small class="text-danger">{{ $errors->first('nilai_tkdn') }}</small>
+                                        <label for="tkdn_value">Nilai TKDN:</label>
+                                        <input type="number" step="0.01" name="tkdn_value" class="form-control" value="{{ $product->tkdn_value }}">
+                                        @if ($errors->has('tkdn_value'))
+                                            <small class="text-danger">{{ $errors->first('tkdn_value') }}</small>
                                         @endif
                                     </div>
                                 </div>
 
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label for="merk">Merk:</label>
-                                        <input type="text" name="merk" class="form-control" value="{{ $Product->merk }}">
-                                        @if ($errors->has('merk'))
-                                            <small class="text-danger">{{ $errors->first('merk') }}</small>
+                                        <label for="brand">Merk:</label>
+                                        <input type="text" name="brand" class="form-control" value="{{ $product->brand }}">
+                                        @if ($errors->has('brand'))
+                                            <small class="text-danger">{{ $errors->first('brand') }}</small>
                                         @endif
                                     </div>
                                 </div>
-                            </div>
-
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label for="no_Product_penyedia">No Product Penyedia:</label>
-                                        <input type="text" name="no_Product_penyedia" class="form-control" value="{{ $Product->no_Product_penyedia }}">
-                                        @if ($errors->has('no_Product_penyedia'))
-                                            <small class="text-danger">{{ $errors->first('no_Product_penyedia') }}</small>
-                                        @endif
-                                    </div>
-                                </div>
-
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label for="memiliki_svlk">Memiliki SVLK:</label>
-                                        <select name="memiliki_svlk" class="form-control">
-                                            <option value="ya" {{ $Product->memiliki_svlk == 'ya' ? 'selected' : '' }}>Ya</option>
-                                            <option value="tidak" {{ $Product->memiliki_svlk == 'tidak' ? 'selected' : '' }}>Tidak</option>
-                                        </select>
-                                        @if ($errors->has('memiliki_svlk'))
-                                            <small class="text-danger">{{ $errors->first('memiliki_svlk') }}</small>
-                                        @endif
-                                    </div>
-                                </div>
-
-
                             </div>
 
                             <div class="row">
@@ -334,8 +299,8 @@
                                     <div class="form-group">
                                         <label for="sni">SNI:</label>
                                         <select name="sni" class="form-control">
-                                            <option value="ya" {{ $Product->sni == 'ya' ? 'selected' : '' }}>Ya</option>
-                                            <option value="tidak" {{ $Product->sni == 'tidak' ? 'selected' : '' }}>Tidak</option>
+                                            <option value="yes" {{ $product->sni == 'yes' ? 'selected' : '' }}>Ya</option>
+                                            <option value="no" {{ $product->sni == 'no' ? 'selected' : '' }}>Tidak</option>
                                         </select>
                                         @if ($errors->has('sni'))
                                             <small class="text-danger">{{ $errors->first('sni') }}</small>
@@ -345,58 +310,37 @@
 
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label for="no_sni">No SNI:</label>
-                                        <input type="text" name="no_sni" class="form-control" value="{{ $Product->no_sni }}">
-                                        @if ($errors->has('no_sni'))
-                                            <small class="text-danger">{{ $errors->first('no_sni') }}</small>
-                                        @endif
-                                    </div>
-                                </div>
-                            </div>
-
-
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label for="kode_kbki">Kode KBLI:</label>
-                                        <input type="number" name="kode_kbki" class="form-control" value="{{ $Product->kode_kbki }}">
-                                        @if ($errors->has('kode_kbki'))
-                                            <small class="text-danger">{{ $errors->first('kode_kbki') }}</small>
-                                        @endif
-                                    </div>
-                                </div>
-
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label for="asal_negara">Asal Negara:</label>
-                                        <input type="text" name="asal_negara" class="form-control" value="{{ $Product->asal_negara }}">
-                                        @if ($errors->has('asal_negara'))
-                                            <small class="text-danger">{{ $errors->first('asal_negara') }}</small>
+                                        <label for="provider_product_number">No Product Penyedia:</label>
+                                        <input type="text" name="provider_product_number" class="form-control" value="{{ $product->provider_product_number }}">
+                                        @if ($errors->has('provider_product_number'))
+                                            <small class="text-danger">{{ $errors->first('provider_product_number') }}</small>
                                         @endif
                                     </div>
                                 </div>
                             </div>
 
                             <div class="row">
+                                
+
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label for="jenis_Product">Jenis Product:</label>
-                                        <select name="jenis_Product" class="form-control">
-                                            <option value="PDN" {{ $Product->jenis_Product == 'PDN' ? 'selected' : '' }}>PDN</option>
-                                            <option value="Impor" {{ $Product->jenis_Product == 'Impor' ? 'selected' : '' }}>Impor</option>
+                                        <label for="sni_number">No SNI:</label>
+                                        <input type="text" name="sni_number" class="form-control" value="{{ $product->sni_number }}">
+                                        @if ($errors->has('sni_number'))
+                                            <small class="text-danger">{{ $errors->first('sni_number') }}</small>
+                                        @endif
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="has_svlk">Memiliki SVLK:</label>
+                                        <select name="has_svlk" class="form-control">
+                                            <option value="yes" {{ $product->has_svlk == 'yes' ? 'selected' : '' }}>Ya</option>
+                                            <option value="no" {{ $product->has_svlk == 'no' ? 'selected' : '' }}>Tidak</option>
                                         </select>
-                                        @if ($errors->has('jenis_Product'))
-                                            <small class="text-danger">{{ $errors->first('jenis_Product') }}</small>
-                                        @endif
-                                    </div>
-                                </div>
-
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label for="fungsi">Fungsi:</label>
-                                        <input type="text" name="fungsi" class="form-control" value="{{ $Product->fungsi }}">
-                                        @if ($errors->has('fungsi'))
-                                            <small class="text-danger">{{ $errors->first('fungsi') }}</small>
+                                        @if ($errors->has('has_svlk'))
+                                            <small class="text-danger">{{ $errors->first('has_svlk') }}</small>
                                         @endif
                                     </div>
                                 </div>
@@ -405,20 +349,45 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label for="tipe_barang">Tipe Barang:</label>
-                                        <input type="text" name="tipe_barang" class="form-control" value="{{ $Product->tipe_barang }}">
-                                        @if ($errors->has('tipe_barang'))
-                                            <small class="text-danger">{{ $errors->first('tipe_barang') }}</small>
+                                        <label for="product_type">Jenis Product:</label>
+                                        <select name="product_type" class="form-control">
+                                            <option value="PDN" {{ $product->product_type == 'PDN' ? 'selected' : '' }}>PDN</option>
+                                            <option value="Impor" {{ $product->product_type == 'Impor' ? 'selected' : '' }}>Impor</option>
+                                        </select>
+                                        @if ($errors->has('product_type'))
+                                            <small class="text-danger">{{ $errors->first('product_type') }}</small>
                                         @endif
                                     </div>
                                 </div>
 
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label for="garansi_Product">Garansi Product:</label>
-                                        <input type="text" name="garansi_Product" class="form-control" value="{{ old('garansi_Product', $Product->garansi_Product) }}">
-                                        @if ($errors->has('garansi_Product'))
-                                            <small class="text-danger">{{ $errors->first('garansi_Product') }}</small>
+                                        <label for="function">Fungsi:</label>
+                                        <input type="text" name="function" class="form-control" value="{{ $product->function }}">
+                                        @if ($errors->has('function'))
+                                            <small class="text-danger">{{ $errors->first('function') }}</small>
+                                        @endif
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="tool_type">Tipe Barang:</label>
+                                        <input type="text" name="tool_type" class="form-control" value="{{ $product->tool_type }}">
+                                        @if ($errors->has('tool_type'))
+                                            <small class="text-danger">{{ $errors->first('tool_type') }}</small>
+                                        @endif
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="product_warranty">Garansi Product:</label>
+                                        <input type="text" name="product_warranty" class="form-control" value="{{ old('product_warranty', $product->product_warranty) }}">
+                                        @if ($errors->has('product_warranty'))
+                                            <small class="text-danger">{{ $errors->first('product_warranty') }}</small>
                                         @endif
                                     </div>
                                 </div>
@@ -428,7 +397,7 @@
 
 
                         <!-- Images Tab -->
-                        <div class="tab-pane fade" id="images" role="tabpanel" aria-labelledby="images-tab">
+                        <div class="tab-pane fade" id="product-list" role="tabpanel" aria-labelledby="product-list-tab">
                             <!-- Detail Product List -->
                             <h2 class="mt-5">Detail Product List</h2>
                             <div id="detail-list-container">
@@ -447,21 +416,21 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach($Product->ProductList as $detail)
-                                            <tr class="detail-list">
+                                        @foreach($product->productLists as $detail)
+                                        <tr class="detail-list">
                                                 <td class="numbering">1</td>
-                                                <td><input type="text" name="detail[nama][]" class="form-control" value="{{ $detail->nama }}"></td>
-                                                <td><textarea name="detail[spesifikasi][]" class="form-control">{{ $detail->spesifikasi }}</textarea></td>
-                                                <td><input type="text" name="detail[merk][]" class="form-control" value="{{ $detail->merk }}"></td>
-                                                <td><input type="text" name="detail[tipe][]" class="form-control" value="{{ $detail->tipe }}"></td>
-                                                <td><input type="number" name="detail[jumlah][]" class="form-control" value="{{ $detail->jumlah }}"></td>
+                                                <td><input type="text" name="detail[name][]" class="form-control" value="{{ $detail->name }}"></td>
+                                                <td><textarea name="detail[specifications][]" class="form-control">{{ $detail->specifications }}</textarea></td>
+                                                <td><input type="text" name="detail[brand][]" class="form-control" value="{{ $detail->brand }}"></td>
+                                                <td><input type="text" name="detail[type][]" class="form-control" value="{{ $detail->type }}"></td>
+                                                <td><input type="number" name="detail[quantity][]" class="form-control" value="{{ $detail->quantity }}"></td>
                                                 <td>
-                                                    <select name="detail[satuan][]" class="form-control">
-                                                        <option value="Set" {{ $detail->satuan == 'Set' ? 'selected' : '' }}>Set</option>
-                                                        <option value="Paket" {{ $detail->satuan == 'Paket' ? 'selected' : '' }}>Paket</option>
+                                                    <select name="detail[unit][]" class="form-control">
+                                                        <option value="Set" {{ $detail->unit == 'Set' ? 'selected' : '' }}>Set</option>
+                                                        <option value="Paket" {{ $detail->unit == 'Paket' ? 'selected' : '' }}>Paket</option>
                                                     </select>
                                                 </td>
-                                                <td><input type="number" step="0.01" name="detail[harga_satuan][]" class="form-control" value="{{ $detail->harga_satuan }}"></td>
+                                                <td><input type="number" step="0.01" name="detail[unit_price][]" class="form-control" value="{{ $detail->harga_satuan }}"></td>
                                                 <td><button type="button" class="btn btn-danger remove-detail">Hapus</button></td>
                                             </tr>
                                         @endforeach
@@ -487,18 +456,18 @@
 
             detailList.innerHTML = `
                 <td class="numbering"></td> <!-- Numbering Cell -->
-                <td><input type="text" name="detail[nama][]" class="form-control"></td>
-                <td><textarea name="detail[spesifikasi][]" class="form-control"></textarea></td>
-                <td><input type="text" name="detail[merk][]" class="form-control"></td>
-                <td><input type="text" name="detail[tipe][]" class="form-control"></td>
-                <td><input type="number" name="detail[jumlah][]" class="form-control"></td>
+                <td><input type="text" name="detail[name][]" class="form-control"></td>
+                <td><textarea name="detail[specifications][]" class="form-control"></textarea></td>
+                <td><input type="text" name="detail[brand][]" class="form-control"></td>
+                <td><input type="text" name="detail[type][]" class="form-control"></td>
+                <td><input type="number" name="detail[quantity][]" class="form-control"></td>
                 <td>
-                    <select name="detail[satuan][]" class="form-control">
+                    <select name="detail[unit][]" class="form-control">
                         <option value="Set">Set</option>
                         <option value="Paket">Paket</option>
                     </select>
                 </td>
-                <td><input type="number" step="0.01" name="detail[harga_satuan][]" class="form-control"></td>
+                <td><input type="number" step="0.01" name="detail[unit_price][]" class="form-control"></td>
                 <td><button type="button" class="btn btn-danger remove-detail">Hapus</button></td>
             `;
             detailListContainer.appendChild(detailList);
@@ -532,40 +501,7 @@
         });
     </script>
 
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-var CategorySelect = document.getElementById('Category_id');
-var subCategorySelect = document.getElementById('sub_Category_id');
 
-function filterSubCategorys() {
-    const selectedCategoryId = CategorySelect.value;
-
-    // Sembunyikan semua subCategory
-    Array.from(subCategorySelect.options).forEach(option => {
-        option.style.display = 'none';
-        option.disabled = true;
-    });
-
-    // Tampilkan hanya subCategory yang sesuai
-    Array.from(subCategorySelect.options).forEach(option => {
-        if (option.getAttribute('data-Category-id') === selectedCategoryId) {
-            option.style.display = 'block';
-            option.disabled = false;
-        }
-    });
-
-    // Set subCategory ke opsi pertama yang sesuai
-    subCategorySelect.value = '';
-}
-
-// Filter subCategory saat halaman pertama kali dimuat
-filterSubCategorys();
-
-// Tambahkan event listener untuk filter ulang saat Category berubah
-CategorySelect.addEventListener('change', filterSubCategorys);
-});
-
-</script>
 
 <style>
     .nav-tabs .nav-link {
@@ -592,17 +528,101 @@ CategorySelect.addEventListener('change', filterSubCategorys);
 
 <script>
     function removeImage(imageId) {
-    let deletedImages = document.getElementById('deleted_images').value;
-    if (deletedImages) {
-        deletedImages += ',' + imageId;
-    } else {
-        deletedImages = imageId;
+        // Get the hidden input field where we store deleted image IDs
+        let deletedImagesInput = document.getElementById('deleted_images');
+        
+        // If deletedImagesInput already has some values, add a comma separator
+        if (deletedImagesInput.value) {
+            deletedImagesInput.value += ',' + imageId;
+        } else {
+            deletedImagesInput.value = imageId;
+        }
+
+        // Remove the image element from the UI
+        const imageDiv = document.getElementById(`image-${imageId}`);
+        if (imageDiv) {
+            imageDiv.remove();
+        }
     }
-    document.getElementById('deleted_images').value = deletedImages;
+</script>
 
-    // Remove the image element from the UI
-    event.target.parentElement.remove();
-}
 
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const allowDiscountCheckbox = document.getElementById('allow_discount');
+        const discountPriceInput = document.getElementById('discount_price');
+        const priceInput = document.getElementById('price');
+
+        // Initialize format on page load
+        formatNumber(priceInput);
+        if (discountPriceInput) formatNumber(discountPriceInput);
+
+        // Toggle the discount price input based on checkbox state
+        function toggleDiscountPriceInput() {
+            discountPriceInput.disabled = !allowDiscountCheckbox.checked;
+            if (!allowDiscountCheckbox.checked) {
+                discountPriceInput.value = ''; // Clear the input if unchecked
+            }
+        }
+
+        // Initialize the state on page load
+        toggleDiscountPriceInput();
+
+        // Add event listener to handle changes on the checkbox
+        allowDiscountCheckbox.addEventListener('change', toggleDiscountPriceInput);
+    });
+
+    function formatNumber(input) {
+        // Remove any character that is not a digit
+        let value = input.value.replace(/[^0-9]/g, '');
+        
+        // Add dot every 3 digits
+        input.value = value.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+    }
+
+    // Function to remove dots before form submission
+    function removeFormatAndSubmit(form) {
+        const priceInput = document.getElementById('price');
+        const discountPriceInput = document.getElementById('discount_price');
+
+        // Remove all dots to submit as plain numeric value
+        priceInput.value = priceInput.value.replace(/\./g, '');
+        if (discountPriceInput) {
+            discountPriceInput.value = discountPriceInput.value.replace(/\./g, '');
+        }
+
+        // Submit the form
+        form.submit();
+    }
+</script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const categorySelect = document.getElementById('category_id');
+        const subcategorySelect = document.getElementById('subcategory_id');
+
+        function filterSubcategories() {
+            const selectedCategoryId = categorySelect.value;
+            
+            Array.from(subcategorySelect.options).forEach(option => {
+                if (option.getAttribute('data-category-id') === selectedCategoryId || option.value === "") {
+                    option.style.display = 'block'; // Show options that match the selected category or the default option
+                } else {
+                    option.style.display = 'none'; // Hide options that do not match
+                }
+            });
+
+            // Clear the subcategory selection if the selected option is not visible
+            if (!Array.from(subcategorySelect.options).some(option => option.value === subcategorySelect.value && option.style.display === 'block')) {
+                subcategorySelect.value = '';
+            }
+        }
+
+        // Initial filter on page load based on the current category selection
+        filterSubcategories();
+
+        // Filter subcategories whenever the category selection changes
+        categorySelect.addEventListener('change', filterSubcategories);
+    });
 </script>
 @endsection

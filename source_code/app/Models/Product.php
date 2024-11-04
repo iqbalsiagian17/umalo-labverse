@@ -81,6 +81,13 @@ class Product extends Model
                     ->where('status', 'delivered');
     }
 
+    public function productList()
+    {
+        return $this->hasMany(ProductList::class, 'product_id');
+    }
+    
+
+
 
 
 }
