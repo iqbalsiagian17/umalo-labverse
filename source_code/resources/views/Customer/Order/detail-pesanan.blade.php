@@ -1,5 +1,4 @@
-@extends('layouts.Customer.master')
-
+@extends('layouts.customer.master')
 @section('content')
     <div class="container mt-5 mb-3">
         <div class="card shadow rounded border-0">

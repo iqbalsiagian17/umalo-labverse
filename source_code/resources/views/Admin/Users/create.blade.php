@@ -1,4 +1,4 @@
-@extends('layouts.Admin.master')
+@extends('layouts.admin.master')
 
 @section('content')
         @if ($errors->any())

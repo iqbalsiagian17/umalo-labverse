@@ -1,4 +1,4 @@
-@extends('layouts.Admin.master')
+@extends('layouts.admin.master')
 
 @section('content')
 
@@ -109,6 +109,57 @@
                                         <label class="form-check-label" for="allow_discount">Izinkan Pengisian Harga Diskon</label>
                                     </div>
                                 </div>
+
+                                <script>
+                                    document.addEventListener('DOMContentLoaded', function() {
+                                        const allowDiscountCheckbox = document.getElementById('allow_discount');
+                                        const discountPriceInput = document.getElementById('discount_price');
+                                        const priceInput = document.getElementById('price');
+                                
+                                        // Initialize format on page load
+                                        formatNumber(priceInput);
+                                        if (discountPriceInput) formatNumber(discountPriceInput);
+                                
+                                        // Toggle the discount price input based on checkbox state
+                                        function toggleDiscountPriceInput() {
+                                            discountPriceInput.disabled = !allowDiscountCheckbox.checked;
+                                            if (!allowDiscountCheckbox.checked) {
+                                                discountPriceInput.value = ''; // Clear the input if unchecked
+                                            }
+                                        }
+                                
+                                        // Initialize the state on page load
+                                        toggleDiscountPriceInput();
+                                
+                                        // Add event listener to handle changes on the checkbox
+                                        allowDiscountCheckbox.addEventListener('change', toggleDiscountPriceInput);
+                                    });
+                                
+                                    function formatNumber(input) {
+                                        // Remove any character that is not a digit
+                                        let value = input.value.replace(/[^0-9]/g, '');
+                                        
+                                        // Add dot every 3 digits
+                                        input.value = value.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+                                    }
+                                
+                                    // Function to remove dots before form submission
+                                    function removeFormatAndSubmit(form) {
+                                        const priceInput = document.getElementById('price');
+                                        const discountPriceInput = document.getElementById('discount_price');
+                                
+                                        // Remove all dots to submit as plain numeric value
+                                        priceInput.value = priceInput.value.replace(/\./g, '');
+                                        if (discountPriceInput) {
+                                            discountPriceInput.value = discountPriceInput.value.replace(/\./g, '');
+                                        }
+                                
+                                        // Submit the form
+                                        form.submit();
+                                    }
+                                </script>
+
+
                             </div>
                             
                             <div class="form-group">
@@ -416,7 +467,7 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach($product->productLists as $detail)
+                                        @foreach($product->productLists ?? [] as $detail)
                                         <tr class="detail-list">
                                                 <td class="numbering">1</td>
                                                 <td><input type="text" name="detail[name][]" class="form-control" value="{{ $detail->name }}"></td>
@@ -546,55 +597,6 @@
     }
 </script>
 
-
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const allowDiscountCheckbox = document.getElementById('allow_discount');
-        const discountPriceInput = document.getElementById('discount_price');
-        const priceInput = document.getElementById('price');
-
-        // Initialize format on page load
-        formatNumber(priceInput);
-        if (discountPriceInput) formatNumber(discountPriceInput);
-
-        // Toggle the discount price input based on checkbox state
-        function toggleDiscountPriceInput() {
-            discountPriceInput.disabled = !allowDiscountCheckbox.checked;
-            if (!allowDiscountCheckbox.checked) {
-                discountPriceInput.value = ''; // Clear the input if unchecked
-            }
-        }
-
-        // Initialize the state on page load
-        toggleDiscountPriceInput();
-
-        // Add event listener to handle changes on the checkbox
-        allowDiscountCheckbox.addEventListener('change', toggleDiscountPriceInput);
-    });
-
-    function formatNumber(input) {
-        // Remove any character that is not a digit
-        let value = input.value.replace(/[^0-9]/g, '');
-        
-        // Add dot every 3 digits
-        input.value = value.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
-    }
-
-    // Function to remove dots before form submission
-    function removeFormatAndSubmit(form) {
-        const priceInput = document.getElementById('price');
-        const discountPriceInput = document.getElementById('discount_price');
-
-        // Remove all dots to submit as plain numeric value
-        priceInput.value = priceInput.value.replace(/\./g, '');
-        if (discountPriceInput) {
-            discountPriceInput.value = discountPriceInput.value.replace(/\./g, '');
-        }
-
-        // Submit the form
-        form.submit();
-    }
-</script>
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {

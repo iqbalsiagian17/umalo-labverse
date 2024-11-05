@@ -11,11 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('t_favorites', function (Blueprint $table) {
+        Schema::create('t_shipping_services', function (Blueprint $table) {
             $table->id();
-            $table->unsignedInteger('user_id'); 
-            $table->foreignId('Product_id')->constrained('t_product')->onDelete('cascade');
-            $table->foreign('user_id')->references('id')->on('t_users')->onDelete('cascade');
+            $table->string('name')->unique();
+            $table->string('images')->nullable(); // Column for storing image path    
             $table->timestamps();
         });
     }
@@ -25,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('t_favorites');
+        Schema::dropIfExists('t_shipping_services');
     }
 };

@@ -1,5 +1,4 @@
-@extends('layouts.Customer.master')
-
+@extends('layouts.customer.master')
 @section('content')
 <section class="product spad">
     <div class="container">

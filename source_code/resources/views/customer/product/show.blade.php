@@ -1,5 +1,4 @@
-@extends('layouts.Customer.master')
-@section('content')
+@extends('layouts.customer.master')@section('content')
 <!-- Product Details Section Begin -->
 <section class="product-details spad">
     <div class="container">
@@ -8,13 +7,13 @@
                 <div class="product__details__pic">
                     <div class="product__details__pic__item">
                         @if($images->isNotEmpty())
-                            <a href="{{ asset($images->first()->gambar) }}" data-lightbox="product-image" data-title="{{ $Product->nama }}">
+                            <a href="{{ asset($images->first()->images) }}" data-lightbox="product-image" data-title="{{ $product->name }}">
                                 <img class="product__details__pic__item--large"
-                                    src="{{ asset($images->first()->gambar) }}" alt="{{ $Product->nama }}">
+                                    src="{{ asset($images->first()->images) }}" alt="{{ $product->name }}">
                             </a>
                         @else
-                            <a href="https://via.placeholder.com/150" data-lightbox="product-image" data-title="{{ $Product->nama }}">
-                                <img src="https://via.placeholder.com/150" class="img-fluid mb-2" alt="{{ $Product->nama }}">
+                            <a href="https://via.placeholder.com/150" data-lightbox="product-image" data-title="{{ $product->name }}">
+                                <img src="https://via.placeholder.com/150" class="img-fluid mb-2" alt="{{ $product->name }}">
                             </a>
                         @endif
                     </div>
@@ -29,10 +28,10 @@
                                 const x = e.clientX - rect.left; // Posisi X mouse
                                 const y = e.clientY - rect.top; // Posisi Y mouse
 
-                                // Ukuran gambar yang ingin diperbesar
+                                // Ukuran images yang ingin diperbesar
                                 const zoomFactor = 2;
 
-                                // Hitung posisi zoom relatif terhadap ukuran gambar
+                                // Hitung posisi zoom relatif terhadap ukuran images
                                 const xPercent = (x / rect.width) * 100;
                                 const yPercent = (y / rect.height) * 100;
 
@@ -41,7 +40,7 @@
                             });
 
                             imageContainer.addEventListener('mouseleave', function() {
-                                // Kembalikan gambar ke ukuran normal saat mouse keluar
+                                // Kembalikan images ke ukuran normal saat mouse keluar
                                 image.style.transform = 'scale(1)';
                             });
                         </script>
@@ -62,8 +61,8 @@
                         <div class="product__details__pic__slider owl-carousel">
                             @if($images->isNotEmpty())
                                 @foreach ($images as $image)
-                                    <img data-imgbigurl="{{ asset($image->gambar) }}"
-                                        src="{{ asset($image->gambar) }}" alt="{{ $Product->nama }}">
+                                    <img data-imgbigurl="{{ asset($image->images) }}"
+                                        src="{{ asset($image->images) }}" alt="{{ $product->nama }}">
                                 @endforeach
                         @endif
                         </div>
@@ -71,33 +70,25 @@
                 </div>
             <div class="col-lg-6 col-md-6">
                 <div class="product__details__text">
-                    <h3>{{ $Product->nama }}
+                    <h3>{{ $product->name }}
                         <button type="button" class="btn primary-btn" data-bs-toggle="modal" data-bs-target="#shareModal" style="width: 45px; height: 45px; border-radius: 50%; padding: 0;">
                             <i class="fas fa-share-alt"></i>
                         </button>
                     </h3>
                     <div class="product__details__price">
                         <div class="product__details__price">
-                            @if ($Product->harga_ditampilkan === 'ya')
-                            @if ($Product->harga_potongan > 0)
+                            @if ($product->is_price_displayed === 'yes')
+                            @if ($product->discount_price > 0)
                                 <span style="text-decoration: line-through; color: #ff0000;">
-                                    Rp{{ number_format($Product->harga_tayang, 0, ',', '.') }}
+                                    Rp{{ number_format($product->price, 0, ',', '.') }}
                                 </span>
                                 <br>
                                 <span style="color: #000000;">
-                                    Rp{{ number_format($Product->harga_potongan, 0, ',', '.') }}
-                                </span>
-                            @elseif ($bigSaleItem && $bigSaleItem->status === 'aktif')
-                                <span style="text-decoration: line-through; color: #ff0000;">
-                                    Rp{{ number_format($Product->harga_tayang, 0, ',', '.') }}
-                                </span>
-                                <br>
-                                <span style="color: #000000;">
-                                    Rp{{ number_format($bigSaleItem->pivot->harga_diskon, 0, ',', '.') }}
+                                    Rp{{ number_format($product->discount_price, 0, ',', '.') }}
                                 </span>
                             @else
                                 <span style="color: #000000;">
-                                    Rp{{ number_format($Product->harga_tayang, 0, ',', '.') }}
+                                    Rp{{ number_format($product->price, 0, ',', '.') }}
                                 </span>
                             @endif
                             <style>
@@ -122,22 +113,20 @@
                         <div class="quantity">
                             <div class="pro-qty">
                                 <span class="dec qtybtn">-</span>
-                                <input type="text" value="1" min="1" data-stok="{{ $Product->stok }}">
+                                <input type="text" id="quantity" value="1" min="1" data-stok="{{ $product->stock }}">
                                 <span class="inc qtybtn">+</span>
                             </div>
                         </div>
                     </div>
-
-
+                    
                     @auth
-                    <a href="#" class="primary-btn add-to-cart-btn" data-id="{{ $Product->id }}">{{ __('messages.add') }}</a>
+                    <a href="#" class="primary-btn add-to-cart-btn" id="add-to-cart" data-id="{{ $product->id }}">{{ __('messages.add') }}</a>
                     @else
                     <a href="{{ route('login') }}" class="primary-btn add-to-cart-btn">{{ __('messages.add') }}</a>
                     @endauth
-                    <a href="#" class="heart-icon" data-product-id="{{ $Product->id }}">
+                    <a href="#" class="heart-icon" data-product-id="{{ $product->id }}">
                         <i class="fas fa-heart {{ $isFavorite ? 'favorite' : '' }}"></i>
-                    </a>
-
+                    </a>                 
                         <style>
                         .heart-icon {
                             color: gray;
@@ -160,42 +149,9 @@
                         </style>
 
 
-                    <script>
-                        $(document).on('click', '.heart-icon', function(e) {
-                            e.preventDefault();
-                            var productId = $(this).data('product-id'); // Get the product ID from the data attribute
-
-                            $.ajax({
-                                url: "{{ route('favorite.toggle', ':id') }}".replace(':id', productId), // Route to toggle favorite
-                                method: "POST",
-                                data: {
-                                    _token: "{{ csrf_token() }}"  // Pass the CSRF token for security
-                                },
-                                success: function(response) {
-                                    showNotification(response.message, false); // Show custom notification without page reload
-                                },
-                                error: function(xhr) {
-                                    showNotification('Something went wrong!', false); // Handle errors with custom notification
-                                }
-                            });
-                        });
-
-                        // Function to show custom notification
-                        function showNotification(message, reload = false) {
-                            $('.notification-text').text(message);
-                            $('#favorite-notification').fadeIn(400).delay(2000).fadeOut(400, function() {
-                                if (reload) {
-                                    window.location.reload(); // Reload the page if needed
-                                }
-                            });
-                        }
-                    </script>
-
-
-
                     <div class="product__details__subtotal hidden">
                         <b>{{ __('messages.subtotal') }}: </b>
-                        <span id="subtotal">Rp{{ number_format($Product->harga_potongan > 0 ? $Product->harga_potongan : ($bigSaleItem && $bigSaleItem->status === 'aktif' ? $bigSaleItem->pivot->harga_diskon : $Product->harga_tayang), 0, ',', '.') }}</span>
+                        <span id="subtotal">Rp{{ number_format($product->discount_price > 0 ? $product->discount_price : $product->price, 0, ',', '.') }}</span>
                         <style>
                             .hidden {
                                 display: none;
@@ -205,79 +161,134 @@
                     </div>
 
                     <script>
-                    document.addEventListener('DOMContentLoaded', function() {
-                    const price = {{ $Product->harga_potongan > 0 ? $Product->harga_potongan : ($bigSaleItem && $bigSaleItem->status === 'aktif' ? $bigSaleItem->pivot->harga_diskon : $Product->harga_tayang) }};
-                    const quantityInput = document.querySelector('.pro-qty input');
-                    const subtotalElement = document.getElementById('subtotal');
-                    const incrementButton = document.querySelector('.inc.qtybtn');
-                    const decrementButton = document.querySelector('.dec.qtybtn');
-                    const subtotalContainer = document.querySelector('.product__details__subtotal');
-                    const maxStock = parseInt(quantityInput.getAttribute('data-stok')); // Dapatkan stok maksimum
-
-                    // Fungsi untuk memperbarui subtotal
-                    function updateSubtotal() {
-                        let quantity = parseInt(quantityInput.value);
-                        if (isNaN(quantity) || quantity < 1) {
-                            quantity = 1;  // Pastikan quantity minimal 1
-                            quantityInput.value = 1;
-                        } else if (quantity > maxStock) {
-                            quantity = maxStock; // Jangan biarkan quantity melebihi stok
-                            quantityInput.value = maxStock;
-                            alert('Jumlah yang diminta melebihi stok yang tersedia.');
-                        }
-                        const subtotal = price * quantity;
-                        subtotalElement.innerHTML = 'Rp' + new Intl.NumberFormat('id-ID').format(subtotal);
-                    }
-
-                    // Fungsi untuk menampilkan subtotal setelah tombol diklik
-                    function showSubtotal() {
-                        subtotalContainer.classList.remove('hidden');
-                    }
-
-                    // Fungsi untuk mengubah nilai quantity
-                    function incrementQuantity() {
-                        let quantity = parseInt(quantityInput.value);
-                        if (isNaN(quantity) || quantity < 1) {
-                            quantity = 1;
-                        } else if (quantity < maxStock) {
-                            quantity += 1;
-                        } else {
-                            alert('Anda telah mencapai jumlah stok maksimum.');
-                            return; // Hentikan increment jika sudah mencapai stok maksimal
-                        }
-                        quantityInput.value = quantity;
-                        updateSubtotal();
-                        showSubtotal(); // Tampilkan subtotal
-                    }
-
-                    function decrementQuantity() {
-                        let quantity = parseInt(quantityInput.value);
-                        if (!isNaN(quantity) && quantity > 1) {
-                            quantity -= 1;
-                        } else {
-                            quantity = 1;  // Pastikan minimal 1
-                        }
-                        quantityInput.value = quantity;
-                        updateSubtotal();
-                        showSubtotal(); // Tampilkan subtotal
-                    }
-
-                    // Pastikan event listener hanya ditambahkan sekali
-                    incrementButton.addEventListener('click', function(e) {
-                        e.preventDefault();
-                        incrementQuantity();
-                    });
-
-                    decrementButton.addEventListener('click', function(e) {
-                        e.preventDefault();
-                        decrementQuantity();
-                    });
-
-                    // Inisialisasi subtotal saat halaman dimuat
-                    updateSubtotal();
-                });
-
-                        </script>
+                        document.addEventListener('DOMContentLoaded', function() {
+                            const price = {{ $product->discount_price > 0 ? $product->discount_price : $product->price }};
+                            const quantityInput = document.querySelector('.pro-qty input');
+                            const subtotalElement = document.getElementById('subtotal');
+                            const incrementButton = document.querySelector('.inc.qtybtn');
+                            const decrementButton = document.querySelector('.dec.qtybtn');
+                            const subtotalContainer = document.querySelector('.product__details__subtotal');
+                            const maxStock = parseInt(quantityInput.getAttribute('data-stok'));
+                    
+                            const addToCartButton = document.getElementById('add-to-cart');
+                            const cartMessage = document.getElementById('cart-message'); // Notification element
+                            let reachedMaxNotificationShown = false; // Track if notification was already shown
+                    
+                            // Only show notification if stock is not zero
+                            const shouldShowNotification = maxStock > 0;
+                    
+                            // Function to show a custom notification
+                            function showNotification(message) {
+                                cartMessage.querySelector('.notification-text').innerText = message;
+                                cartMessage.classList.remove('d-none'); // Show notification
+                                setTimeout(() => {
+                                    cartMessage.classList.add('d-none'); // Hide after 3 seconds
+                                }, 3000);
+                            }
+                    
+                            // Function to update subtotal
+                            function updateSubtotal() {
+                                let quantity = parseInt(quantityInput.value);
+                                if (isNaN(quantity) || quantity < 1) {
+                                    quantity = 1;
+                                    quantityInput.value = 1;
+                                } else if (quantity > maxStock) {
+                                    quantity = maxStock;
+                                    quantityInput.value = maxStock;
+                    
+                                    // Show notification only if stock is exceeded and allowed
+                                    if (shouldShowNotification && !reachedMaxNotificationShown) {
+                                        showNotification('Jumlah yang diminta melebihi stok yang tersedia.');
+                                        reachedMaxNotificationShown = true; // Set flag to true
+                                    }
+                                }
+                                const subtotal = price * quantity;
+                                subtotalElement.innerHTML = 'Rp' + new Intl.NumberFormat('id-ID').format(subtotal);
+                    
+                                // Show subtotal container only if quantity is greater than 1
+                                if (quantity > 1) {
+                                    subtotalContainer.classList.remove('hidden');
+                                } else {
+                                    subtotalContainer.classList.add('hidden');
+                                }
+                            }
+                    
+                            // Function to increment quantity
+                            function incrementQuantity() {
+                                let quantity = parseInt(quantityInput.value);
+                                if (quantity < maxStock) {
+                                    quantity += 1;
+                                    quantityInput.value = quantity;
+                                    updateSubtotal();
+                                    reachedMaxNotificationShown = false; // Reset flag if below max stock
+                                } else {
+                                    // Show notification only if max stock is exceeded and allowed
+                                    if (shouldShowNotification && !reachedMaxNotificationShown) {
+                                        showNotification('Anda telah mencapai jumlah stok maksimum.');
+                                        reachedMaxNotificationShown = true;
+                                    }
+                                }
+                            }
+                    
+                            // Function to decrement quantity
+                            function decrementQuantity() {
+                                let quantity = parseInt(quantityInput.value);
+                                if (quantity > 1) {
+                                    quantity -= 1;
+                                    quantityInput.value = quantity;
+                                    updateSubtotal();
+                                }
+                            }
+                    
+                            // Event listeners for increment and decrement buttons
+                            incrementButton.addEventListener('click', function(e) {
+                                e.preventDefault();
+                                incrementQuantity();
+                            });
+                    
+                            decrementButton.addEventListener('click', function(e) {
+                                e.preventDefault();
+                                decrementQuantity();
+                            });
+                    
+                            // AJAX Add to Cart
+                            addToCartButton.addEventListener('click', function(e) {
+                                e.preventDefault();
+                                const productId = this.getAttribute('data-id');
+                                const quantity = quantityInput.value;
+                    
+                                fetch("{{ route('cart.add') }}", {
+                                    method: 'POST',
+                                    headers: {
+                                        'Content-Type': 'application/json',
+                                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                                    },
+                                    body: JSON.stringify({
+                                        product_id: productId,
+                                        quantity: quantity
+                                    })
+                                })
+                                .then(response => response.json())
+                                .then(data => {
+                                    if (data.success) {
+                                        showNotification('Product added to cart successfully!');
+                                    } else if (data.error) {
+                                        showNotification(data.error);
+                                    }
+                                })
+                                .catch(error => console.error('Error:', error));
+                            });
+                    
+                            // Initialize subtotal on page load without showing notifications
+                            updateSubtotal();
+                        });
+                    </script>
+                    
+                    
+                    
+                    
+                    
+                    
 
                             <!-- Modal -->
                             <div class="modal fade" id="shareModal" tabindex="-1" aria-labelledby="shareModalLabel" aria-hidden="true">
@@ -291,13 +302,13 @@
                                             <!-- Example product card -->
                                             <div class="product-card">
                                                 @if($images->isNotEmpty())
-                                                    <img src="{{ asset($images->first()->gambar) }}" alt="{{ $Product->nama }}" class="product-image">
+                                                    <img src="{{ asset($images->first()->images) }}" alt="{{ $product->name }}" class="product-image">
                                                 @else
                                                     <img src="path_to_default_image.jpg" alt="Default Image" class="product-image">
                                                 @endif
                                                 <div class="product-info">
-                                                    <p class="product-name">{{ $Product->nama }}</p>
-                                                    <p class="product-price">Rp{{ number_format($Product->harga_tayang, 0, ',', '.') }}</p>
+                                                    <p class="product-name">{{ $product->name }}</p>
+                                                    <p class="product-price">Rp{{ number_format($product->price, 0, ',', '.') }}</p>
                                                 </div>
                                             </div>
 
@@ -425,7 +436,7 @@
                         <script>
                             function share(platform) {
                                 let url = "{{ url()->current() }}";
-                                let message = encodeURIComponent('Beli (" ' + '{{ $Product->nama }}' + '") dengan harga terbaik! ' + url);
+                                let message = encodeURIComponent('Beli (" ' + '{{ $product->name }}' + '") dengan harga terbaik! ' + url);
                                 let shareUrl;
 
                                 switch (platform) {
@@ -460,28 +471,21 @@
                         </script>
 
 
-
-
-                    @if ($bigSale && $bigSale->status === 'aktif')
-                    <span class="nego-badge">Big Sale</span>
-                    @endif
-
                     <ul>
-                        <li><b>{{ __('messages.stock') }}</b> <span>{{ $Product->stok }}</span></li>
-                        <li><b>{{ __('messages.commodity') }}</b> <span>{{ $Product->komoditas ? $Product->komoditas->nama : 'N/A' }}</span></li>
-                        <li><b>{{ __('messages.category') }}</b> <span>{{ $Product->Category ? $Product->Category->nama : 'N/A' }}</span></li>
-                        <li><b>{{ __('messages.sub_category') }}</b> <span>{{ $Product->subCategory ? $Product->subCategory->nama : 'N/A' }}</span></li>
+                        <li><b>{{ __('messages.stock') }}</b> <span>{{ $product->stock }}</span></li>
+                        <li><b>{{ __('messages.category') }}</b> <span>{{ $product->Category ? $product->Category->name : 'N/A' }}</span></li>
+                        <li><b>{{ __('messages.sub_category') }}</b> <span>{{ $product->subCategory ? $product->subCategory->name : 'N/A' }}</span></li>
                         <li><b>{{ __('messages.ecatalog') }}</b>
                             <span>
-                                @if ($Product->link_ekatalog)
+                                @if ($product->e_catalog_link)
                                     @php
-                                        $url = $Product->link_ekatalog;
+                                        $url = $product->e_catalog_link;
                                         if (!preg_match('~^(?:f|ht)tps?://~i', $url)) {
                                             $url = 'http://' . $url;
                                         }
                                     @endphp
 
-                                    <a href="{{ $url }}" target="_blank" class="ecatalog-link">{{ Str::limit($Product->link_ekatalog, 50) }}</a>
+                                    <a href="{{ $url }}" target="_blank" class="ecatalog-link">{{ Str::limit($product->e_catalog_link, 50) }}</a>
                                 @else
                                     N/A
                                 @endif
@@ -552,143 +556,119 @@
                         <div class="tab-pane active" id="tabs-1" role="tabpanel">
                             <div class="product__details__tab__desc">
                                 <h6>{{ __('messages.product_information') }}</h6>
-                                <p>{!! $Product->spesifikasi_Product !!}</p>
+                                <p>{!! $product->product_specifications !!}</p>
                             </div>
                         </div>
                         <div class="tab-pane" id="tabs-2" role="tabpanel">
                             <div class="product__details__tab__desc">
                                 <table class="table table-striped">
                                     <tbody>
-                                        @if($Product->tipe_barang)
+                                        @if($product->product_type)
                                             <tr>
                                                 <th scope="row"><strong>{{ __('messages.product_type') }}:</strong></th>
-                                                <td>{{ $Product->tipe_barang }}</td>
+                                                <td>{{ $product->product_type }}</td>
                                             </tr>
                                         @endif
-                                        @if($Product->stok)
+                                        @if($product->stock)
                                             <tr>
                                                 <th scope="row"><strong>Stok:</strong></th>
-                                                <td>{{ $Product->stok }}</td>
+                                                <td>{{ $product->stock }}</td>
                                             </tr>
                                         @endif
-                                        @if($Product->masa_berlaku_Product)
+                                        @if($product->product_expiration_date)
                                             <tr>
                                                 <th scope="row"><strong>{{ __('messages.stock') }}:</strong></th>
-                                                <td>{{ $Product->masa_berlaku_Product }}</td>
+                                                <td>{{ $product->product_expiration_date }}</td>
                                             </tr>
                                         @endif
-                                        @if($Product->merk)
+                                        @if($product->brand)
                                             <tr>
                                                 <th scope="row"><strong>Merk:</strong></th>
-                                                <td>{{ $Product->merk }}</td>
+                                                <td>{{ $product->brand }}</td>
                                             </tr>
                                         @endif
-                                        @if($Product->no_Product_penyedia)
+                                        @if($product->provider_product_number)
                                             <tr>
                                                 <th scope="row"><strong>No Product Penyedia:</strong></th>
-                                                <td>{{ $Product->no_Product_penyedia }}</td>
+                                                <td>{{ $product->provider_product_number }}</td>
                                             </tr>
                                         @endif
-                                        @if($Product->unit_pengukuran)
+                                        @if($product->measurement_unit)
                                             <tr>
                                                 <th scope="row"><strong>Unit Pengukuran:</strong></th>
-                                                <td>{{ $Product->unit_pengukuran }}</td>
+                                                <td>{{ $product->measurement_unit }}</td>
                                             </tr>
                                         @endif
-                                        @if($Product->jenis_Product)
+                                        @if($product->tool_type)
                                             <tr>
                                                 <th scope="row"><strong>Jenis Product:</strong></th>
-                                                <td>{{ $Product->jenis_Product }}</td>
+                                                <td>{{ $product->tool_type }}</td>
                                             </tr>
                                         @endif
-                                        @if($Product->kode_kbli)
+                                        @if($product->kbki_code)
                                             <tr>
                                                 <th scope="row"><strong>Kode KBLI:</strong></th>
-                                                <td>{{ $Product->kode_kbli }}</td>
+                                                <td>{{ $product->kbki_code }}</td>
                                             </tr>
                                         @endif
-                                        @if($Product->nilai_tkdn)
+                                        @if($product->tkdn_value)
                                             <tr>
                                                 <th scope="row"><strong>Nilai TKDN:</strong></th>
-                                                <td>{{ $Product->nilai_tkdn }}</td>
+                                                <td>{{ $product->tkdn_value }}</td>
                                             </tr>
                                         @endif
-                                        @if($Product->no_sni)
+                                        @if($product->sni_number)
                                             <tr>
                                                 <th scope="row"><strong>No SNI:</strong></th>
-                                                <td>{{ $Product->no_sni }}</td>
+                                                <td>{{ $product->sni_number }}</td>
                                             </tr>
                                         @endif
-                                        @if($Product->asal_negara)
-                                            <tr>
-                                                <th scope="row"><strong>Asal Negara:</strong></th>
-                                                <td>{{ $Product->asal_negara }}</td>
-                                            </tr>
-                                        @endif
-                                        @if($Product->garansi_Product)
+                                        @if($product->product_warranty)
                                             <tr>
                                                 <th scope="row"><strong>Garansi Product:</strong></th>
-                                                <td>{{ $Product->garansi_Product }}</td>
+                                                <td>{{ $product->product_warranty }}</td>
                                             </tr>
                                         @endif
-                                        @if($Product->sni)
+                                        @if($product->sni)
                                             <tr>
                                                 <th scope="row"><strong>SNI:</strong></th>
-                                                <td>{{ $Product->sni }}</td>
+                                                <td>{{ $product->sni }}</td>
                                             </tr>
                                         @endif
-                                        @if($Product->uji_fungsi)
+                                        @if($product->function_test)
                                             <tr>
                                                 <th scope="row"><strong>Uji Fungsi:</strong></th>
-                                                <td>{{ $Product->uji_fungsi }}</td>
+                                                <td>{{ $product->function_test }}</td>
                                             </tr>
                                         @endif
-                                        @if($Product->memiliki_svlk)
+                                        @if($product->has_svlk)
                                             <tr>
                                                 <th scope="row"><strong>Memiliki SVLK:</strong></th>
-                                                <td>{{ $Product->memiliki_svlk }}</td>
+                                                <td>{{ $product->has_svlk }}</td>
                                             </tr>
                                         @endif
-                                        @if($Product->jenis_alat)
-                                            <tr>
-                                                <th scope="row"><strong>Jenis Alat:</strong></th>
-                                                <td>{{ $Product->jenis_alat }}</td>
-                                            </tr>
-                                        @endif
-                                        @if($Product->fungsi)
+                                        @if($product->function)
                                             <tr>
                                                 <th scope="row"><strong>Fungsi:</strong></th>
-                                                <td>{{ $Product->fungsi }}</td>
+                                                <td>{{ $product->function }}</td>
                                             </tr>
                                         @endif
-                                        @if($Product->spesifikasi_Product)
+                                        @if($product->product_specifications)
                                             <tr>
                                                 <th scope="row"><strong>Spesifikasi Product:</strong></th>
-                                                <td>{{ $Product->spesifikasi_Product }}</td>
+                                                <td>{!! $product->product_specifications !!}</td>
                                             </tr>
                                         @endif
-                                        @if($Product->ramah_lingkungan !== null)
-                                            <tr>
-                                                <th scope="row"><strong>Ramah Lingkungan:</strong></th>
-                                                <td>{{ $Product->ramah_lingkungan ? 'Ya' : 'Tidak' }}</td>
-                                            </tr>
-                                        @endif
-                                        @if($Product->Category && $Product->Category->nama)
+                                        @if($product->Category && $product->Category->name)
                                             <tr>
                                                 <th scope="row"><strong>Category:</strong></th>
-                                                <td>{{ $Product->Category->nama }}</td>
+                                                <td>{{ $product->Category->name }}</td>
                                             </tr>
                                         @endif
-                                        @if($Product->subCategory && $Product->subCategory->nama)
+                                        @if($product->subCategory && $product->subCategory->name)
                                             <tr>
                                                 <th scope="row"><strong>Sub Category:</strong></th>
-                                                <td>{{ $Product->subCategory->nama }}</td>
-                                            </tr>
-                                        @endif
-                                        @if($Product->komoditas && $Product->komoditas->nama)
-                                            <tr>
-                                                <th scope="row"><strong>Komoditas:</strong></th>
-                                                <td>{{ $Product->komoditas->nama }}</td>
+                                                <td>{{ $product->subCategory->name }}</td>
                                             </tr>
                                         @endif
                                     </tbody>
@@ -700,8 +680,8 @@
                                 <h6>Ulasan</h6>
 
                                 <!-- Display existing reviews or a message if no reviews are available -->
-                                @if ($Product->reviews->isNotEmpty())
-                                    @foreach ($Product->reviews as $review)
+                                @if ($product->reviews->isNotEmpty())
+                                    @foreach ($product->reviews as $review)
                                         <div
                                             class="review-item d-flex align-items-start mb-4 p-3 shadow-sm bg-light rounded">
                                             <div class="review-avatar mr-3">
@@ -773,15 +753,15 @@
                                 @endif
 
                                 <!-- Review Form -->
-                                @if ($order && $order->status === 'Selesai')
-                                    @if ($Product->reviews->where('user_id', auth()->id())->isEmpty())
+                                @foreach ($deliveredOrders as $order)
+                                @if ($order->status === \App\Models\Order::STATUS_DELIVERED)
+                                    @if ($product->reviews->where('user_id', auth()->id())->isEmpty())
                                         <div class="card shadow-sm border-0 mb-4">
                                             <div class="card-header text-white" style="background-color: #416bbf;">
                                                 <h5 class="mb-0">Tinggalkan Ulasan</h5>
                                             </div>
                                             <div class="card-body">
-                                                <form action="{{ route('order.submitReview', $order->id) }}"
-                                                    method="POST" enctype="multipart/form-data">
+                                                <form action="{{ route('order.submitReview', $order->id) }}" method="POST" enctype="multipart/form-data">
                                                     @csrf
                                                     <div class="form-group mb-3">
                                                         <label for="review">Ulasan Anda</label>
@@ -790,45 +770,30 @@
                                                     </div>
                                                     <div class="form-group mb-3">
                                                         <label for="rating">Rating</label>
-                                                        <div class="star-rating d-flex align-items-center"
-                                                            style="justify-content: flex-start;">
+                                                        <div class="star-rating d-flex align-items-center" style="justify-content: flex-start;">
                                                             @for ($i = 5; $i >= 1; $i--)
-                                                                <input type="radio" id="star{{ $i }}"
-                                                                    name="rating" value="{{ $i }}"
-                                                                    required>
-                                                                <label for="star{{ $i }}"
-                                                                    class="fa fa-star mx-1"
-                                                                    style="margin: 0;"></label>
+                                                                <input type="radio" id="star{{ $i }}" name="rating" value="{{ $i }}" required>
+                                                                <label for="star{{ $i }}" class="fa fa-star mx-1" style="margin: 0;"></label>
                                                             @endfor
                                                         </div>
                                                     </div>
-
                                                     <div class="form-group mb-3">
                                                         <label for="review_images">Upload Foto (Opsional)</label>
                                                         <div class="custom-file">
-                                                            <input type="file" name="review_images[]"
-                                                                id="review_images" class="custom-file-input"
-                                                                accept="image/*" multiple>
-                                                            <label class="custom-file-label" for="review_images">Pilih
-                                                                file</label>
+                                                            <input type="file" name="review_images[]" id="review_images" class="custom-file-input" accept="image/*" multiple>
+                                                            <label class="custom-file-label" for="review_images">Pilih file</label>
                                                         </div>
-                                                        <small class="form-text text-muted">Maksimal ukuran file 2MB
-                                                            per gambar.</small>
+                                                        <small class="form-text text-muted">Maksimal ukuran file 2MB per gambar.</small>
                                                     </div>
                                                     <div class="form-group mb-3">
                                                         <label for="review_videos">Upload Video (Opsional)</label>
                                                         <div class="custom-file">
-                                                            <input type="file" name="review_videos[]"
-                                                                id="review_videos" class="custom-file-input"
-                                                                accept="video/*" multiple>
-                                                            <label class="custom-file-label" for="review_videos">Pilih
-                                                                file</label>
+                                                            <input type="file" name="review_videos[]" id="review_videos" class="custom-file-input" accept="video/*" multiple>
+                                                            <label class="custom-file-label" for="review_videos">Pilih file</label>
                                                         </div>
-                                                        <small class="form-text text-muted">Maksimal ukuran file 10MB
-                                                            per video.</small>
+                                                        <small class="form-text text-muted">Maksimal ukuran file 10MB per video.</small>
                                                     </div>
-                                                    <button type="submit" class="btn text-white w-100"
-                                                        style="background-color: #416bbf;">Kirim Ulasan</button>
+                                                    <button type="submit" class="btn text-white w-100" style="background-color: #416bbf;">Kirim Ulasan</button>
                                                 </form>
                                             </div>
                                         </div>
@@ -838,6 +803,8 @@
                                         </div>
                                     @endif
                                 @endif
+                            @endforeach
+
                                     <style>
                                         /* Style for the star rating */
                                         .star-rating input[type="radio"] {
@@ -899,105 +866,60 @@
 </section>
 <!-- Product Details Section End -->
 
-
-    @if($Product->isNotEmpty())
-        <section class="featured spad">
-            <div class="container">
-                <div class="row">
-                    <div class="col-lg-12">
-                        <div class="section-title">
-                            <h2>{{ __('messages.other_products') }} !!</h2>
-                        </div>
+@if($relatedProducts->count() > 0)
+    <section class="featured spad">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="section-title">
+                        <h2>{{ __('messages.other_products') }} !!</h2>
                     </div>
                 </div>
+            </div>
 
-                <div class="row featured__filter" id="MixItUpD27635">
-                    @foreach ($Product as $index => $item)
+            <div class="row">
+                @foreach ($relatedProducts as $index => $item)
+                    @if ($item instanceof \App\Models\Product)
                         @php
                             $imagePath = $item->images->isNotEmpty()
-                                ? $item->images->first()->gambar
+                                ? $item->images->first()->images
                                 : 'path/to/default/image.jpg';
-                            $bigSaleItem = $item->bigSales->first(); // Ambil Big Sale pertama jika ada
                         @endphp
-                        <div class="col-lg-3 col-md-4 col-sm-6 mix oranges fresh-meat">
-                            <div class="featured__item" data-href="{{ route('Product_customer.user.show', $item->id) }}">
+                        <div class="col-lg-3 col-md-4 col-sm-6">
+                            <div class="featured__item" data-href="{{ route('product.show', $item->slug) }}?source={{ Str::random(10) }}">
                                 <div class="featured__item__pic"
                                     style="background-image: url('{{ asset($imagePath) }}'); background-size: cover; background-position: center; border-radius: 10px;">
-                                @if ($bigSaleItem && $bigSaleItem->status === 'aktif')
-                                    <span class="nego-badge badge-primary">Big Sale</span>
-                                @endif
 
-                                    <ul class="featured__item__pic__hover">
-                                        <li><a href="{{ route('Product_customer.user.show', $item->id) }}"><i
-                                                    class="fa fa-info-circle"></i></a></li>
-
-                                        @auth
-                                            <!-- Jika pengguna sudah login -->
-                                            <li><a href="#" class="add-to-cart-btn" data-id="{{ $item->id }}"><i
-                                                        class="fa fa-shopping-cart"></i></a></li>
-                                        @else
-                                            <!-- Jika pengguna belum login -->
-                                            <li><a href="{{ route('login') }}"><i class="fa fa-shopping-cart"></i></a></li>
-                                        @endauth
-                                    </ul>
                                 </div>
 
                                 <div class="featured__item__text">
-                                    <h6><a href="#">{{ $item->nama }}</a></h6>
+                                    <h6><a href="{{ route('product.show', $product->slug) }}?source={{ Str::random(10) }}">{{ $item->name }}</a></h6>
                                     <h5>
-                                        @if ($item->harga_ditampilkan === 'ya')
-                                            @if($bigSaleItem && $bigSaleItem->status === 'aktif')
-                                                <span style="text-decoration: line-through; color: #ff0000;">
-                                                    Rp{{ number_format($item->harga_tayang, 0, ',', '.') }}
-                                                </span>
-                                                <br>
-                                                <span style="color: #000000;">
-                                                    Rp{{ number_format($bigSaleItem->pivot->harga_diskon, 0, ',', '.') }}
-                                                </span>
-                                            @else
-                                                <span style="color: #000000;">
-                                                    Rp{{ number_format($item->harga_tayang, 0, ',', '.') }}
-                                                </span>
-                                            @endif
+                                        @if ($item->is_price_displayed === 'yes')
+                                            <span style="color: #000000;">
+                                                Rp{{ number_format($item->price, 0, ',', '.') }}
+                                            </span>
                                         @else
-                                        {{ __('messages.contact_admin_for_price') }}
+                                            {{ __('messages.contact_admin_for_price') }}
                                         @endif
                                     </h5>
-
-
                                 </div>
                             </div>
                         </div>
 
-                        @if ($index == 3 && $Product->count() > 4)
+                        @if ($index == 3 && $relatedProducts->count() > 4)
                             <div class="col-lg-12 text-center mt-3">
                                 <a href="{{ route('shop') }}" class="primary-btn rounded">{{ __('messages.selengkapnya') }}</a>
                             </div>
                             @break
                         @endif
-
-                    @endforeach
-                </div>
+                    @endif
+                @endforeach
             </div>
-        </section>
-    @endif
-
-
-
-    <!-- Notifikasi (Hidden by Default) -->
-    <div id="cart-notification" class="cart-notification" style="display: none;">
-        <div class="notification-content">
-            <div class="notification-icon">&#10003;</div>
-        <div class="notification-text">{{ __('messages.added_to_cart') }}</div>
         </div>
-    </div>
+    </section>
+@endif
 
-    <div id="favorite-notification" class="cart-notification" style="display: none;">
-        <div class="notification-content">
-            <div class="notification-icon">&#10003;</div> <!-- Change icon as needed -->
-            <div class="notification-text"></div>
-        </div>
-    </div>
 
 
         <!-- CSS untuk Notifikasi -->
@@ -1054,59 +976,7 @@
         </style>
 
         <!-- AJAX for Add to Cart -->
-        <script>
-            document.querySelectorAll('.add-to-cart-btn').forEach(function(button) {
-                button.addEventListener('click', function(event) {
-                    event.preventDefault(); // Prevent default action
-
-                    var isAuthenticated = '{{ Auth::check() }}';
-
-                    if (!isAuthenticated) {
-                        // Redirect to login page if the user is not authenticated
-                        window.location.href = '{{ route('login') }}';
-                        return;
-                    }
-
-                    var productId = this.dataset.id;
-                    var token = '{{ csrf_token() }}';
-                    var quantity = document.querySelector('.pro-qty input').value; // Ambil nilai quantity dari input
-
-                    fetch('{{ route('cart.add', '') }}/' + productId, {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json',
-                                'X-CSRF-TOKEN': token
-                            },
-                            body: JSON.stringify({
-                                quantity: quantity // Gunakan nilai quantity yang diambil dari input
-                            })
-                        })
-                        .then(response => {
-                            if (!response.ok) {
-                                throw new Error('Network response was not ok');
-                            }
-                            return response.json();
-                        })
-                        .then(data => {
-                            if (data.success) {
-                                // Display notification or update cart count
-                                var notification = document.getElementById('cart-notification');
-                                notification.style.display = 'flex';
-                                setTimeout(() => {
-                                    notification.style.display = 'none';
-                                }, 3000); // Notification disappears after 3 seconds
-                            } else {
-                                alert('Failed to add product to cart: ' + (data.message ||
-                                    'Unknown error.'));
-                            }
-                        })
-                        .catch(error => {
-                            console.error('Error:', error);
-                            alert('An error occurred while adding the product to the cart.');
-                        });
-                });
-            });
-            </script>
+        
 
             <script>
                 document.querySelectorAll('.star-rating label').forEach(function(label) {
@@ -1127,6 +997,10 @@
         });
 
     </script>
+
+
+
+
 
 
 <style>
@@ -1153,4 +1027,31 @@
         });
     });
 </script>
+
+
+
+
+
+
+
+
+
+
+
+<div id="cart-message" class="cart-notification d-none" style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background-color: rgba(30, 30, 30, 0.9); color: white; padding: 20px 30px; border-radius: 10px; display: flex; align-items: center; justify-content: center; box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.5); z-index: 1000; font-size: 18px;">
+    <div class="notification-content" style="display: flex; align-items: center; width: 100%;">
+        <span class="notification-icon" style="font-size: 30px; margin-right: 15px;">🎉</span>
+        <span class="notification-text" style="flex-grow: 1; font-weight: bold;">{{ __('Product.cart_message') }}</span>
+        <button onclick="this.parentElement.parentElement.style.display='none'" style="background: transparent; border: none; color: white; cursor: pointer; font-size: 22px; margin-left: 15px;">&times;</button>
+    </div>
+</div>
+
+<!-- Notification Message -->
+<div id="wishlist-message" class="wishlist-notification d-none" style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background-color: rgba(30, 30, 30, 0.9); color: white; padding: 20px 30px; border-radius: 10px; display: flex; align-items: center; justify-content: center; box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.5); z-index: 1000; font-size: 18px;">
+    <div class="notification-content" style="display: flex; align-items: center; width: 100%;">
+        <span class="notification-icon" style="font-size: 30px; margin-right: 15px;">🎉</span>
+        <span class="notification-text" style="flex-grow: 1; font-weight: bold;">{{ __('product.wishlist_message') }}</span>
+        <button onclick="this.parentElement.parentElement.style.display='none'" style="background: transparent; border: none; color: white; cursor: pointer; font-size: 22px; margin-left: 15px;">&times;</button>
+    </div>
+</div>   
 @endsection
