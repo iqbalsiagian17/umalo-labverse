@@ -38,18 +38,18 @@ class ShopController extends Controller
             } elseif ($sort == 'oldest') {
                 $query->orderBy('created_at', 'asc');
             } elseif ($sort == 'price_lowest') {
-                $query->orderBy('harga_tayang', 'asc'); // Sort by price lowest to highest
+                $query->orderBy('price', 'asc'); // Sort by price lowest to highest
             } elseif ($sort == 'price_highest') {
-                $query->orderBy('harga_tayang', 'desc'); // Sort by price highest to lowest
+                $query->orderBy('price', 'desc'); // Sort by price highest to lowest
             }
 
 
-            $Product = $query->paginate(9);
+            $products = $query->paginate(9);
 
             // Dapatkan Product setelah menerapkan filter dan sorting
-            $productCount = $Product->total();
+            $productCount = $products->total();
 
-            return view('customer.shop.shop', compact('Product', 'categories', 'subcategories', 'productCount'));
+            return view('customer.shop.shop', compact('products', 'categories', 'subcategories', 'productCount'));
         }
 
 
@@ -158,7 +158,6 @@ class ShopController extends Controller
 
     public function showDiscountedCategoryProducts($categoryId)
 {
-    $komoditas = Komoditas::all();
 
     // Get the active Big Sale
     $bigSale = BigSale::with('Product')
@@ -183,13 +182,13 @@ class ShopController extends Controller
         });
     })->get();
 
-    return view('customer.bigsale.Category', compact('products', 'Category', 'bigSale','komoditas'));
+    return view('customer.bigsale.Category', compact('products', 'Category', 'bigSale'));
 }
 
 public function filterByRating($rating)
 {
     $subCategory = SubCategory::all(); // Untuk sidebar komoditas
-    $Category = Category::all(); // Untuk sidebar Category
+    $categories = Category::all(); // Untuk sidebar Category
 
     // Fetch products with the exact average rating specified
     $Product = Product::whereHas('reviews', function($query) use ($rating) {
@@ -203,7 +202,7 @@ public function filterByRating($rating)
     // Get the total count of filtered products
     $productCount = $Product->total();
 
-    return view('customer.shop.shop', compact('Product', 'subCategory', 'Category', 'productCount'));
+    return view('customer.shop.shop', compact('Product', 'subCategory', 'categories', 'productCount'));
 }
 
 

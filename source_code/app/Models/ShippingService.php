@@ -9,7 +9,11 @@ class ShippingService extends Model
 {
     use HasFactory;
 
-    protected $table = 't_md_shipping_services';
-    protected $fillable = ['name'];
+    protected $table = 't_shipping_services';
+
+    protected $fillable = [
+        'name',
+        'images',
+    ];
 
 }

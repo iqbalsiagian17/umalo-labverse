@@ -1,5 +1,4 @@
-@extends('layouts.Customer.master')
-
+@extends('layouts.customer.master')
 @section('content')
     <div class="container">
         <h1>Kontrak Pesanan</h1>

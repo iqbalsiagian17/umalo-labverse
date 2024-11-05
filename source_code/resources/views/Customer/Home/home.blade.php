@@ -1,5 +1,4 @@
-@extends('layouts.Customer.master')
-
+@extends('layouts.customer.master')
 @section('content')
     <!-- Hero Section Begin -->
     <section class="hero mt-5">
@@ -301,29 +300,16 @@
                         : 'assets/dummy/produck1.png'; // Gambar default jika tidak ada gambar
                 @endphp
                     <div class="col-lg-3 col-md-4 col-sm-6 mix oranges fresh-meat">
-                        <div class="featured__item" data-href="{{ route('Product_customer.user.show', $item->id) }}?source={{ Str::random(10) }}">
+                        <div class="featured__item" data-href="{{ route('product.show', $item->slug) }}?source={{ Str::random(10) }}">
                             <div class="featured__item__pic"
                                 style="background-image: url('{{ asset($imagePath) }}'); background-size: cover; background-position: center; border-radius: 10px;">
                                 @if ($item->discount_price)
                                     <span class="nego-badge bg-danger">{{ __('Diskon!!') }}</span>
                                 @endif
-
-                                <ul class="featured__item__pic__hover">
-                                    <li><a href="{{ route('Product_customer.user.show', $item->id) }}?source={{ Str::random(10) }}"><i
-                                                class="fa fa-info-circle"></i></a></li>
-                                    @auth
-                                        <!-- Jika pengguna sudah login -->
-                                        <li><a href="#" class="add-to-cart-btn" data-id="{{ $item->id }}"><i
-                                                    class="fa fa-shopping-cart"></i></a></li>
-                                    @else
-                                        <!-- Jika pengguna belum login -->
-                                        <li><a href="{{ route('login') }}"><i class="fa fa-shopping-cart"></i></a></li>
-                                    @endauth
-                                </ul>
                             </div>
 
                             <div class="featured__item__text">
-                                <h6><a href="{{ route('Product_customer.user.show', $item->id) }}?source={{ Str::random(10) }}">{{ $item->name }}</a></h6>
+                                <h6><a href="{{ route('product.show', $item->slug) }}?source={{ Str::random(10) }}">{{ $item->name }}</a></h6>
                                 <h5>
                                     @if ($item->discount_price)
                                                 <span style="text-decoration: line-through; color:red;">
@@ -344,15 +330,11 @@
                             </div>
                         </div>
                     </div>
-
-                    @if ($index == 7 && $product->count() > 8)
-                        <div class="col-lg-12 text-center mt-3">
-                            <a href="{{ route('shop') }}" class="primary-btn rounded">{{ __('messages.selengkapnya') }}</a>
-                        </div>
-                        @break
-                    @endif
-
                 @endforeach
+                <div class="col-lg-12 text-center mt-3">
+                    <a href="{{ route('shop') }}" class="primary-btn rounded">{{ __('messages.selengkapnya') }}</a>
+                </div>
+
             </div>
         </div>
     </section>
@@ -361,89 +343,7 @@
 
 
 
-    <!-- Notifikasi (Hidden by Default) -->
-    <div id="cart-notification" class="cart-notification" style="display: none;">
-        <div class="notification-content">
-            <div class="notification-icon">&#10003;</div>
-            <div class="notification-text">{{ __('messages.added_to_cart') }}</div>
-        </div>
-    </div>
-
-    <!-- CSS untuk Notifikasi -->
-    <style>
-        .cart-notification {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background-color: rgba(0, 0, 0, 0.8);
-            color: white;
-            padding: 20px 30px;
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.5);
-            z-index: 1000;
-        }
-
-        .notification-icon {
-            font-size: 30px;
-            margin-right: 15px;
-        }
-
-        .notification-text {
-            font-size: 18px;
-        }
-    </style>
-
-    <!-- AJAX for Add to Cart -->
-    <script>
-        document.querySelectorAll('.add-to-cart-btn').forEach(function(button) {
-            button.addEventListener('click', function(event) {
-                event.preventDefault(); // Prevent default action
-
-                var productId = this.dataset.id;
-                var token = '{{ csrf_token() }}';
-
-                fetch('{{ route('cart.add', '') }}/' + productId, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-CSRF-TOKEN': token
-                        },
-                        body: JSON.stringify({
-                            quantity: 1 // Add exactly 1 quantity
-                        })
-                    })
-                    .then(response => {
-                        if (!response.ok) {
-                            throw new Error('Network response was not ok');
-                        }
-                        return response.json();
-                    })
-                    .then(data => {
-                        if (data.success) {
-                            // Display notification or update cart count
-                            var notification = document.getElementById('cart-notification');
-                            notification.style.display = 'flex';
-                            setTimeout(() => {
-                                notification.style.display = 'none';
-                            }, 3000); // Notification disappears after 3 seconds
-                        } else {
-                            alert('Failed to add product to cart: ' + (data.message ||
-                                'Unknown error.'));
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Error:', error);
-                        alert('An error occurred while adding the product to the cart.');
-                    });
-            });
-        });
-    </script>
-
-
+  
 <style>
     /* Gaya pointer untuk elemen .featured__item */
     .featured__item {

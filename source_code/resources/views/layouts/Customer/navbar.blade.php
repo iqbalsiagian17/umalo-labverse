@@ -14,7 +14,7 @@
             <ul>
                 @if (Auth::check())
                     <li>
-                        <a href="{{ route('cart.view') }}"><i class="fa fa-shopping-cart"></i></a>
+                        <a href="{{ route('cart.show') }}"><i class="fa fa-shopping-cart"></i></a>
                     </li>
                 @endif
             </ul>
@@ -56,7 +56,7 @@
                             <a class="dropdown-item" href="{{ route('user.show') }}">
                                 {{ __('messages.settings') }}
                             </a>
-                            <a class="dropdown-item" href="{{ route('order.history') }}">
+                            <a class="dropdown-item" href="{{ route('customer.orders.index') }}">
                                 {{ __('messages.purchase') }}
                             </a>
                             <a class="dropdown-item" href="{{ route('logout') }}"
@@ -169,20 +169,21 @@
                             <ul>
                                 @if (Auth::check())
                                 <li>
-                                    <a href="{{ route('favorite.show') }}">
+                                    <a href="{{ route('wishlist.index') }}">
                                         <i class="fa fa-heart"></i> <!-- Change the icon to a heart -->
                                         <span class="notification">
-                                            {{ Auth::check() ? Auth::user()->favorites()->count() : 0 }}
+                                            {{ Auth::check() ? Auth::user()->wishlist()->count() : 0 }}
                                         </span>
                                         
                                     </a>
                                 </li>
 
                                 <li>
-                                    <a href="{{ route('cart.view') }}">
+                                    <a href="{{ route('cart.show') }}">
                                         <i class="fa fa-shopping-cart"></i>
-                                        <span
-                                            class="notification">{{ session('cart') ? array_sum(array_column(session('cart'), 'quantity')) : 0 }}</span>
+                                        <span class="notification">
+                                            {{ Auth::check() ? \App\Models\Cart::where('user_id', Auth::id())->sum('quantity') : 0 }}
+                                        </span>
                                     </a>
                                 </li>
                                 @endif
@@ -216,7 +217,7 @@
                                                 <a class="dropdown-item" href="{{ route('user.show') }}">
                                                     {{ __('messages.settings') }}
                                                 </a>
-                                                <a class="dropdown-item" href="{{ route('order.history') }}">
+                                                <a class="dropdown-item" href="{{ route('customer.orders.index') }}">
                                                     {{ __('messages.purchase') }}
                                                 </a>
                                                 <a class="dropdown-item" href="{{ route('logout') }}"
@@ -283,7 +284,7 @@
                 </a>
             </li>
             <li class="nav-item">
-                <a href="{{ route('order.history') }}" class="nav-link text-center text-dark">
+                <a href="{{ route('customer.orders.index') }}" class="nav-link text-center text-dark">
                     <div class="icon-circle">
                         <svg width="1.5em" height="1.5em" viewBox="0 0 16 16" class="bi bi-bag"
                             fill="currentColor" xmlns="http://www.w3.org/2000/svg">
@@ -363,43 +364,7 @@
         });
     </script>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const addToCartButtons = document.querySelectorAll('.add-to-cart-btn');
-
-            addToCartButtons.forEach(button => {
-                button.addEventListener('click', function(event) {
-                    event.preventDefault();
-
-                    const productId = this.dataset.productId;
-                    const url = `/cart/add/${productId}`;
-
-                    fetch(url, {
-                            method: 'POST',
-                            headers: {
-                                'X-CSRF-TOKEN': document.querySelector(
-                                    'meta[name="csrf-token"]').getAttribute('content'),
-                                'Content-Type': 'application/json'
-                            },
-                            body: JSON.stringify({
-                                quantity: 1 // or the quantity from an input field
-                            })
-                        })
-                        .then(response => response.json())
-                        .then(data => {
-                            if (data.success) {
-                                // Update the cart notification span
-                                const cartNotification = document.querySelector(
-                                    '.notification');
-                                cartNotification.textContent = data.totalQuantity;
-                            } else {
-                                alert(data.message);
-                            }
-                        });
-                });
-            });
-        });
-    </script>
+    
 
 
     <style>

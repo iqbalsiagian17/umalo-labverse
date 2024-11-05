@@ -1,4 +1,4 @@
-@extends('layouts.Admin.master')
+@extends('layouts.admin.master')
 
 @section('content')
 <div class="row justify-content-center align-items-center" style="height: 100vh;">

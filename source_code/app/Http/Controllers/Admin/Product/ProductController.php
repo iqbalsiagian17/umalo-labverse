@@ -26,7 +26,7 @@ class ProductController extends Controller
 
             // Order by exact match first, then by closest match
             $query->where('name', 'like', '%' . $search . '%')
-                  ->orderByRaw("CASE
+                ->orderByRaw("CASE
                                     WHEN name LIKE ? THEN 1
                                     WHEN name LIKE ? THEN 2
                                     ELSE 3
@@ -41,6 +41,7 @@ class ProductController extends Controller
 
         return view('admin.product.index', compact('product'));
     }
+
 
     public function create()
     {
@@ -214,7 +215,7 @@ class ProductController extends Controller
             'product_specifications' => 'required|string',
             'is_price_displayed' => 'required|in:yes,no',
             'price' => 'required|numeric|min:0',
-            'discount_price' => 'nullable|numeric|min:0|lt:price|required_if:is_discount,1',
+            'discount_price' => 'nullable|numeric|min:0|lt:price|required_if:allow_discount,1',
             'e_catalog_link' => 'nullable',
             'category_id' => 'required|exists:t_p_category,id',
             'subcategory_id' => 'required|exists:t_p_sub_category,id',
@@ -246,8 +247,8 @@ class ProductController extends Controller
             'status' => $request->status,
             'product_specifications' => $request->product_specifications,
             'is_price_displayed' => $request->is_price_displayed,
-            'price' => $request->price,
-            'discount_price' => $request->is_discount ? $request->discount_price : null,
+            'price' => str_replace('.', '', $request->price), // Remove formatting before saving
+            'discount_price' => $request->allow_discount ? str_replace('.', '', $request->discount_price) : null,
             'e_catalog_link' => $request->e_catalog_link,
             'category_id' => $request->category_id,
             'subcategory_id' => $request->subcategory_id,

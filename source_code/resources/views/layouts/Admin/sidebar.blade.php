@@ -50,8 +50,8 @@
             <div class="collapse" id="tables">
                 <ul class="nav nav-collapse">
                     <li>
-                        <a href="{{ route('transaksi.index') }}">
-                            <span class="sub-item">Transaksi</span>
+                        <a href="{{ route('admin.orders.index') }}">
+                            <span class="sub-item">Orderan</span>
                         </a>
                     </li>
                 </ul>
@@ -98,7 +98,7 @@
                   <span class="sub-item">Slider - Landing Page</span>
                 </a>
               </li><li>
-                <a href="{{ route('bigsale.index') }}">
+                <a href="{{-- {{ route('bigsale.index') }} --}}">
                   <span class="sub-item">BigSale Event</span>
                 </a>
               </li>
@@ -179,6 +179,11 @@
                 <li>
                   <a href="{{ route('admin.masterdata.materai.index') }}">
                     <span class="sub-item">Materai</span>
+                  </a>
+                </li>
+                <li>
+                  <a href="{{ route('admin.masterdata.shippingservice.index') }}">
+                    <span class="sub-item">Shipping Service</span>
                   </a>
                 </li>
               </ul>

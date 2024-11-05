@@ -1,4 +1,4 @@
-@extends('layouts.Admin.master')
+@extends('layouts.admin.master')
 
 @section('content')
 <div class="row">
@@ -7,11 +7,14 @@
             <div class="card-header d-flex justify-content-between align-items-center">
                 <div class="card-title"><h1>Product</h1></div>
                 <form id="search-form" action="{{ route('admin.product.index') }}" method="GET" class="d-flex w-50">
-                    <input type="text" id="search" name="search" class="form-control" placeholder="Search Product..." value="{{ request()->input('search') }}">
-                    <button type="submit" class="btn btn-primary ml-2 d-none">Cari</button>
+                    <input type="text" id="search" name="search" class="form-control me-2" placeholder="Search Product..." value="{{ request()->input('search') }}">
+                    <a href="{{ route('admin.product.index') }}" class="btn btn-secondary ml-2">
+                        <i class="fas fa-sync-alt"></i>
+                    </a>
                 </form>
                 <a href="{{ route('admin.product.create') }}" class="btn btn-primary">Tambah Product</a>
             </div>
+            
             @if (session('success'))
             <div class="alert alert-success">
                 {{ session('success') }}
@@ -83,38 +86,39 @@
 
 <script>
     $(document).ready(function() {
-        // SweetAlert confirmation for deletion
-        $('.delete-button').on('click', function(e) {
-            e.preventDefault(); // Prevent form submission
+    // SweetAlert confirmation for deletion
+    $('.delete-button').on('click', function(e) {
+        e.preventDefault(); // Prevent form submission
 
-            var form = $(this).closest('form'); // Get the form
-            Swal.fire({
-                title: 'Are you sure?',
-                text: "You won't be able to revert this!",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonText: 'Yes, delete it!',
-                cancelButtonText: 'No, cancel!',
-                reverseButtons: true
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    form.submit(); // Submit the form if confirmed
-                }
-            });
-        });
-
-        // AJAX search functionality
-        $('#search').on('keyup', function() {
-            var query = $(this).val();
-            $.ajax({
-                url: "{{ route('admin.product.index') }}",
-                type: "GET",
-                data: { search: query },
-                success: function(data) {
-                    $('#Product-table-body').html(data);
-                }
-            });
+        var form = $(this).closest('form'); // Get the form
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Yes, delete it!',
+            cancelButtonText: 'No, cancel!',
+            reverseButtons: true
+        }).then((result) => {
+            if (result.isConfirmed) {
+                form.submit(); // Submit the form if confirmed
+            }
         });
     });
+
+    // AJAX search functionality
+    $('#search').on('keyup', function() {
+        var query = $(this).val();
+        $.ajax({
+            url: "{{ route('admin.product.index') }}",
+            type: "GET",
+            data: { search: query },
+            success: function(data) {
+                $('#Product-table-body').html(data);
+            }
+        });
+    });
+});
+
 </script>
 @endsection

@@ -1,5 +1,4 @@
-@extends('layouts.Customer.master')
-
+@extends('layouts.customer.master')
 @section('content')
 <div class="container mt-5 mb-5">
     <h2 class="mb-4 text-center">Frequently Asked Questions (FAQ)</h2>

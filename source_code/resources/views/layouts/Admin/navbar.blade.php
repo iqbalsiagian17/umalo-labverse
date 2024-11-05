@@ -199,7 +199,7 @@
             </div>
         </li>
         <li>
-            <a class="see-all" href="{{ route('transaksi.index') }}">
+            <a class="see-all" href="{{ route('admin.orders.index') }}">
                 See all notifications<i class="fa fa-angle-right"></i>
             </a>
         </li>
@@ -233,12 +233,12 @@
                         </div>
                       </a>
                     
-                      <a class="col-6 col-md-4 p-0" href="{{ route('transaksi.index') }}">
+                      <a class="col-6 col-md-4 p-0" href="{{ route('admin.orders.index') }}">
                         <div class="quick-actions-item">
                             <div class="avatar-item bg-warning rounded-circle">
                                 <i class="fas fa-money-bill-wave"></i>
                             </div>
-                            <span class="text">Transaksi</span>
+                            <span class="text">Order</span>
                         </div>
                     </a>                    
                     <a class="col-6 col-md-4 p-0" href="{{ route('admin.product.create') }}">
@@ -250,7 +250,7 @@
                       </div>
                   </a>
                   
-                  <a class="col-6 col-md-4 p-0" href="{{ route('bigsale.index') }}">
+                  <a class="col-6 col-md-4 p-0" href="{{-- {{ route('bigsale.index') }} --}}">
                     <div class="quick-actions-item">
                         <div class="avatar-item bg-success rounded-circle">
                             <i class="fas fa-tags"></i>

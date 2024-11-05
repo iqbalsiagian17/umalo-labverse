@@ -1,5 +1,4 @@
-@extends('layouts.Customer.master')
-
+@extends('layouts.customer.master')
 @section('content')
     <!-- Product Section Begin -->
     <section class="product spad">
@@ -341,44 +340,24 @@
                         </div>
                     </div>
                     <div class="row" id="product-list">
-                        @foreach ($Product as $product)
+                        @foreach ($products as $product)
                             <div class="col-lg-4 col-md-6 col-sm-6 product__item-container">
-                                <div class="product__item" data-href="{{ route('Product_customer.user.show', ['id' => $product->id . '-' . Str::random(10)]) }}">
+                                <div class="product__item" data-href="{{ route('product.show', $product->slug) }}?source={{ Str::random(10) }}">
                                     @php
                                         $imagePath = $product->images->isNotEmpty()
-                                            ? $product->images->first()->gambar
+                                            ? $product->images->first()->images
                                             : 'path/to/default/image.jpg';
                                     @endphp
                                     <div class="product__item__pic"
                                         style="background-image: url('{{ asset($imagePath) }}');">
-                                        <ul class="product__item__pic__hover">
-                                            <li>
-                                                <a href="{{ route('Product_customer.user.show', ['id' => $product->id . '-' . Str::random(10)]) }}">
-                                                    <i class="fa fa-info-circle"></i>
-                                                </a>
-                                            </li>
-                                            @auth
-                                                <li>
-                                                    <a href="#" class="add-to-cart-btn" data-id="{{ $product->id }}">
-                                                        <i class="fa fa-shopping-cart"></i>
-                                                    </a>
-                                                </li>
-                                            @else
-                                                <li>
-                                                    <a href="{{ route('login') }}">
-                                                        <i class="fa fa-shopping-cart"></i>
-                                                    </a>
-                                                </li>
-                                            @endauth
-                                        </ul>
                                     </div>
                                     <div class="product__item__text">
                                         <h6>
-                                            <a href="{{ route('Product_customer.user.show', ['id' => $product->id . '-' . Str::random(10)]) }}">
+                                            <a href="{{ route('product.show', $product->slug) }}?source={{ Str::random(10) }}">
                                                 {{ \Illuminate\Support\Str::limit($product->name, 20, '...') }}
                                             </a>
                                         </h6>
-                                        <h5>Rp{{ number_format($product->harga_tayang, 2) }}</h5>
+                                        <h5>Rp{{ number_format($product->price, 2) }}</h5>
                                     </div>
                                 </div>
                             </div>
@@ -415,16 +394,12 @@
                             position: relative;
                         }
                     </style>
-
-
-
                     <div class="product__pagination text-center">
-                        <!-- Pagination Elements -->
-                        @for ($i = 1; $i <= $Product->lastPage(); $i++)
-                            @if ($i == $Product->currentPage())
+                        @for ($i = 1; $i <= $products->lastPage(); $i++)
+                            @if ($i == $products->currentPage())
                                 <span class="">{{ $i }}</span>
                             @else
-                                <a href="{{ $Product->url($i) }}">{{ $i }}</a>
+                                <a href="{{ $products->url($i) }}">{{ $i }}</a>
                             @endif
                         @endfor
                     </div>

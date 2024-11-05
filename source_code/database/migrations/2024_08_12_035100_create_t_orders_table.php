@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('t_orders', function (Blueprint $table) {
             $table->id();
             $table->unsignedInteger('user_id'); 
-            $table->foreignId('shipping_service_id')->nullable()->constrained('t_orders_shipping_services')->onDelete('set null');
+            $table->foreignId('shipping_service_id')->nullable()->constrained('t_shipping_services')->onDelete('set null');
             $table->decimal('total', 15, 2);
             $table->string('invoice_number')->nullable();
             $table->string('tracking_number')->nullable();
