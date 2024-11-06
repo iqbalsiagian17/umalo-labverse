@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('t_orders_payments', function (Blueprint $table) {
+        Schema::create('t_payments', function (Blueprint $table) {
             $table->id();
             $table->foreignId('order_id')->constrained('t_orders')->onDelete('cascade');
             $table->enum('status', ['pending', 'pading', 'paid', 'failed', 'refunded', 'partially_refunded']);
@@ -33,6 +33,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('t_ord_payments');
+        Schema::dropIfExists('t_payments');
     }
 };

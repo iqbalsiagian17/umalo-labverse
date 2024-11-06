@@ -10,7 +10,7 @@ class Payment extends Model
 {
     use HasFactory;
 
-    protected $table = 't_ord_payments';
+    protected $table = 't_payments';
 
 
     protected $fillable = [

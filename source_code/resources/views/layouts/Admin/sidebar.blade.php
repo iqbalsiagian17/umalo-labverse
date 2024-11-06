@@ -45,15 +45,40 @@
             <a data-bs-toggle="collapse" href="#tables">
               <i class="fas fa-shopping-cart"></i> 
               <p>Transaksi</p>
+              @php
+                                    // Jumlah pesanan yang belum dilihat
+                                    $unviewedOrdersCount = \App\Models\Order::where('is_viewed', false)->count();
+                                    $unviewedPaymentsCount = \App\Models\Payment::where('is_viewed', false)->count();
+
+                                    $unviewedCount = \App\Models\Order::where('is_viewed', false)->count() + \App\Models\Payment::where('is_viewed', false)->count();
+
+
+                                @endphp
+                                @if ($unviewedCount > 0)
+                                <span class="badge bg-danger">{{ $unviewedCount }}</span>
+                                @endif
                 <span class="caret"></span>
             </a>
             <div class="collapse" id="tables">
                 <ul class="nav nav-collapse">
                     <li>
                         <a href="{{ route('admin.orders.index') }}">
-                            <span class="sub-item">Orderan</span>
+                            <span class="sub-item">Orderan
+                              @if ($unviewedOrdersCount > 0)
+                                    <span class="badge bg-danger">{{ $unviewedOrdersCount }}</span>
+                                @endif
+                            </span>
                         </a>
                     </li>
+                    <li>
+                      <a href="{{ route('admin.payments.index') }}">
+                          <span class="sub-item">Payment
+                                @if ($unviewedPaymentsCount > 0)
+                                    <span class="badge bg-danger">{{ $unviewedPaymentsCount }}</span>
+                                @endif
+                          </span>
+                      </a>
+                  </li>
                 </ul>
             </div>
         </li>

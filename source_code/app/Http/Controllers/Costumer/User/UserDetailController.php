@@ -10,22 +10,26 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\DB;
+
 
 class UserDetailController extends Controller
 {
     public function show()
     {
         $user = Auth::user();
-        $userDetail = $user->userDetail;
-        $userAddresses = $user->addresses; // This should return a collection, not null
-
-        if (!$userDetail) {
+        $userAddresses = $user->userAddresses ?: collect(); // Ensure it's a collection
+    
+        // Check if userAddresses is empty
+        if ($userAddresses->isEmpty()) {
             return redirect()->route('user.create')
                 ->with('warning', 'Please complete your details.');
         }
-
-        return view('customer.user.show', compact('userDetail', 'user', 'userAddresses'));
+    
+        return view('customer.user.show', compact('user', 'userAddresses'));
     }
+
+
 
 
     public function create()
@@ -37,103 +41,124 @@ class UserDetailController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'no_telepone' => 'required|string|max:15',
-            'alamat' => 'required|string',
-            'kota' => 'required|string',
-            'provinsi' => 'required|string',
-            'kode_pos' => 'required|string|size:5',
-            'lahir' => 'required|date',
-            'jenis_kelamin' => 'required|in:laki-laki,perempuan',
+            'address' => 'required|string',
+            'recipient_name' => 'required|string',
+            'phone_number' => 'required|string|max:15',
+            'no_telephone' => 'required|string|max:15',
+            'address_label' => 'required|string',
+            'is_active' => 'boolean',
+            'city' => 'required|string',
+            'province' => 'required|string',
+            'postal_code' => 'required|string|size:5',
+            'perusahaan' => 'nullable|string',
+            'additional_info' => 'nullable|string',
         ]);
 
-        $userDetail = new UserDetail([
-            'user_id' => Auth::id(),
-            'no_telepone' => $request->get('no_telepone'),
-            'perusahaan' => $request->get('perusahaan'),
-            'lahir' => $request->get('lahir'),
-            'jenis_kelamin' => $request->get('jenis_kelamin'),
+        $userId = Auth::id();
+
+        // Update data langsung di tabel t_users
+        DB::table('t_users')->where('id', $userId)->update([
+            'phone_number' => $request->get('no_telephone'),
+            'company' => $request->get('perusahaan'),
         ]);
 
-        $userAddress = new UserAddress([
-            'user_id' => Auth::id(),
-            'alamat' => $request->get('alamat'),
-            'kota' => $request->get('kota'),
-            'provinsi' => $request->get('provinsi'),
-            'kode_pos' => $request->get('kode_pos'),
-            'tambahan' => $request->get('tambahan'),
-            'status' => 'aktif', // Default status
+        // Insert data alamat baru ke tabel t_user_addresses
+        DB::table('t_user_addresses')->insert([
+            'user_id' => $userId,
+            'address_label' => $request->get('address_label'),
+            'recipient_name' => $request->get('recipient_name'),
+            'phone_number' => $request->get('phone_number'),
+            'is_active' => (bool) true,
+            'address' => $request->get('address'),
+            'city' => $request->get('city'),
+            'province' => $request->get('province'),
+            'postal_code' => $request->get('postal_code'),
+            'additional_info' => $request->get('additional_info'),
+            'created_at' => now(),
+            'updated_at' => now(),
         ]);
-        $userAddress->save();
-
-        $userDetail->save();
 
         return redirect()->route('user.show')->with('success', 'Detail has been added');
     }
 
     public function edit()
     {
-        $userDetail = Auth::user()->userDetail;
-        $userAddress = Auth::user()->addresses->where('status', 'aktif')->first(); // Get the first active address
+        $user = Auth::user();
+        $userAddress = $user->addresses->where('is_active', true)->first(); // Ambil alamat pertama yang aktif
 
-        if (!$userDetail) {
+        // Jika pengguna tidak memiliki alamat aktif, arahkan ke halaman pengisian alamat
+        if (!$userAddress) {
             return redirect()->route('user.create') // Menggunakan nama rute yang benar
-                ->with('warning', 'Please complete your details.');
+                ->with('warning', 'Please complete your address details.');
         }
 
-        return view('customer.user.edit', compact('userDetail','userAddress'));
+        return view('customer.user.edit', compact('user', 'userAddress'));
     }
+
 
     public function update(Request $request)
     {
         $request->validate([
-            'no_telepone' => 'required|string|max:15',
-            'alamat' => 'required|string',
-            'kota' => 'required|string',
-            'provinsi' => 'required|string',
-            'kode_pos' => 'required|string|size:5',
+            'phone_number' => 'required|string|max:15',
+            'no_telephone' => 'required|string|max:15',
+            'address_label' => 'required|string',
+            'recipient_name' => 'required|string',
+            'is_active' => 'boolean',
+            'additional_info' => 'nullable|string',
+            'address' => 'required|string',
+            'city' => 'required|string',
+            'province' => 'required|string',
+            'postal_code' => 'required|string|size:5',
             'lahir' => 'required|date',
             'jenis_kelamin' => 'required|in:laki-laki,perempuan',
+            'company' => 'nullable|string',
         ]);
-
-        $userDetail = Auth::user()->userDetail;
-
-        if (!$userDetail) {
-            return redirect()->route('user-detail.create')
-                ->with('warning', 'Please complete your details.');
-        }
-
-        $userDetail->update([
-            'no_telepone' => $request->get('no_telepone'),
-            'perusahaan' => $request->get('perusahaan'),
-            'lahir' => $request->get('lahir'),
-            'jenis_kelamin' => $request->get('jenis_kelamin'),
+    
+        $userId = Auth::id();
+    
+        // Update detail pengguna langsung di tabel t_users
+        DB::table('t_users')->where('id', $userId)->update([
+            'phone_number' => $request->get('no_telephone'),
+            'company' => $request->get('company'),
         ]);
-
-        $userAddress = Auth::user()->address;
-        if ($userAddress) {
-            $userAddress->update([
-                'alamat' => $request->get('alamat'),
-                'kota' => $request->get('kota'),
-                'provinsi' => $request->get('provinsi'),
-                'kode_pos' => $request->get('kode_pos'),
-                'tambahan' => $request->get('tambahan'),
-                'status' => 'aktif', // Keep the status active
+    
+        // Perbarui atau buat data alamat pengguna
+        $existingAddress = DB::table('t_user_addresses')->where('user_id', $userId)->first();
+        if ($existingAddress) {
+            // Update jika alamat sudah ada
+            DB::table('t_user_addresses')->where('user_id', $userId)->update([
+                'address' => $request->get('address'),
+                'address_label' => $request->get('address_label'),
+                'recipient_name' => $request->get('recipient_name'),
+                'phone_number' => $request->get('phone_number'),
+                'is_active' => $request->get('is_active'),
+                'city' => $request->get('city'),
+                'province' => $request->get('province'),
+                'postal_code' => $request->get('postal_code'),
+                'additional_info' => $request->get('additional_info'),
+                'updated_at' => now(),
             ]);
         } else {
-            // Create a new address if it doesn't exist
-            UserAddress::create([
-                'user_id' => Auth::id(),
-                'alamat' => $request->get('alamat'),
-                'kota' => $request->get('kota'),
-                'provinsi' => $request->get('provinsi'),
-                'kode_pos' => $request->get('kode_pos'),
-                'tambahan' => $request->get('tambahan'),
-                'status' => 'aktif',
+            // Insert jika alamat belum ada
+            DB::table('t_user_addresses')->insert([
+                'user_id' => $userId,
+                'address_label' => $request->get('address_label'),
+                'recipient_name' => $request->get('recipient_name'),
+                'phone_number' => $request->get('phone_number'),
+                'is_active' => $request->get('is_active'),
+                'address' => $request->get('address'),
+                'city' => $request->get('city'),
+                'province' => $request->get('province'),
+                'postal_code' => $request->get('postal_code'),
+                'additional_info' => $request->get('additional_info'),
+                'created_at' => now(),
+                'updated_at' => now(),
             ]);
         }
-
+    
         return redirect()->route('user.show')->with('success', 'Detail has been updated');
     }
+
 
     public function createPassword(Request $request)
     {
@@ -231,11 +256,15 @@ public function uploadProfilePhoto(Request $request)
     public function updateAddress(Request $request)
     {
         $request->validate([
-            'alamat' => 'required|string',
-            'kota' => 'required|string',
-            'provinsi' => 'required|string',
-            'kode_pos' => 'required|string|size:5',
-            'tambahan' => 'nullable|string',
+            'address' => 'required|string',
+            'address_label' => 'required|string',
+            'recipient_name' => 'required|string',
+            'phone_number' => 'required|string|max:15',
+            'is_active' => 'required|boolean',
+            'city' => 'required|string',
+            'province' => 'required|string',
+            'postal_code' => 'required|string|size:5',
+            'additional_info' => 'nullable|string',
         ]);
 
         $userAddress = Auth::user()->address;
@@ -246,12 +275,15 @@ public function uploadProfilePhoto(Request $request)
         }
 
         $userAddress->update([
-            'alamat' => $request->get('alamat'),
-            'kota' => $request->get('kota'),
-            'provinsi' => $request->get('provinsi'),
-            'kode_pos' => $request->get('kode_pos'),
-            'tambahan' => $request->get('tambahan'),
-            'status' => 'aktif', // Keep the status active
+            'address' => $request->get('address'),
+            'address_label' => $request->get('address_label'),
+            'recipient_name' => $request->get('recipient_name'),
+            'phone_number' => $request->get('phone_number'),
+            'is_active' => $request->get('is_active'),
+            'city' => $request->get('city'),
+            'province' => $request->get('province'),
+            'postal_code' => $request->get('postal_code'),
+            'additional_info' => $request->get('additional_info'),
         ]);
 
         return redirect()->route('user.show')->with('success', 'Address has been updated successfully.');
@@ -261,17 +293,24 @@ public function uploadProfilePhoto(Request $request)
 {
     $user = Auth::user();
 
-    // Deactivate all addresses for the user
-    UserAddress::where('user_id', $user->id)->update(['status' => 'tidak aktif']);
-
-    // Find the specific address by id and toggle its status
+    // Temukan alamat spesifik berdasarkan id
     $address = UserAddress::where('user_id', $user->id)->findOrFail($id);
 
-    $address->status = 'aktif';
+    // Periksa status saat ini dan toggle
+    $address->is_active = !$address->is_active;
     $address->save();
+
+    // Jika alamat diaktifkan, nonaktifkan alamat lainnya
+    if ($address->is_active) {
+        UserAddress::where('user_id', $user->id)
+            ->where('id', '!=', $id)
+            ->update(['is_active' => false]);
+    }
 
     return redirect()->back()->with('success', 'Address status updated successfully.');
 }
+
+
 
 public function createAddress()
 {
@@ -281,11 +320,15 @@ public function createAddress()
 public function storeAddress(Request $request)
 {
     $request->validate([
-        'alamat' => 'required|string',
-        'kota' => 'required|string',
-        'provinsi' => 'required|string',
-        'kode_pos' => 'required|string|size:5',
-        'tambahan' => 'nullable|string',
+        'address' => 'required|string',
+        'address_label' => 'required|string',  
+        'recipient_name' => 'required|string',
+        'phone_number' => 'required|string|max:15',
+        'is_active' => 'required|boolean',
+        'city' => 'required|string',
+        'province' => 'required|string',
+        'postal_code' => 'required|string|size:5',
+        'additional_info' => 'nullable|string',
     ]);
 
     // Deactivate existing addresses
@@ -294,19 +337,18 @@ public function storeAddress(Request $request)
     // Create a new address and set it as active
     UserAddress::create([
         'user_id' => Auth::id(),
-        'alamat' => $request->get('alamat'),
-        'kota' => $request->get('kota'),
-        'provinsi' => $request->get('provinsi'),
-        'kode_pos' => $request->get('kode_pos'),
-        'tambahan' => $request->get('tambahan'),
-        'status' => 'aktif',
+        'address' => $request->get('address'),
+        'address_label' => $request->get('address_label'),
+        'recipient_name' => $request->get('recipient_name'),
+        'phone_number' => $request->get('phone_number'),
+        'is_active' => $request->get('is_active'),
+        'city' => $request->get('city'),
+        'province' => $request->get('province'),
+        'postal_code' => $request->get('postal_code'),
+        'additional_info' => $request->get('additional_info'),
     ]);
 
     return redirect()->route('user.show')->with('success', 'New address has been added.');
 }
-
-
-
-
 
 }

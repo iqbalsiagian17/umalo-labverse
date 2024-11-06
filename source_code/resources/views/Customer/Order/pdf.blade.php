@@ -83,17 +83,40 @@
             font-size: 14px;
         }
 
-        .invoice-table th,
-        .invoice-table td {
-            border: 1px solid #000;
-            padding: 8px;
-            text-align: left;
-        }
+        .invoice-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 20px;
+        font-size: 14px;
+    }
 
-        .invoice-table th {
-            background-color: #f2f2f2;
-            text-transform: uppercase;
-        }
+    .invoice-table th,
+    .invoice-table td {
+        border: 1px solid #000;
+        padding: 8px;
+        text-align: left;
+    }
+
+    .invoice-table th {
+        background-color: #f2f2f2;
+        text-transform: uppercase;
+        font-weight: bold;
+        text-align: center;
+    }
+
+    .invoice-table td {
+        text-align: right;
+    }
+
+    .invoice-table td:first-child,
+    .invoice-table td:nth-child(2) {
+        text-align: left;
+    }
+
+    .invoice-table .total-row {
+        font-weight: bold;
+        background-color: #f9f9f9;
+    }
 
         .payment-info {
             margin-top: 20px;
@@ -219,26 +242,26 @@
 
 @php
     // Find the active address from the collection of userAddresses
-    $activeAddress = $userAddresses->firstWhere('status', 'aktif');
+    $activeAddress = $userAddresses->firstWhere('is_active', '1');
 @endphp
 
 <div class="content">
     <p style="margin: 0;">Billed To:</p>
-    <p style="margin: 0;"><strong>{{ $userDetail->perusahaan }}</strong></p>
+    <p style="margin: 0;"><strong>{{ $user->company }}</strong></p>
     @if ($activeAddress)
         <p style="margin: 0;">
-            {{ $activeAddress->alamat }},
-            {{ $activeAddress->kota }},
-            {{ $activeAddress->provinsi }}
-            {{ $activeAddress->kode_pos }}
+            {{ $activeAddress->address }},
+            {{ $activeAddress->city }},
+            {{ $activeAddress->province }}
+            {{ $activeAddress->postal_code }}
         </p>
     @else
         <p style="margin: 0;">No active address available.</p>
     @endif
     <br>
-    <p style="margin: 0;">Dear {{ $userDetail->perusahaan }},</p><br>
+    <p style="margin: 0;">Dear {{ $user->company }},</p><br>
     <p style="margin: 0;">
-        Based on Purchase Order No. {{ $order->id }}/{{ $companyAbbreviation }}-PROC/{{ $romanMonth }}/{{ $order->created_at->format('Y') }},
+        Based on Purchase Order No. {{ $order->id }}/{{ $order->created_at->format('Y') }},
         PT. Arkamaya Guna Saharsa submits the invoice:
     </p>
 </div>
@@ -253,50 +276,22 @@
             <th>Description</th>
             <th>Qty</th>
             <th>Unit Price</th>
-            <th>Total Price</th>
+            <th>Total</th>
         </tr>
     </thead>
-
     <tbody>
-        @foreach ($order->orderItems as $index => $item)
+        @foreach ($order->items as $index => $item)
             <tr>
                 <td>{{ $index + 1 }}</td>
-                <td>{{ $item->Product->nama }}</td>
-                <td>{{ $item->jumlah }}</td>
-                <td>Rp {{ number_format($item->harga, 0, ',', '.') }}</td>
-                <td>Rp {{ number_format($item->harga * $item->jumlah, 0, ',', '.') }}</td>
+                <td>{{ $item->product->name }}</td>
+                <td>{{ $item->quantity }}</td>
+                <td>Rp {{ number_format($item->price, 0, ',', '.') }}</td>
+                <td>Rp {{ number_format($item->total, 0, ',', '.') }}</td>
             </tr>
         @endforeach
-        @if (in_array($order->status, ['Diterima', 'Packing', 'Pengiriman', 'Selesai']) &&
-                $order->orderItems->contains(function ($item) {
-                    return $item->Product->nego == 'ya';
-                }))
-            <tr>
-                <td colspan="4" style="text-align:right;"><strong>Subtotal Sebelum Nego</strong></td>
-                <td>Rp {{ number_format($order->harga_total, 0, ',', '.') }}</td>
-            </tr>
-        @endif
-        @if (
-            $order->orderItems->contains(function ($item) {
-                return $item->Product->nego == 'ya';
-            }) && $order->harga_setelah_nego)
-            <tr>
-                <td colspan="4" style="text-align:right;"><strong>Harga Setelah Nego</strong></td>
-                <td>Rp {{ number_format($order->harga_setelah_nego, 0, ',', '.') }}</td>
-            </tr>
-        @endif
-
-        <tr>
-            <td colspan="4" style="text-align:right;"><strong>Subtotal</strong></td>
-            <td>Rp {{ number_format($order->harga_setelah_nego ?? $order->harga_total, 0, ',', '.') }}</td>
-        </tr>
-        </tr>
-        <tr>
+        <tr class="total-row">
             <td colspan="4" style="text-align:right;"><strong>Total Price</strong></td>
-            <td>
-                Rp
-                {{ number_format($order->harga_setelah_nego ?? $order->harga_total, 0, ',', '.') }}
-            </td>
+            <td style="text-align: right;">Rp {{ number_format($order->total, 0, ',', '.') }}</td>
         </tr>
     </tbody>
 </table>

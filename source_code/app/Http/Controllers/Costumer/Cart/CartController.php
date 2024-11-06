@@ -41,6 +41,11 @@ class CartController extends Controller
     // Get the product
     $product = Product::findOrFail($productId);
 
+    // Cek jika stok produk kurang dari 1 (stok nol atau kurang)
+    if ($product->stock <= 0) {
+        return response()->json(['error' => 'Product is out of stock.'], 400);
+    }
+
     // Check if the stock is available
     if ($product->stock < $quantity) {
         return response()->json(['error' => 'Not enough stock available.'], 400);
@@ -72,10 +77,6 @@ class CartController extends Controller
         ]);
     }
 
-    // Update product stock
-    $product->stock -= $quantity;
-    $product->save();
-
     return response()->json(['success' => 'Product added to cart.']);
     }
 
@@ -104,6 +105,35 @@ class CartController extends Controller
         }
     }
     
+    public function updateQuantity(Request $request)
+    {
+        $cartItem = Cart::find($request->id);
+
+        if ($cartItem) {
+            $cartItem->quantity = $request->quantity;
+            $cartItem->save();
+
+            // Calculate subtotal and total
+            $price = $cartItem->product->discount_price ?? $cartItem->product->price;
+            $subtotal = $price * $cartItem->quantity;
+
+            $total = Cart::where('user_id', auth()->id())->get()->sum(function($item) {
+                return ($item->product->discount_price ?? $item->product->price) * $item->quantity;
+            });
+
+            return response()->json([
+                'success' => true,
+                'subtotal' => $subtotal,
+                'total' => $total
+            ]);
+        }
+
+        return response()->json([
+            'success' => false,
+            'message' => 'Failed to update cart item.'
+        ]);
+    }
+
 
     
     

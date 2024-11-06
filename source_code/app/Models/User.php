@@ -70,9 +70,9 @@ class User extends Authenticatable
         return $this->hasMany(Order::class);
     }
 
-    public function addresses()
+    public function userAddresses()
     {
-        return $this->hasMany(UserAddress::class, 'user_id');
+        return $this->hasMany(UserAddress::class); // Sesuaikan dengan nama model alamat pengguna Anda
     }
 
     public function wishlist()

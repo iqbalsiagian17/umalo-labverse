@@ -20,9 +20,11 @@ use App\Http\Controllers\Admin\Transaksi\TransaksiController;
 use App\Http\Controllers\Admin\User\UserController;
 use App\Http\Controllers\Costumer\Cart\CartController;
 use App\Http\Controllers\Costumer\Order\OrderHandleCustomerController;
+use App\Http\Controllers\Costumer\Payment\PaymentHandleCustomerController;
 use App\Http\Controllers\Costumer\QnA\QnaController;
 use App\Http\Controllers\Costumer\Shop\ShopController;
 use App\Http\Controllers\Costumer\Wishlist\WishlistController;
+use App\Http\Controllers\Costumer\Review\ReviewCustomerController;
 use App\Http\Controllers\LanguageController;
 
 Auth::routes();
@@ -69,16 +71,23 @@ Route::middleware(['auth', 'user-access:costumer'])->group(function () {
     Route::get('/customer/cart', [CartController::class, 'index'])->name('cart.show');
     Route::post('/customer/cart/add', [CartController::class, 'addToCart'])->name('cart.add');
     Route::delete('/customer/cart/remove/{id}', [CartController::class, 'removeFromCart'])->name('cart.remove');
+    Route::post('/cart/update', [CartController::class, 'updateQuantity'])->name('cart.update');
 
     
     //order
     Route::post('/checkout', [OrderHandleCustomerController::class, 'checkout'])->name('customer.checkout');
-    Route::post('/payment/{orderId}', [OrderHandleCustomerController::class, 'submitPaymentProof'])->name('customer.payment.submit');
+    Route::post('/payment/{orderId}', [PaymentHandleCustomerController::class, 'submitPaymentProof'])->name('customer.payment.submit');
     Route::get('/order/{orderId}', [OrderHandleCustomerController::class, 'showOrder'])->name('customer.order.show');
     Route::put('/orders/{order}/complete', [OrderHandleCustomerController::class, 'completeOrder'])->name('customer.complete.order');
     Route::post('/orders/{order}/complaint', [OrderHandleCustomerController::class, 'submitComplaint'])->name('customer.complaint.submit');
     Route::put('/orders/{order}/cancel', [OrderHandleCustomerController::class, 'cancelOrder'])->name('customer.order.cancel');
     Route::get('/customer/orders', [OrderHandleCustomerController::class, 'index'])->name('customer.orders.index');
+
+
+    //
+    Route::get('/product/{productId}/review', [ReviewCustomerController::class, 'createReview'])->name('review.create');
+    Route::post('/product/{productId}/review', [ReviewCustomerController::class, 'storeReview'])->name('review.store');
+
 
 });
 
@@ -117,13 +126,13 @@ Route::middleware(['auth', 'user-access:admin'])->group(function () {
     Route::put('/admin/orders/{order}/packing', [OrderHandleAdminController::class, 'markAsPacking'])->name('admin.mark.packing');
     Route::put('/admin/orders/{order}/shipped', [OrderHandleAdminController::class, 'markAsShipped'])->name('admin.orders.shipped');
     Route::put('admin/orders/{order}/payment', [OrderHandleAdminController::class, 'allowPayment'])->name('customer.orders.payment');
+    Route::put('/admin/orders/{order}/cancel', [OrderHandleAdminController::class, 'cancelOrder'])->name('admin.orders.cancel');
 
 
     Route::get('/admin/payments', [PaymentHandleAdminController::class, 'index'])->name('admin.payments.index');
     Route::get('admin/payments/{id}', [PaymentHandleAdminController::class, 'show'])->name('admin.payments.show');
     Route::put('/admin/payments/{payment}/verify', [PaymentHandleAdminController::class, 'verifyPayment'])->name('admin.payments.verify');
     Route::post('admin/payments/{paymentId}/reject', [PaymentHandleAdminController::class, 'rejectPayment'])->name('admin.payments.reject');
-    Route::put('/admin/orders/{order}/cancel', [PaymentHandleAdminController::class, 'cancelOrder'])->name('admin.orders.cancel');
 
 
     Route::prefix('admin/masterdata')->name('admin.masterdata.')->group(function () {

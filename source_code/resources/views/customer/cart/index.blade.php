@@ -31,7 +31,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @php $total = 0; @endphp
+                            @php $total = 0; @endphp 
                             @foreach($cartItems as $cartItem)
                                 @php 
                                     $product = $cartItem->product;
@@ -50,8 +50,9 @@
                                         Rp {{ number_format($price, 0, ',', '.') }}
                                     </td>
                                     <td class="shoping__cart__quantity align-middle text-center">
-                                        <input type="number" name="quantity" value="{{ $cartItem->quantity }}" class="form-control quantity" data-id="{{ $cartItem->id }}" data-max="{{ $product->stock }}" min="1" style="width: 70px; padding: 8px; text-align: center; margin: 0 auto; border-radius: 8px; border: 1px solid #ced4da; box-shadow: 0px 2px 5px rgba(0,0,0,0.1);">
-                                    </td>
+                                        <input type="number" name="quantity" value="{{ $cartItem->quantity }}" class="form-control quantity" data-id="{{ $cartItem->id }}" data-max="{{ $product->stock }}" min="1" style="width: 70px; padding: 8px; text-align: center; margin: 0 auto; border-radius: 8px; border: 1px solid #ced4da; box-shadow: 0px 2px 5px rgba(0,0,0,0.1);"
+                                        onchange="updateQuantity(this)">
+                                    </td>                                    
                                     <td class="shoping__cart__total subtotal align-middle text-center" data-id="{{ $cartItem->id }}">
                                         Rp {{ number_format($subtotal, 0, ',', '.') }}
                                     </td>
@@ -75,15 +76,16 @@
                                     <li>{{ __('messages.total') }} <span id="total">Rp {{ number_format($total, 0, ',', '.') }}</span></li>
                                 </ul>
 
-                                @if(auth()->user()->userDetail)
-                                    <form action="{{ route('cart.checkout') }}" method="POST">
-                                        @csrf
-                                        <button type="submit" class="btn text-white" style="background: #42378C;">{{ __('messages.proceed_to_checkout') }}</button>
-                                    </form>
-                                @else
-                                    <p class="text-danger">{{ __('messages.complete_personal_data') }}</p>
-                                    <a href="{{ route('user.create') }}" class="btn text-white" style="background: #42378C;">{{ __('messages.fill_personal_data') }}</a>
-                                @endif
+                                @if(auth()->user()->userAddresses->isNotEmpty())
+                                <form action="{{ route('customer.checkout') }}" method="POST">
+                                    @csrf
+                                    <button type="submit" class="btn text-white" style="background: #42378C;">{{ __('messages.proceed_to_checkout') }}</button>
+                                </form>
+                            @else
+                                <p class="text-danger">{{ __('messages.complete_address_data') }}</p>
+                                <a href="{{ route('user.create') }}" class="btn text-white" style="background: #42378C;">{{ __('messages.fill_address_data') }}</a>
+                            @endif
+                            
                             </div>
                         </div>
                     </div>
@@ -101,9 +103,43 @@
     </div>
 </section>
 
+<script>
+    function updateQuantity(element) {
+        let quantity = parseInt(element.value);
+        let cartItemId = element.getAttribute('data-id');
+        let maxQuantity = parseInt(element.getAttribute('data-max'));
+        
+        // Ensure quantity does not exceed available stock
+        if (quantity > maxQuantity) {
+            quantity = maxQuantity;
+            element.value = quantity;
+        } else if (quantity < 1) {
+            quantity = 1;
+            element.value = quantity;
+        }
 
+        // AJAX request to update quantity
+        $.ajax({
+            url: '/cart/update', // Define your route here
+            type: 'POST',
+            data: {
+                _token: '{{ csrf_token() }}',
+                id: cartItemId,
+                quantity: quantity
+            },
+            success: function(response) {
+                if(response.success) {
+                    // Update subtotal
+                    document.querySelector(`.subtotal[data-id="${cartItemId}"]`).textContent = 'Rp ' + response.subtotal.toLocaleString();
 
-
-
+                    // Update total
+                    document.getElementById('total').textContent = 'Rp ' + response.total.toLocaleString();
+                } else {
+                    alert(response.message);
+                }
+            }
+        });
+    }
+</script>
 
 @endsection

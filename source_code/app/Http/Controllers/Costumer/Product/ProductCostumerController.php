@@ -9,6 +9,7 @@ use App\Models\Product;
 use Illuminate\Http\Request;
 use App\Models\Order;
 use App\Models\PPN;
+use App\Models\Review;
 use App\Models\SubCategory;
 use Illuminate\Support\Facades\DB;
 
@@ -38,8 +39,13 @@ class ProductCostumerController extends Controller
             })
             ->get();
 
-        return view('customer.product.show', compact('product', 'images', 'averageRating', 'totalRatings', 'relatedProducts', 'isFavorite', 'deliveredOrders'));
-    }
+            $reviewExists = Review::where('user_id', auth()->id())
+            ->where('product_id', $product->id)
+            ->whereIn('order_id', $deliveredOrders->pluck('id'))
+            ->exists();
+
+            return view('customer.product.show', compact('product', 'images', 'averageRating', 'totalRatings', 'relatedProducts', 'isFavorite', 'deliveredOrders', 'reviewExists'));
+        }
 
 
 

@@ -9,10 +9,11 @@ class UserAddress extends Model
 {
     use HasFactory;
 
-    protected $table = 't_user_address';
+    protected $table = 't_user_addresses';
 
     protected $fillable = [
         'user_id',
+        'address_label',
         'recipient_name',
         'phone_number',
         'is_active',
@@ -20,7 +21,5 @@ class UserAddress extends Model
         'city',
         'province',
         'postal_code',
-        'additional_info',
-        'status',
-    ];
+        'additional_info',    ];
 }

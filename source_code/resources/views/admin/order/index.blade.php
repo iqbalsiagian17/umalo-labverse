@@ -89,7 +89,7 @@
                         <tr>
                             <td>{{ $order->id }}</td>
                             <td>
-                                <a href="{{ $order->invoice_number ? route('customer.order.invoice', $order->id) : '#' }}">
+                                <a href="{{ $order->invoice_number ? route('order.generate_pdf', $order->id) : '#' }}">
                                     {{ $order->invoice_number ?? '-' }}
                                 </a>
                             </td>                        

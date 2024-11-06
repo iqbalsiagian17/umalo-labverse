@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('t_user_addresses', function (Blueprint $table) {
             $table->id();
             $table->unsignedInteger('user_id');
+            $table->string('address_label');
             $table->string('recipient_name');
             $table->string('phone_number');
             $table->text('address');

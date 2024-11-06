@@ -117,14 +117,14 @@
         <div class="card-header d-flex justify-content-between align-items-center">
             <h5 class="mb-0">Informasi Pesanan</h5>
             
-            @if($order->status !== 'cancelled' && $order->status !== 'cancelled_by_system' && $order->status !== 'delivered')
+            @if(!in_array($order->status, ['cancelled', 'cancelled_by_system', 'cancelled_by_admin', 'delivered']))
             <form action="{{ route('admin.orders.cancel', $order->id) }}" method="POST" class="mb-0">
                 @csrf
                 @method('PUT')
                 <button type="submit" class="btn btn-danger btn-sm">Batalkan Pesanan</button>
             </form>
-            @endif
-
+        @endif
+        
         </div>
         
         <div class="card-body">
@@ -135,7 +135,7 @@
                 </tr>
                 <tr>
                     <th>Nomor Invoice</th>
-                    <td><a href="{{ route('customer.order.invoice', $order->id) }}" target="_blank">{{ $order->invoice_number }}</a></td>
+                    <td><a href="{{ route('order.generate_pdf', $order->id) }}" target="_blank">{{ $order->invoice_number }}</a></td>
                 </tr>
                 <tr>
                     <th>Total Pembayaran</th>

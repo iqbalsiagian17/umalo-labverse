@@ -19,30 +19,18 @@ class OrderHandleCustomerController extends Controller
     public function showOrder($orderId)
     {
         $order = Order::find($orderId);
-        return view('customer.order.show', compact('order'));
+        return view('customer.order.detail-pesanan', compact('order'));
     }
 
     public function index(Request $request)
     {
         $user = auth()->user();
-
-        // Get the status filter from the request
-        $status = $request->input('status');
-    
         // Fetch orders based on the status filter
-        $orders = Order::where('user_id', auth()->id()) // Fetch only user's orders
-                        ->when($status && $status !== 'semua', function ($query) use ($status) {
-                            $query->where('status', $status);
-                        })
-                        ->orderBy('created_at', 'desc')
-                        ->get();
-    
-            // Count orders with the 'approved' status (Menunggu Pembayaran)
-        $waitingForPaymentCount = Order::where('user_id', auth()->id())
-        ->where('status', 'pending_payment')
-        ->count();
+        $orders = Order::where('user_id', auth()->id())
+            ->orderBy('created_at', 'desc')
+            ->get();
         
-        return view('customer.settings.order.index', compact('orders', 'status','user', 'waitingForPaymentCount'));
+        return view('customer.order.riwayat-pesanan', compact('orders','user'));
     }
 
     public function checkout(Request $request)
@@ -105,51 +93,7 @@ class OrderHandleCustomerController extends Controller
         
     }
 
-    public function submitPaymentProof(Request $request, $orderId)
-    {
-    // Find the order
-    $order = Order::find($orderId);
-
-    // Check if the order is cancelled
-    if ($order->status === Order::STATUS_CANCELLED_BY_SYSTEM) {
-        return back()->with('info', 'Your order has been cancelled due to non-payment.');
-    }
-
-    // Validate the payment proof
-    $request->validate([
-        'payment_proof' => 'required|mimes:jpg,jpeg,png,pdf|max:2048',
-    ]);
-
-    // Store the payment proof in public/payments
-    $fileName = time() . '_' . $request->file('payment_proof')->getClientOriginalName();
-    $request->file('payment_proof')->move(public_path('payments'), $fileName);
-
-
-    DB::beginTransaction();
-    try {
-        // Buat data pembayaran dengan status 'pending'
-        Payment::create([
-            'order_id' => $orderId,
-            'payment_proof' => 'payments/' . $fileName,
-            'status' => Payment::STATUS_PENDING,
-            'peding_at' => now(),
-        ]);
-
-        // Perbarui status pesanan menjadi 'pending_payment'
-        $order->update([
-            'status' => Order::STATUS_PENDING_PAYMENT,
-            'pending_payment_at' => now(),
-        ]);
-
-        DB::commit();
-
-        return back()->with('success', 'Payment proof submitted. Awaiting verification.');
-        
-    } catch (\Exception $e) {
-        DB::rollBack();
-        return back()->with('error', 'Failed to submit payment proof: ' . $e->getMessage());
-    }
-    }
+   
 
     public function completeOrder($orderId)
         {

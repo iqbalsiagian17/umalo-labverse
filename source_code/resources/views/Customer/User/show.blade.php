@@ -52,7 +52,7 @@
 
     <ul class="nav nav-tabs mb-3" id="profileTabs" role="tablist">
         <li class="nav-item" role="presentation">
-            <button class="nav-link active" id="personal-profile-tab" data-bs-toggle="tab" data-bs-target="#personal-profile" type="button" role="tab" aria-controls="personal-profile" aria-selected="true">{{ __('messages.personal_profile') }}</button>
+            <button class="nav-link" id="personal-profile-tab" data-bs-toggle="tab" data-bs-target="#personal-profile" type="button" role="tab" aria-controls="personal-profile" aria-selected="true">{{ __('messages.personal_profile') }}</button>
         </li>
         <li class="nav-item" role="presentation">
             <button class="nav-link" id="address-list-tab" data-bs-toggle="tab" data-bs-target="#address-list" type="button" role="tab" aria-controls="address-list" aria-selected="false">{{ __('messages.address_list') }}</button>
@@ -121,10 +121,8 @@
                             <h4 class="mb-3">{{ __('messages.account_bio') }}</h4>
                             <p><strong>{{ __('messages.name') }}:</strong> {{ $user->name }}</p>
                             <p><strong>{{ __('messages.email') }}:</strong> {{ $user->email }} <span class="badge bg-success">{{ __('messages.verified') }}</span></p>
-                            <p><strong>{{ __('messages.phone_number') }}:</strong> {{ $userDetail->no_telepone }}</p>
-                            <p><strong>{{ __('messages.date_of_birth') }}:</strong> {{ $userDetail->lahir }}</p>
-                            <p><strong>{{ __('messages.gender') }}:</strong> {{ $userDetail->jenis_kelamin }}</p>
-                            <p><strong>{{ __('messages.company') }}:</strong> {{ $userDetail->perusahaan }}</p>
+                            <p><strong>{{ __('messages.phone_number') }}:</strong> {{ $user->phone_number }}</p>
+                            <p><strong>{{ __('messages.company') }}:</strong> {{ $user->company }}</p>
                         </div>
                     </div>
                 </div>
@@ -136,18 +134,19 @@
             <div class="card mb-5 shadow rounded border-0">
                 <div class="card-body">
                     @foreach($userAddresses as $index => $userAddress)
-                    <div class="card p-3 mb-3" style="border: 1px solid {{ $userAddress->status == 'aktif' ? '#28a745' : '#dc3545' }}; background-color: {{ $userAddress->status == 'aktif' ? '#f0fff4' : '#f8d7da' }};">
+                    <div class="card p-3 mb-3" style="border: 1px solid {{ $userAddress->is_active ? '#28a745' : '#dc3545' }}; background-color: {{ $userAddress->is_active ? '#f0fff4' : '#f8d7da' }};">
                         <div class="d-flex justify-content-between">
                             <div>
                                 <h5 class="card-title">
                                     <strong>Alamat {{ $index + 1 }}</strong>
-                                    <span class="badge {{ $userAddress->status == 'aktif' ? 'bg-success text-white' : 'bg-danger text-white' }}">
-                                        {{ $userAddress->status }}
+                                    <span class="badge {{ $userAddress->is_active ? 'bg-success text-white' : 'bg-danger text-white' }}">
+                                        {{ $userAddress->is_active ? 'Aktif' : 'Tidak Aktif' }}
                                     </span>
                                 </h5>
-                                <p class="mb-0">{{ $user->name }}, {{ $userDetail->perusahaan }}</p>
-                                <p class="mb-0">{{ $userDetail->no_telepone }}</p>
-                                <p class="mb-0">{{ $userAddress->alamat }}, {{ $userAddress->kota }}, {{ $userAddress->provinsi }} {{ $userAddress->kode_pos }}, {{ $userAddress->tambahan }}</p>
+                                <p class="mb-0 font-weight-bold">{{ $userAddress->address_label }}</p>
+                                <p class="mb-0">{{ $userAddress->recipient_name}}</p>
+                                <p class="mb-0">{{ $userAddress->phone_number }}</p>
+                                <p class="mb-0">{{ $userAddress->address }}, {{ $userAddress->city }}, {{ $userAddress->province }} {{ $userAddress->postal_code }}, {{ $userAddress->additional_info }}</p>
                             </div>
                             <div>
                                 <i class="bi bi-check-circle" style="color: #28a745; font-size: 1.5rem;"></i>
@@ -158,11 +157,12 @@
                             <a href="{{ route('user.editAddress', $userAddress->id) }}" class="btn text-white" style="background: #42378C;">{{ __('messages.edit_address') }}</a>
                             <form method="POST" action="{{ route('user.toggleAddressStatus', $userAddress->id) }}" style="margin-left: 10px;">
                                 @csrf
-                                <button type="submit" class="btn {{ $userAddress->status == 'aktif' ? 'btn-danger' : 'btn-success' }}">
-                                    {{ $userAddress->status == 'aktif' ? __('messages.deactivate') : __('messages.activate') }}
+                                <button type="submit" class="btn {{ $userAddress->is_active ? 'btn-danger' : 'btn-success' }}">
+                                    {{ $userAddress->is_active ? __('messages.deactivate') : __('messages.activate') }}
                                 </button>
                             </form>
                         </div>
+                        
                     </div>
                     @endforeach
 
@@ -254,4 +254,35 @@
         }
     });
 </script>
+
+<script>
+    // Simpan tab yang aktif ke localStorage
+    document.querySelectorAll('.nav-link').forEach(function(tab) {
+        tab.addEventListener('click', function() {
+            localStorage.setItem('activeTab', tab.getAttribute('data-bs-target'));
+        });
+    });
+
+    // Ambil tab yang tersimpan dari localStorage saat halaman dimuat
+    document.addEventListener('DOMContentLoaded', function() {
+        const activeTab = localStorage.getItem('activeTab');
+        if (activeTab) {
+            const tabToActivate = document.querySelector(activeTab);
+            if (tabToActivate) {
+                // Hapus kelas 'show active' dari semua tab dan link
+                document.querySelectorAll('.tab-pane').forEach(function(tabPane) {
+                    tabPane.classList.remove('show', 'active');
+                });
+                document.querySelectorAll('.nav-link').forEach(function(navLink) {
+                    navLink.classList.remove('active');
+                });
+
+                // Aktifkan tab yang diambil dari localStorage
+                tabToActivate.classList.add('show', 'active');
+                document.querySelector(`button[data-bs-target='${activeTab}']`).classList.add('active');
+            }
+        }
+    });
+</script>
+
 @endsection

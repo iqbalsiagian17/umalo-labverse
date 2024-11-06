@@ -68,12 +68,39 @@
                         </div>
                     </div>
                 </div>
-            <div class="col-lg-6 col-md-6">
-                <div class="product__details__text">
+
+                <style>
+                    /* Efek muted untuk produk tanpa stok */
+                    .muted {
+                        opacity: 0.5; /* Mengurangi opacity untuk memberi efek muted */
+                        pointer-events: none; /* Menonaktifkan klik pada elemen */
+                    }
+                
+                    .muted .product__details__text h3, 
+                    .muted .product__details__price, 
+                    .muted .primary-btn,
+                    .muted .heart-icon {
+                        color: #999999; /* Warna abu-abu untuk produk yang tidak tersedia */
+                    }
+                
+                    .muted .primary-btn {
+                        background-color: #ddd; /* Warna latar untuk tombol disabled */
+                        cursor: not-allowed; /* Mengganti kursor menjadi tanda tidak bisa diklik */
+                    }
+
+                    .stock-habis {
+                        display: block;
+                        margin-top: 10px;
+                        font-size: 18px;
+                        color: #ff0000; /* Warna merah untuk pesan */
+                        font-weight: bold;
+                    }
+                </style>
+
+
+                <div class="col-lg-6 col-md-6">
+                    <div class="product__details__text">
                     <h3>{{ $product->name }}
-                        <button type="button" class="btn primary-btn" data-bs-toggle="modal" data-bs-target="#shareModal" style="width: 45px; height: 45px; border-radius: 50%; padding: 0;">
-                            <i class="fas fa-share-alt"></i>
-                        </button>
                     </h3>
                     <div class="product__details__price">
                         <div class="product__details__price">
@@ -101,15 +128,13 @@
                         @else
                             {{ __('messages.contact_admin_for_price') }}
                         @endif
-
-
                         </div>
 
 
                     </div>
 
 
-                    <div class="product__details__quantity">
+                    <div class="product__details__quantity {{ $product->stock == 0 ? 'muted' : '' }}">
                         <div class="quantity">
                             <div class="pro-qty">
                                 <span class="dec qtybtn">-</span>
@@ -120,13 +145,22 @@
                     </div>
                     
                     @auth
-                    <a href="#" class="primary-btn add-to-cart-btn" id="add-to-cart" data-id="{{ $product->id }}">{{ __('messages.add') }}</a>
-                    @else
-                    <a href="{{ route('login') }}" class="primary-btn add-to-cart-btn">{{ __('messages.add') }}</a>
-                    @endauth
-                    <a href="#" class="heart-icon" data-product-id="{{ $product->id }}">
-                        <i class="fas fa-heart {{ $isFavorite ? 'favorite' : '' }}"></i>
-                    </a>                 
+                    <a href="#" class="primary-btn add-to-cart-btn {{ $product->stock == 0 ? 'muted' : '' }}" id="add-to-cart" data-id="{{ $product->id }}" {{ $product->stock == 0 ? 'disabled' : '' }}>
+                        {{ $product->stock == 0 ? 'Stock Habis :(' : __('messages.add') }}
+                    </a>
+                @else
+                    <a href="{{ route('login') }}" class="primary-btn add-to-cart-btn {{ $product->stock == 0 ? 'muted' : '' }}" {{ $product->stock == 0 ? 'disabled' : '' }}>
+                        {{ $product->stock == 0 ? 'Stock Habis :(' : __('messages.add') }}
+                    </a>
+                @endauth
+                
+                <a href="#" class="heart-icon" data-product-id="{{ $product->id }}">
+                    <i class="fas fa-heart {{ $isFavorite ? 'favorite' : '' }}"></i>
+                </a>     
+
+                <a href="#" class="heart-icon" data-bs-toggle="modal" data-bs-target="#shareModal">
+                    <i class="fas fa-share-alt"></i>
+                </a>
                         <style>
                         .heart-icon {
                             color: gray;
@@ -540,26 +574,28 @@
                 <div class="product__details__tab">
                     <ul class="nav nav-tabs" role="tablist">
                         <li class="nav-item">
-                            <a class="nav-link active" data-toggle="tab" href="#tabs-1" role="tab"
-                               aria-selected="true">{{ __('messages.specifications') }}</a>
+                            <a class="nav-link" data-toggle="tab" href="#tabs-1" role="tab"
+                               aria-selected="true" id="specifications-tab">{{ __('messages.specifications') }}</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" data-toggle="tab" href="#tabs-2" role="tab"
-                               aria-selected="false">{{ __('messages.additional_information') }}</a>
+                               aria-selected="false" id="additional-info-tab">{{ __('messages.additional_information') }}</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" data-toggle="tab" href="#tabs-3" role="tab"
-                               aria-selected="false">{{ __('messages.review') }}</a>
+                               aria-selected="false" id="review-tab">{{ __('messages.review') }}</a>
                         </li>
                     </ul>
+
+                    
                     <div class="tab-content">
-                        <div class="tab-pane active" id="tabs-1" role="tabpanel">
+                        <div class="tab-pane fade" id="tabs-1" role="tabpanel">
                             <div class="product__details__tab__desc">
                                 <h6>{{ __('messages.product_information') }}</h6>
                                 <p>{!! $product->product_specifications !!}</p>
                             </div>
                         </div>
-                        <div class="tab-pane" id="tabs-2" role="tabpanel">
+                        <div class="tab-pane fade" id="tabs-2" role="tabpanel">
                             <div class="product__details__tab__desc">
                                 <table class="table table-striped">
                                     <tbody>
@@ -675,26 +711,22 @@
                                 </table>
                             </div>
                         </div>
-                        <div class="tab-pane" id="tabs-3" role="tabpanel">
+                        <div class="tab-pane fade" id="tabs-3" role="tabpanel">
                             <div class="product__details__tab__desc">
                                 <h6>Ulasan</h6>
-
                                 <!-- Display existing reviews or a message if no reviews are available -->
                                 @if ($product->reviews->isNotEmpty())
                                     @foreach ($product->reviews as $review)
-                                        <div
-                                            class="review-item d-flex align-items-start mb-4 p-3 shadow-sm bg-light rounded">
+                                        <div class="review-item d-flex align-items-start mb-4 p-3 shadow-sm bg-light rounded">
                                             <div class="review-avatar mr-3">
                                                 <img src="{{ $review->user->foto_profile ? asset($review->user->foto_profile) : asset('assets/images/logo.png') }}"
-                                                    alt="Avatar" class="rounded-circle border" width="60"
-                                                    height="60" style="object-fit: cover;">
+                                                    alt="Avatar" class="rounded-circle border" width="60" height="60" style="object-fit: cover;">
                                             </div>
                                             <div class="review-content">
                                                 <h6 class="mb-1 font-weight-bold text-primary">
                                                     {{ $review->user->name }}
                                                     @if ($review->user->userDetail && $review->user->userDetail->perusahaan)
-                                                        <small class="text-muted">-
-                                                            {{ $review->user->userDetail->perusahaan }}</small>
+                                                        <small class="text-muted">- {{ $review->user->userDetail->perusahaan }}</small>
                                                     @endif
                                                 </h6>
                                                 <div class="mb-2">
@@ -707,44 +739,7 @@
                                                     @endfor
                                                 </div>
                                                 <p class="text-secondary mb-2">{{ $review->content }}</p>
-
-                                               <!-- Review Images -->
-                                            @if (is_array($decodedImages = json_decode($review->images, true)) && !empty($decodedImages))
-                                                <div class="review-images mb-3">
-                                                    @foreach ($decodedImages as $imageIndex => $image)
-                                                        <a href="#" data-toggle="modal" data-target="#imageModal{{ $review->id }}-{{ $imageIndex }}">
-                                                            <img src="{{ asset('storage/' . $image) }}" alt="Review Image" class="img-thumbnail mr-2 mb-2" width="100" height="100" style="object-fit: cover;">
-                                                        </a>
-
-                                                        <!-- Modal -->
-                                                        <div class="modal fade" id="imageModal{{ $review->id }}-{{ $imageIndex }}" tabindex="-1" aria-labelledby="imageModalLabel{{ $review->id }}-{{ $imageIndex }}" aria-hidden="true">
-                                                            <div class="modal-dialog modal-dialog-centered">
-                                                                <div class="modal-content">
-                                                                    <div class="modal-body">
-                                                                        <img src="{{ asset('storage/' . $image) }}" class="img-fluid" alt="Review Image">
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    @endforeach
-                                                </div>
-                                            @endif
-
-                                                <!-- Review Videos -->
-                                                @if (is_array($decodedVideos = json_decode($review->videos, true)) && !empty($decodedVideos))
-                                                    <div class="review-videos mb-3">
-                                                        @foreach ($decodedVideos as $video)
-                                                            <video width="40%" height="auto" controls class="mb-2">
-                                                                <source src="{{ asset('storage/' . $video) }}" type="video/mp4">
-                                                                Your browser does not support the video tag.
-                                                            </video>
-                                                        @endforeach
-                                                    </div>
-                                                @endif
-
-
-                                                <small
-                                                    class="text-muted">{{ $review->created_at->format('d M Y, H:i') }}</small>
+                                                <small class="text-muted">{{ $review->created_at->format('d M Y, H:i') }}</small>
                                             </div>
                                         </div>
                                     @endforeach
@@ -752,21 +747,23 @@
                                     <p class="text-muted">Belum ada ulasan untuk Product ini</p>
                                 @endif
 
+
                                 <!-- Review Form -->
-                                @foreach ($deliveredOrders as $order)
-                                @if ($order->status === \App\Models\Order::STATUS_DELIVERED)
-                                    @if ($product->reviews->where('user_id', auth()->id())->isEmpty())
-                                        <div class="card shadow-sm border-0 mb-4">
-                                            <div class="card-header text-white" style="background-color: #416bbf;">
-                                                <h5 class="mb-0">Tinggalkan Ulasan</h5>
-                                            </div>
-                                            <div class="card-body">
-                                                <form action="{{ route('order.submitReview', $order->id) }}" method="POST" enctype="multipart/form-data">
+                                <div class="card shadow-sm border-0 mb-4">
+                                    <div class="card-header text-white" style="background-color: #416bbf;">
+                                        <h5 class="mb-0">Tinggalkan Ulasan</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        @if (!$reviewExists)
+                                            @if ($deliveredOrders->isNotEmpty())
+                                                <form action="{{ route('review.store', ['productId' => $product->id]) }}" method="POST" enctype="multipart/form-data">
                                                     @csrf
+                                                    <input type="hidden" name="order_id" value="{{ $deliveredOrders->first()->id }}">
+                                                    <input type="hidden" name="product_id" value="{{ $product->id }}">
+
                                                     <div class="form-group mb-3">
-                                                        <label for="review">Ulasan Anda</label>
-                                                        <textarea class="form-control" id="review" name="review" rows="4"
-                                                            placeholder="Tulis ulasan Anda di sini..." required></textarea>
+                                                        <label for="rating">Ulasan Anda</label>
+                                                        <textarea class="form-control" id="rating" name="comment" rows="4" placeholder="Tulis ulasan Anda di sini..." required></textarea>
                                                     </div>
                                                     <div class="form-group mb-3">
                                                         <label for="rating">Rating</label>
@@ -777,34 +774,20 @@
                                                             @endfor
                                                         </div>
                                                     </div>
-                                                    <div class="form-group mb-3">
-                                                        <label for="review_images">Upload Foto (Opsional)</label>
-                                                        <div class="custom-file">
-                                                            <input type="file" name="review_images[]" id="review_images" class="custom-file-input" accept="image/*" multiple>
-                                                            <label class="custom-file-label" for="review_images">Pilih file</label>
-                                                        </div>
-                                                        <small class="form-text text-muted">Maksimal ukuran file 2MB per gambar.</small>
-                                                    </div>
-                                                    <div class="form-group mb-3">
-                                                        <label for="review_videos">Upload Video (Opsional)</label>
-                                                        <div class="custom-file">
-                                                            <input type="file" name="review_videos[]" id="review_videos" class="custom-file-input" accept="video/*" multiple>
-                                                            <label class="custom-file-label" for="review_videos">Pilih file</label>
-                                                        </div>
-                                                        <small class="form-text text-muted">Maksimal ukuran file 10MB per video.</small>
-                                                    </div>
                                                     <button type="submit" class="btn text-white w-100" style="background-color: #416bbf;">Kirim Ulasan</button>
                                                 </form>
+                                            @else
+                                                <div class="alert alert-warning">
+                                                    Anda belum memiliki pesanan yang diselesaikan untuk produk ini.
+                                                </div>
+                                            @endif
+                                        @else
+                                            <div class="alert alert-info">
+                                                Anda telah memberikan ulasan untuk produk ini dalam pesanan ini.
                                             </div>
-                                        </div>
-                                    @else
-                                        <div class="alert alert-info">
-                                            Anda telah memberikan ulasan untuk Product ini.
-                                        </div>
-                                    @endif
-                                @endif
-                            @endforeach
-
+                                        @endif
+                                    </div>
+                                </div>
                                     <style>
                                         /* Style for the star rating */
                                         .star-rating input[type="radio"] {
@@ -1028,6 +1011,38 @@
     });
 </script>
 
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        // Check localStorage for the active tab
+        const activeTab = localStorage.getItem("activeTab");
+        if (activeTab) {
+            const tabLink = document.querySelector(`a[href="${activeTab}"]`);
+            const tabPane = document.querySelector(activeTab);
+            
+            if (tabLink && tabPane) {
+                // Activate the saved tab
+                tabLink.classList.add("active");
+                tabPane.classList.add("show", "active");
+            } else {
+                // If not found, activate the first tab as default
+                document.querySelector('.nav-link').classList.add("active");
+                document.querySelector('.tab-pane').classList.add("show", "active");
+            }
+        } else {
+            // Default to first tab if no tab was saved
+            document.querySelector('.nav-link').classList.add("active");
+            document.querySelector('.tab-pane').classList.add("show", "active");
+        }
+
+        // Save active tab on click
+        document.querySelectorAll('.nav-link').forEach(tab => {
+            tab.addEventListener("click", function() {
+                localStorage.setItem("activeTab", this.getAttribute("href"));
+            });
+        });
+    });
+</script>
 
 
 

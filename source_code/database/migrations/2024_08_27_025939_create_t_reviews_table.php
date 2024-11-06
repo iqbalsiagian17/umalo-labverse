@@ -12,6 +12,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('product_id');
             $table->unsignedInteger('user_id'); 
+            $table->unsignedBigInteger('order_id'); 
             $table->text('content');
             $table->integer('rating');
             $table->json('images')->nullable(); // Storing images as a JSON array
@@ -20,7 +21,9 @@ return new class extends Migration
 
             $table->foreign('product_id')->references('id')->on('t_product')->onDelete('cascade');
             $table->foreign('user_id')->references('id')->on('t_users')->onDelete('cascade');
+            $table->foreign('order_id')->references('id')->on('t_orders')->onDelete('cascade');
         });
+
     }
 
     public function down()

@@ -18,28 +18,28 @@
                     <p class="mb-1"><strong>{{ __('messages.status') }}:</strong> {{ $order->status }}</p>
                 </div>
                 <div>
-                    <a href="{{ route('order.detail', $order->id) }}" class="btn btn-sm text-white" style="background-color: #42378C;">{{ __('messages.view_detail') }}</a>
-                    @if(in_array($order->status, ['Diterima', 'Selesai']))
+                    <a href="{{ route('customer.order.show', $order->id) }}" class="btn btn-sm text-white" style="background-color: #42378C;">{{ __('messages.view_detail') }}</a>
+                    @if(in_array($order->status, ['approved', 'pending_payment','confirmed','processing','shipped','delivered']))
                     <a href="{{ route('order.generate_pdf', $order->id) }}" class="btn btn-success btn-sm">{{ __('messages.download_invoice') }}</a>
                     @endif                
                 </div>
             </div>
             
-            @foreach($order->orderItems as $item)
+            @foreach($order->items as $item)
                 <div class="d-flex mb-3">
                     <div style="flex: 1;">
-                        @if($item->Product->images->isNotEmpty())
-                            <img src="{{ asset($item->Product->images->first()->gambar) }}" alt="{{ $item->Product->nama }}" style="width: 250px;" class="rounded">
+                        @if($item->product->images->isNotEmpty())
+                            <img src="{{ asset($item->product->images->first()->images) }}" alt="{{ $item->Product->name }}" style="width: 250px;" class="rounded">
                         @else
-                            <img src="https://via.placeholder.com/150" class="img-fluid mb-2" alt="{{ $item->Product->nama }}" style="width: 250px;" class="rounded">
+                            <img src="https://via.placeholder.com/150" class="img-fluid mb-2" alt="{{ $item->Product->name }}" style="width: 250px;" class="rounded">
                         @endif
                     </div>
                     <div style="flex: 3; margin-left: 20px;">
-                        <h6 class="mb-1"><strong>{{ $item->Product->nama }}</strong></h6>
-                        <p class="mb-1"><strong>x{{ $item->jumlah }}</strong></p>
+                        <h6 class="mb-1"><strong>{{ $item->Product->name }}</strong></h6>
+                        <p class="mb-1"><strong>x{{ $item->quantity }}</strong></p>
                     </div>
                     <div style="flex: 2; text-align: right;">
-                        <p class="mb-1"><strong>Rp{{ number_format($item->harga, 0, ',', '.') }}</strong></p>
+                        <p class="mb-1"><strong>Rp{{ number_format($item->price, 0, ',', '.') }}</strong></p>
                     </div>
                 </div>
             @endforeach
@@ -53,7 +53,7 @@
                     @endif
                 </div>
                 <div>
-                    <p class="text-danger"><strong>{{ __('messages.total_order') }}: Rp{{ number_format($order->harga_total, 0, ',', '.') }}</strong></p>
+                    <p class="text-danger"><strong>{{ __('messages.total_order') }}: Rp{{ number_format($order->total, 0, ',', '.') }}</strong></p>
                 </div>
             </div>
         </div>

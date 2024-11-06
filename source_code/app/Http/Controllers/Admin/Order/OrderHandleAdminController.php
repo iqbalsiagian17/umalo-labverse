@@ -7,6 +7,7 @@ use App\Models\Order;
 use App\Models\ShippingService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Barryvdh\DomPDF\Facade\Pdf; 
 
 
 class OrderHandleAdminController extends Controller
@@ -77,7 +78,7 @@ class OrderHandleAdminController extends Controller
 
     public function show($id)
     {
-        $order = Order::with('user.addresses', 'items')->findOrFail($id);
+        $order = Order::with('user.userAddresses', 'items')->findOrFail($id);
         
         // Mark the order as viewed
         if (!$order->is_viewed) {
@@ -178,7 +179,7 @@ class OrderHandleAdminController extends Controller
     {
         $request->validate([
             'tracking_number' => 'required|string|max:255',
-            'shipping_service_id' => 'required|exists:t_md_shipping_services,id', // Ensure the shipping service exists
+            'shipping_service_id' => 'required|exists:t_shipping_services,id', // Ensure the shipping service exists
         ]);
 
         $order = Order::find($orderId);
@@ -194,19 +195,29 @@ class OrderHandleAdminController extends Controller
 
     public function cancelOrder(Request $request, $orderId)
     {
-        $order = Order::findOrFail($orderId);
-    
+        $order = Order::with('items.product')->findOrFail($orderId);
+
         if ($order->status !== Order::STATUS_CANCELLED && $order->status !== Order::STATUS_CANCELLED_BY_ADMIN) {
-            // Set the status to 'cancelled_by_admin'
+            // Kembalikan jumlah quantity setiap produk ke stok
+            foreach ($order->items as $item) {
+                $product = $item->product;
+                if ($product) {
+                    $product->stock += $item->quantity; // Kembalikan jumlah ke stok produk
+                    $product->save();
+                }
+            }
+
+            // Set status pesanan ke 'cancelled_by_admin'
             $order->status = Order::STATUS_CANCELLED_BY_ADMIN;
-            $order->cancelled_by_admin_at = now(); // Set the cancelled_by_admin timestamp
+            $order->cancelled_by_admin_at = now(); // Set timestamp cancelled_by_admin
             $order->save();
-    
-            return redirect()->back()->with('success', 'Order has been cancelled by the admin.');
+
+            return redirect()->back()->with('success', 'Order has been cancelled by the admin, and stock has been updated.');
         }
-    
+
         return redirect()->back()->with('error', 'Order has already been cancelled.');
     }
+
 
 
     public static function generateInvoiceNumber()
@@ -238,15 +249,11 @@ class OrderHandleAdminController extends Controller
     public function generatePdf($id)
     {
         // Retrieve the order along with related items, user details, and addresses
-        $order = Order::with(['orderItems.Product', 'user.userDetail', 'user.addresses'])->findOrFail($id);
+        $order = Order::with(['items.product', 'user.userAddresses'])->findOrFail($id);
 
-        // Retrieve all Materai records
-
-        // Retrieve the UserDetail from the Order's user relationship
-        $userDetail = $order->user->userDetail;
-
-        // Retrieve the UserAddresses from the User
-        $userAddresses = $order->user->addresses;
+        // Retrieve the user and their addresses
+        $user = $order->user;
+        $userAddresses = $user ? $user->useraddresses : collect(); // Ensure $userAddresses is a collection
 
         // Generate the invoice number
         $invoiceNumber = $order->invoice_number;
@@ -256,12 +263,7 @@ class OrderHandleAdminController extends Controller
             return redirect()->back()->with('error', 'Invoice number not found for this order.');
         }
 
-        // Get the company abbreviation
-        $companyAbbreviation = $this->getCompanyAbbreviation($order->user->userDetail->perusahaan);
-
-        // Get the Roman numeral for the month the order was created
-        $romanMonth = $this->getRomanMonth($order->created_at->month);
-
+       
         // Convert ags.jpeg, maps-and-flags.png, email.png, phone-call.png to base64
         $logoPath = public_path('assets/images/ags.jpeg');
         $agsLogo = '';
@@ -270,7 +272,7 @@ class OrderHandleAdminController extends Controller
             $data = file_get_contents($logoPath);
             $agsLogo = 'data:image/' . $type . ';base64,' . base64_encode($data);
         }
-
+        
         // Convert maps-and-flags.png to base64
         $mapsPath = public_path('assets/images/maps-and-flags.png');
         $mapsIcon = '';
@@ -297,13 +299,14 @@ class OrderHandleAdminController extends Controller
             $data = file_get_contents($phonePath);
             $phoneIcon = 'data:image/' . $type . ';base64,' . base64_encode($data);
         }
-
+        
         // Pass all the images to the view along with other data
-        $pdf = PDF::loadView('customer.order.pdf', compact('order',  'userDetail', 'userAddresses', 'agsLogo', 'mapsIcon', 'emailIcon', 'phoneIcon', 'invoiceNumber', 'companyAbbreviation', 'romanMonth'));
+        $pdf = PDF::loadView('customer.order.pdf', compact(
+            'order', 'user', 'userAddresses', 'agsLogo', 'mapsIcon', 'emailIcon', 'phoneIcon', 'invoiceNumber'
+        ));
 
-        // Sanitize the company name to create a valid filename
-        $companyName = preg_replace('/[^A-Za-z0-9\-]/', '_', $userDetail->perusahaan);
-        $year = $order->created_at->format('Y');
+        // Sanitize the company name for the filename
+        $companyName = $user && isset($user->company) ? preg_replace('/[^A-Za-z0-9\-]/', '_', $user->company) : 'unknown_company';
 
         // Replace "/" with "_" in the invoice number for the filename
         $safeInvoiceNumber = str_replace('/', '_', $invoiceNumber);
@@ -314,4 +317,6 @@ class OrderHandleAdminController extends Controller
         // Return the generated PDF for download
         return $pdf->download($fileName);
     }
+
+
 }
