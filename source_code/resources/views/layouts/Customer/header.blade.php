@@ -1,6 +1,6 @@
     <!-- Mau Ngapain Bang?? -->
 <!DOCTYPE html>
-<html lang="zxx">
+<html lang="id">
 
 <head>
     <meta charset="UTF-8">
@@ -9,7 +9,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
 
-    <title>Labverse</title>
+    <title>Situs Jual Beli Online Labverse - ARKAMAYA GUNA SAHARSA</title>
 
     <!-- Google Font -->
     <link rel="stylesheet" href="{{ asset('css/fonts.googleapis.css') }}" type="text/css">
@@ -28,6 +28,8 @@
     <link rel="stylesheet" href="{{ asset('ogani/css/owl.carousel.min.css') }}" type="text/css">
     <link rel="stylesheet" href="{{ asset('ogani/css/slicknav.min.css') }}" type="text/css">
     <link rel="stylesheet" href="{{ asset('ogani/css/style.css') }}" type="text/css">
+
+    <link rel="stylesheet" href="{{ asset('ogani/css/custom.css') }}" type="text/css">
 
 
 

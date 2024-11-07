@@ -47,8 +47,9 @@ class PaymentHandleAdminController extends Controller
         // Fetch the payment by ID, along with the associated order and user
         $payment = Payment::with('order.user')->findOrFail($paymentId);
         
-        if (!$payment->is_viewed) {
-            $payment->is_viewed = true; // Set is_viewed to true
+        if (!$payment->is_viewed_by_admin) {
+            $payment->is_viewed_by_admin = true; // Set is_viewed_by_admin to true
+            $payment->is_viewed_by_customer = false;
             $payment->save(); // Save the change to the database
         }
 
@@ -70,7 +71,8 @@ class PaymentHandleAdminController extends Controller
         $payment->update([
             'status' => Payment::STATUS_PAID,
             'paid_at' => now(),
-            'is_viewed' => true,
+            'is_viewed_by_admin' => true,
+            'is_viewed_by_customer' => false,
         ]);
 
         // Perbarui status pesanan terkait menjadi 'confirmed' dan catat waktu verifikasi pembayaran
@@ -96,7 +98,8 @@ class PaymentHandleAdminController extends Controller
         // Perbarui status pembayaran menjadi 'failed'
         $payment->update([
             'status' => Payment::STATUS_FAILED,
-            'is_viewed' => true,
+            'is_viewed_by_admin' => true,
+            'is_viewed_by_customer' => false,
         ]);
 
         $order = $payment->order;

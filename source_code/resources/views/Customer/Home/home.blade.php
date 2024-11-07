@@ -1,5 +1,7 @@
 @extends('layouts.customer.master')
+
 @section('content')
+
     <!-- Hero Section Begin -->
     <section class="hero mt-5">
         <div class="container">
@@ -312,20 +314,27 @@
                                 <h6><a href="{{ route('product.show', $item->slug) }}?source={{ Str::random(10) }}">{{ $item->name }}</a></h6>
                                 <h5>
                                     @if ($item->discount_price)
-                                                <span style="text-decoration: line-through; color:red;">
-                                                    Rp{{ number_format($item->price, 0, ',', '.') }}
-                                                </span>
-                                                <br>
-                                                <span>
-                                                    Rp{{ number_format($item->discount_price, 0, ',', '.') }}
-                                                </span>
-                                            @else
-                                                @if ($item->is_price_displayed === 'yes')
-                                                    Rp{{ number_format($item->price, 0, ',', '.') }}
-                                                @else
-                                                    {{ __('messages.hubungi_admin') }}
-                                                @endif
-                                            @endif
+                                        @php
+                                            $discount_percentage = (($item->price - $item->discount_price) / $item->price) * 100;
+                                        @endphp
+                                        <span style="text-decoration: line-through; color:darkgray">
+                                            Rp{{ number_format($item->price, 0, ',', '.') }}
+                                        </span>
+                                        <span style="color:red;">
+                                            ({{ round($discount_percentage) }}% Off)
+                                        </span>
+                                        <br>
+                                        <span>
+                                            Rp{{ number_format($item->discount_price, 0, ',', '.') }}
+                                        </span>
+                                    @else
+                                        @if ($item->is_price_displayed === 'yes')
+                                            Rp{{ number_format($item->price, 0, ',', '.') }}
+                                        @else
+                                            {{ __('messages.hubungi_admin') }}
+                                        @endif
+                                    @endif
+
                                 </h5>
                             </div>
                         </div>

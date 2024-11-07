@@ -31,7 +31,8 @@ class Order extends Model
         'cancelled_at',
         'cancelled_by_admin_at',
         'cancelled_by_system_at',
-        'is_viewed',    
+        'is_viewed_by_admin',  
+        'is_viewed_by_customer',  
         'invoice_number',
     ];
 
@@ -52,8 +53,10 @@ class Order extends Model
         $this->update([
             'status' => $status,
             $status . '_at' => Carbon::now(),
+            'is_viewed_by_customer' => false, // Atur ulang ke false setiap kali status berubah
         ]);
     }
+
 
     public function user()
     {
@@ -84,4 +87,34 @@ class Order extends Model
     {
         return $this->hasManyThrough(Review::class, OrderItem::class, 'order_id', 'product_id', 'id', 'product_id');
     }
+
+    public function statusMessage()
+    {
+        switch ($this->status) {
+            case self::STATUS_WAITING_APPROVAL:
+                return 'Menunggu Persetujuan';
+            case self::STATUS_APPROVED:
+                return 'Disetujui';
+            case self::STATUS_PENDING_PAYMENT:
+                return 'Menunggu Pembayaran';
+            case self::STATUS_CONFIRMED:
+                return 'Dikonfirmasi';
+            case self::STATUS_PROCESSING:
+                return 'Sedang Diproses';
+            case self::STATUS_SHIPPED:
+                return 'Dikirim';
+            case self::STATUS_DELIVERED:
+                return 'Diterima';
+            case self::STATUS_CANCELLED:
+                return 'Dibatalkan';
+            case self::STATUS_CANCELLED_BY_ADMIN:
+                return 'Dibatalkan oleh Admin';
+            case self::STATUS_CANCELLED_BY_SYSTEM:
+                return 'Dibatalkan oleh Sistem';
+            default:
+                return 'Status Tidak Diketahui';
+        }
+    }
+
+    
 }

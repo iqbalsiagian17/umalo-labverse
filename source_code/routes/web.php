@@ -31,9 +31,10 @@ Auth::routes();
 
 Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 Route::get('/shop', [App\Http\Controllers\Costumer\Shop\ShopController::class, 'shop'])->name('shop');
-Route::get('/shop/category/{id}', [App\Http\Controllers\Costumer\Shop\ShopController::class, 'filterByCategory'])->name('shop.category');
-Route::get('/shop/subcategory/{id}', [ShopController::class, 'filterBySubcategory'])->name('shop.subcategory');
-Route::get('/shop/price-range', [ShopController::class, 'filterByPriceRange'])->name('shop.priceRange');
+Route::get('/shop/{category_slug?}', [ShopController::class, 'shop'])->name('shop');
+Route::get('/shop/{category_slug?}/{subcategory_slug?}', [ShopController::class, 'shop'])->name('shop');
+Route::get('/shop/rating/{rating}', [ShopController::class, 'shop'])->name('shop.rating');
+
 Route::get('/product/lab/{id}', [ProductCostumerController::class, 'userShow'])->name('Product_customer.user.show');
 Route::get('/search', [ProductCostumerController::class, 'search'])->name('Product.search');
 Route::get('/labverse/lab/product/{slug}', [ProductCostumerController::class, 'userShow'])->name('product.show');
@@ -55,8 +56,8 @@ Route::middleware(['auth', 'user-access:costumer'])->group(function () {
     Route::post('/user/upload-profile-photo', [UserDetailController::class, 'uploadProfilePhoto'])->name('user.uploadProfilePhoto');
     Route::post('/personal/password', [UserDetailController::class, 'createPassword'])->name('password.store');
     Route::post('/password/change', [UserDetailController::class, 'changePassword'])->name('password.change');
-    Route::get('/personal/address/edit', [UserDetailController::class, 'editAddress'])->name('user.editAddress');
-    Route::put('/personal/address/update', [UserDetailController::class, 'updateAddress'])->name('user.updateAddress');
+    Route::get('/personal/address/edit/{id}', [UserDetailController::class, 'editAddress'])->name('user.editAddress');
+    Route::put('/personal/address/update/{id}', [UserDetailController::class, 'updateAddress'])->name('user.updateAddress');
     Route::post('/personal/address/toggle/{id}', [UserDetailController::class, 'toggleAddressStatus'])->name('user.toggleAddressStatus');
     Route::get('/personal/address/create', [UserDetailController::class, 'createAddress'])->name('user.createAddress');
     Route::post('/personal/address/store', [UserDetailController::class, 'storeAddress'])->name('user.storeAddress');

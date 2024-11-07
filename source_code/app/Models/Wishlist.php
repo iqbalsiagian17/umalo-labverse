@@ -15,7 +15,7 @@ class Wishlist extends Model
     // Define the fillable properties
     protected $fillable = [
         'user_id',
-        'product_id',
+        'Product_id',
     ];
 
     // Relationship to the User model
@@ -27,6 +27,8 @@ class Wishlist extends Model
     // Relationship to the Product model
     public function product()
     {
-        return $this->belongsTo(Product::class);
+        return $this->belongsTo(Product::class, 'Product_id'); // Gunakan 'Product_id' jika nama kolom benar demikian
     }
+    
+    
 }

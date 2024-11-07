@@ -11,6 +11,8 @@ use PDF;
 use Illuminate\Support\Facades\DB;
 use App\Models\PPN;
 use App\Models\Materai;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 
 class OrderHandleCustomerController extends Controller
@@ -18,7 +20,29 @@ class OrderHandleCustomerController extends Controller
 
     public function showOrder($orderId)
     {
+        // Temukan pesanan berdasarkan ID
         $order = Order::find($orderId);
+    
+        // Pastikan pesanan ditemukan
+        if (!$order) {
+            abort(404, 'Pesanan tidak ditemukan');
+        }
+    
+        // Pastikan pesanan milik pengguna yang sedang login
+        if ($order->user_id !== Auth::id()) {
+            abort(403, 'Anda tidak memiliki akses ke pesanan ini');
+        }
+    
+        // Update kolom is_viewed_by_customer menjadi true
+        $order->is_viewed_by_customer = true;
+        $order->save();
+
+        foreach ($order->payments as $payment) {
+            $payment->is_viewed_by_customer = true;
+            $payment->save();
+        }
+    
+        // Tampilkan halaman detail pesanan
         return view('customer.order.detail-pesanan', compact('order'));
     }
 
@@ -122,4 +146,6 @@ class OrderHandleCustomerController extends Controller
     
             return redirect()->back()->with('success', 'Order has been cancelled successfully.');
         }
+
+
 }

@@ -22,8 +22,8 @@ return new class extends Migration
             $table->timestamp('failed_at')->nullable();
             $table->timestamp('refunded_at')->nullable();
             $table->timestamp('partially_refunded_at')->nullable();
-   
-            $table->boolean('is_viewed')->default(false);   
+            $table->boolean('is_viewed_by_admin')->default(false); 
+            $table->boolean('is_viewed_by_customer')->default(false);
             $table->timestamps();
         });
     }

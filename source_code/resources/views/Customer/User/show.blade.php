@@ -208,7 +208,7 @@
 <div class="modal fade" id="changePasswordModal" tabindex="-1" aria-labelledby="changePasswordModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
-            <form id="changePasswordForm" method="POST" action="{{ route('password.update') }}">
+            <form id="changePasswordForm" method="POST" action="{{ route('password.change') }}">
                 @csrf
                 <div class="modal-header">
                     <h5 class="modal-title" id="changePasswordModalLabel">{{ __('messages.change_password') }}</h5>

@@ -214,4 +214,13 @@ return [
     'favorites_empty' => 'Belum ada favorit.',
     'view_details' => 'Lihat Detail',
     'removed_from_favorites' => 'Dihapus dari Favorit',
+
+    'waiting_approval' => 'Menunggu Persetujuan',
+    'approved' => 'Disetujui',
+    'pending_payment' => 'Menunggu Pembayaran',
+    'confirmed' => 'Dikonfirmasi',
+    'processing' => 'Sedang Diproses',
+    'shipped' => 'Dikirim',
+    'delivered' => 'Terkirim',
+
 ];

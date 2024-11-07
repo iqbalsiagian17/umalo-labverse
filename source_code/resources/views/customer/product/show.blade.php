@@ -154,9 +154,42 @@
                     </a>
                 @endauth
                 
-                <a href="#" class="heart-icon" data-product-id="{{ $product->id }}">
+                <a href="javascript:void(0)" class="heart-icon" data-product-id="{{ $product->id }}">
                     <i class="fas fa-heart {{ $isFavorite ? 'favorite' : '' }}"></i>
-                </a>     
+                </a>
+
+                <script>
+                    $(document).ready(function() {
+                        $('.heart-icon').on('click', function() {
+                            var productId = $(this).data('product-id');
+                
+                            $.ajax({
+                                url: '{{ route('wishlist.add') }}', // URL to your route
+                                type: 'POST',
+                                data: {
+                                    product_id: productId,
+                                    _token: '{{ csrf_token() }}' // CSRF token for security
+                                },
+                                success: function(response) {
+                                    // Show the custom notification
+                                    var message = response.success ? response.message : 'Product already in wishlist';
+                                    $('#wishlist-message .notification-text').text(message);
+                                    $('#wishlist-message').removeClass('d-none').fadeIn(); // Show notification
+                
+                                    // Optional: highlight the heart if the product is added
+                                    if (response.success) {
+                                        $(this).find('i').addClass('favorite'); // Highlight the heart
+                                    }
+                                }.bind(this), // Bind the current context for 'this'
+                                error: function(xhr) {
+                                    $('#wishlist-message .notification-text').text('An error occurred while adding the product to your wishlist.');
+                                    $('#wishlist-message').removeClass('d-none').fadeIn(); // Show notification
+                                }
+                            });
+                        });
+                    });
+                </script>
+                
 
                 <a href="#" class="heart-icon" data-bs-toggle="modal" data-bs-target="#shareModal">
                     <i class="fas fa-share-alt"></i>
@@ -1068,5 +1101,6 @@
         <span class="notification-text" style="flex-grow: 1; font-weight: bold;">{{ __('product.wishlist_message') }}</span>
         <button onclick="this.parentElement.parentElement.style.display='none'" style="background: transparent; border: none; color: white; cursor: pointer; font-size: 22px; margin-left: 15px;">&times;</button>
     </div>
-</div>   
+</div>
+
 @endsection

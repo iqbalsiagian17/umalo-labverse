@@ -56,6 +56,34 @@
                     <p class="text-danger"><strong>{{ __('messages.total_order') }}: Rp{{ number_format($order->total, 0, ',', '.') }}</strong></p>
                 </div>
             </div>
+            @if($order->status === 'delivered')
+            <div class="mt-4 bg-light p-4 rounded mb-4">
+                <h5 class="fw-bold">Give a Review</h5>
+                <ul class="list-unstyled">
+                    @foreach($order->items as $item)
+                        @php
+                            // Check if the review exists for this product and order
+                            $reviewExists = $item->product->reviews()
+                                ->where('user_id', auth()->id())
+                                ->where('order_id', $order->id)
+                                ->exists();
+                        @endphp
+
+                        @if(!$reviewExists)
+                            <li class="mb-2">
+                                <a href="{{ route('product.show', ['slug' => $item->product->slug]) }}?order={{ $order->id }}" class="btn btn-outline-primary">
+                                    Review {{ $item->product->name }}
+                                </a>
+                            </li>
+                        @else
+                            <li>
+                                <span class="text-muted">You have already reviewed {{ $item->product->name }} for this order.</span>
+                            </li>
+                        @endif
+                    @endforeach
+                </ul>
+            </div>
+            @endif
         </div>
     </div>
 @endforeach

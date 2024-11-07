@@ -98,7 +98,7 @@
                         <td>{{ $payment->order_id }}</td>
                         <td>{{ $payment->order->invoice_number }} 
                         </span>
-                        @if (!$payment->is_viewed)
+                        @if (!$payment->is_viewed_by_admin)
                             <span class="badge bg-danger ms-2">Baru</span>
                         @endif
                         </td>

@@ -142,7 +142,7 @@
                                             {{ ucfirst($order->status) }}
                                     @endswitch
                                 </span>
-                                @if (!$order->is_viewed)
+                                @if (!$order->is_viewed_by_admin)
                                     <span class="badge bg-danger ms-2">Baru</span>
                                 @endif
                             </td>

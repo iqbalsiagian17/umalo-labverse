@@ -174,5 +174,8 @@
     <script src="{{ asset('ogani/js/popper.min.js') }}"></script>
     <script src="{{ asset('js/bootstrap/bootstrap.min.js') }}"></script>
 
+    
+    <script src="{{ asset('ogani/js/custom.js') }}"></script>
+
     </body>
     </html>

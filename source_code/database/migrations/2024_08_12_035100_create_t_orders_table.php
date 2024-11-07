@@ -18,7 +18,9 @@ return new class extends Migration
             $table->decimal('total', 15, 2);
             $table->string('invoice_number')->nullable();
             $table->string('tracking_number')->nullable();
-            $table->boolean('is_viewed')->default(false);
+            $table->boolean('is_viewed_by_admin')->default(false);
+            $table->boolean('is_viewed_by_customer')->default(false);
+
 
 
             $table->enum('status', [

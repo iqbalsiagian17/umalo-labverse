@@ -81,8 +81,8 @@ class OrderHandleAdminController extends Controller
         $order = Order::with('user.userAddresses', 'items')->findOrFail($id);
         
         // Mark the order as viewed
-        if (!$order->is_viewed) {
-            $order->is_viewed = true; // Set is_viewed to true
+        if (!$order->is_viewed_by_admin) {
+            $order->is_viewed_by_admin = true; // Set is_viewed_by_admin to true
             $order->save(); // Save the change to the database
         }
     
@@ -117,6 +117,7 @@ class OrderHandleAdminController extends Controller
             $order->update([
                 'status' => Order::STATUS_APPROVED,
                 'approved_at' => now(),
+                'is_viewed_by_customer' => false, 
             ]);
 
             DB::commit();
@@ -143,6 +144,7 @@ class OrderHandleAdminController extends Controller
             $order->update([
                 'status' => Order::STATUS_PENDING_PAYMENT,
                 'pending_payment_at' => now(),
+                'is_viewed_by_customer' => false, 
             ]);
 
             // Redirect customer ke halaman pembayaran
@@ -169,6 +171,7 @@ class OrderHandleAdminController extends Controller
             'status' => Order::STATUS_PROCESSING, // gunakan konstanta status
             'packing_at' => now(),              // Set packing timestamp
             'processing_at' => now(),           // Set processing timestamp
+            'is_viewed_by_customer' => false, 
         ]);
 
         return back()->with('success', 'Order is now in the packing process.');
@@ -187,6 +190,7 @@ class OrderHandleAdminController extends Controller
             'status' => 'shipped',
             'tracking_number' => $request->tracking_number,
             'shipping_service_id' => $request->shipping_service_id, // Save the selected shipping service
+            'is_viewed_by_customer' => false, 
             'shipped_at' => now() // Set shipped timestamp
         ]);
 
@@ -209,6 +213,7 @@ class OrderHandleAdminController extends Controller
 
             // Set status pesanan ke 'cancelled_by_admin'
             $order->status = Order::STATUS_CANCELLED_BY_ADMIN;
+            $order->is_viewed_by_customer = false; 
             $order->cancelled_by_admin_at = now(); // Set timestamp cancelled_by_admin
             $order->save();
 

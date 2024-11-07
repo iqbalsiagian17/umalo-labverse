@@ -12,67 +12,73 @@ use Illuminate\Support\Facades\Auth;
 class WishlistController extends Controller
 {
     public function addToWishlist(Request $request)
-{
-    $user = Auth::user();
-    $productId = $request->input('product_id');
-
-    // Check if the product is already in the wishlist
-    if (!Wishlist::where('user_id', $user->id)->where('product_id', $productId)->exists()) {
+    {
+        $user = Auth::user();
+    
+        // Cek apakah produk sudah ada di wishlist pengguna
+        $exists = Wishlist::where('user_id', $user->id)
+                          ->where('Product_id', $request->product_id)
+                          ->exists();
+    
+        if ($exists) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Product already in wishlist'
+            ]);
+        }
+    
+        // Tambahkan produk ke wishlist
         Wishlist::create([
             'user_id' => $user->id,
-            'product_id' => $productId,
+            'Product_id' => $request->product_id,
         ]);
-
-        return response()->json(['success' => true, 'message' => 'Product added to wishlist']);
+    
+        return response()->json([
+            'success' => true,
+            'message' => 'Product added to wishlist'
+        ]);
     }
-
-    return response()->json(['success' => false, 'message' => 'Product already in wishlist']);
-}
 
 
     // Remove a product from the wishlist
     public function removeFromWishlist($productId)
     {
         $user = Auth::user();
-
-        // Find the wishlist item and delete it
+    
         Wishlist::where('user_id', $user->id)->where('product_id', $productId)->delete();
-
-        return redirect()->back()->with('success', 'Product removed from wishlist');
+    
+        return response()->json(['success' => true, 'message' => __('Product removed from wishlist')]);
     }
 
     // Display the user's wishlist
     public function index()
     {
         $user = Auth::user();
-        $wishlistItems = Wishlist::where('user_id', $user->id)->with('product.images')->get();
-
+        $wishlistItems = Wishlist::where('user_id', $user->id)->with('product')->get();
+    
         return view('customer.wishlist.index', compact('wishlistItems'));
     }
+    
 
     public function moveToCart($productId)
-{
-    $user = Auth::user();
+    {
+        $user = Auth::user();
 
-    // Find the product by its ID
-    $product = Product::findOrFail($productId);
+        $product = Product::findOrFail($productId);
 
-    // Remove the product from the wishlist
-    Wishlist::where('user_id', $user->id)->where('product_id', $productId)->delete();
+        Wishlist::where('user_id', $user->id)->where('product_id', $productId)->delete();
 
-    // Calculate the total price based on the product's price and default quantity (1)
-    $totalPrice = $product->price * 1; // You can adjust the quantity if needed
+        $totalPrice = $product->price * 1;
 
-    // Add to Cart
-    Cart::create([
-        'user_id' => $user->id,
-        'product_id' => $productId,
-        'quantity' => 1, // Default quantity
-        'total_price' => $totalPrice, // Use the product price here
-    ]);
+        Cart::create([
+            'user_id' => $user->id,
+            'product_id' => $productId,
+            'quantity' => 1,
+            'total_price' => $totalPrice,
+        ]);
 
-    return redirect()->back()->with('success', 'Product moved to cart');
-}
+        return response()->json(['success' => true, 'message' => __('Product moved to cart')]);
+    }
 
 
 

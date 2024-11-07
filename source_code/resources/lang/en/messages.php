@@ -218,5 +218,15 @@ return [
 
     'favorites_empty' => 'You don\'t have any favorite yet.',
     'view_details' => 'View Detail',
-    'removed_from_favorites' => 'Deleted From Favorites'
+    'removed_from_favorites' => 'Deleted From Favorites',
+
+
+    'waiting_approval' => 'Waiting for Approval',
+    'approved' => 'Approved',
+    'pending_payment' => 'Pending Payment',
+    'confirmed' => 'Confirmed',
+    'processing' => 'Processing',
+    'shipped' => 'Shipped',
+    'delivered' => 'Delivered',
+
 ];

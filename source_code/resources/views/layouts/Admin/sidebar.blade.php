@@ -47,10 +47,10 @@
               <p>Transaksi</p>
               @php
                                     // Jumlah pesanan yang belum dilihat
-                                    $unviewedOrdersCount = \App\Models\Order::where('is_viewed', false)->count();
-                                    $unviewedPaymentsCount = \App\Models\Payment::where('is_viewed', false)->count();
+                                    $unviewedOrdersCount = \App\Models\Order::where('is_viewed_by_admin', false)->count();
+                                    $unviewedPaymentsCount = \App\Models\Payment::where('is_viewed_by_admin', false)->count();
 
-                                    $unviewedCount = \App\Models\Order::where('is_viewed', false)->count() + \App\Models\Payment::where('is_viewed', false)->count();
+                                    $unviewedCount = \App\Models\Order::where('is_viewed_by_admin', false)->count() + \App\Models\Payment::where('is_viewed_by_admin', false)->count();
 
 
                                 @endphp

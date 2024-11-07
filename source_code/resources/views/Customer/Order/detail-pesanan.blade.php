@@ -31,7 +31,7 @@
                         </p>
                     </div>
                     <div class="col-md-6 text-md-right">
-                        @if(!in_array($order->status, ['cancelled', 'cancelled_by_system', 'cancelled_by_admin']))
+                        @if(!in_array($order->status, ['cancelled','waiting_approval', 'cancelled_by_system', 'cancelled_by_admin']))
                             <a href="{{ route('order.generate_pdf', $order->id) }}" class="btn btn-success btn-sm">
                                 <i class="fas fa-file-download"></i> {{ __('messages.download_invoice') }}
                             </a>

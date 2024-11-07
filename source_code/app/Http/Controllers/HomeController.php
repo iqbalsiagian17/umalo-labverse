@@ -13,6 +13,8 @@ use App\Models\Visit;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
+
 
 class HomeController extends Controller
 {
@@ -38,13 +40,15 @@ class HomeController extends Controller
     
         $user = User::find(auth()->id());
 
+        $orders = Order::where('user_id', Auth::id())->get();
+
         $product = Product::with('images')
         ->where('status', 'publish')
         ->orderBy('created_at', 'desc')
         ->take(8)
         ->get();
     
-        return view('customer.home.home', compact( 'slider' , 'product', 'user'));
+        return view('customer.home.home', compact( 'slider' , 'product', 'user', 'orders'));
     }
     
 

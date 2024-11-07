@@ -32,6 +32,8 @@
             </table>
         @endif
 
+        
+
         <div class="mt-4">
             <a href="{{ route('order.detail', $order->id) }}" class="btn btn-secondary">Kembali</a>
         </div>
