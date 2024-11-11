@@ -24,6 +24,7 @@
                             <th>Gambar</th>
                             <th>Deskripsi</th>
                             <th>URL</th>
+                            <th>Button</th>
                             <th>Aksi</th>
                         </tr>
                     </thead>
@@ -32,8 +33,9 @@
                             <tr>
                                 <td>{{ $index + 1 }}</td> <!-- Nomor urut -->
                                 <td><img src="{{ asset($slider->image) }}" width="100" class="img-fluid img-thumbnail"></td> <!-- Gambar -->
-                                <td>{{ $slider->deskripsi }}</td> <!-- Deskripsi -->
+                                <td>{{ $slider->description }}</td> <!-- Deskripsi -->
                                 <td>{{ $slider->url }}</td> <!-- URL -->
+                                <td>{{ $slider->button }}</td>
                                 <td> <!-- Aksi -->
                                     <a href="{{ route('slider.show', $slider->id) }}" class="btn btn-info btn-sm">Show</a>
                                     <a href="{{ route('slider.edit', $slider->id) }}" class="btn btn-warning btn-sm">Edit</a>

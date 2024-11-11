@@ -7,7 +7,7 @@ use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
-class QaSeeder extends Seeder
+class FaqSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -61,7 +61,7 @@ class QaSeeder extends Seeder
             ],
 
         ];
-        DB::table('t_qas')->insert($faqs);
+        DB::table('t_faq')->insert($faqs);
 
 
     }

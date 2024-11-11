@@ -166,7 +166,7 @@
           <div class="collapse" id="faq">
             <ul class="nav nav-collapse">
               <li>
-                <a href="{{ route('qas.index') }}">
+                <a href="{{ route('faq.index') }}">
                   <span class="sub-item">FAQ</span>
                 </a>
             </ul>

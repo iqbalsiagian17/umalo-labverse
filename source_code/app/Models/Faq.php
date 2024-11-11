@@ -5,10 +5,10 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Qa extends Model
+class Faq extends Model
 {
     use HasFactory;
-    protected $table = 'qas';
+    protected $table = 't_faq';
 
     protected $fillable = [
         'question',

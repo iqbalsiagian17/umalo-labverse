@@ -18,7 +18,7 @@
                         </tr>
                         <tr>
                             <th>Description</th>
-                            <td>{{ $slider->deskripsi }}</td>
+                            <td>{{ $slider->description }}</td>
                         </tr>
                         <tr>
                             <th>URL</th>

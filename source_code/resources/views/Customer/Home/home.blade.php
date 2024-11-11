@@ -33,8 +33,8 @@
                                 <div class="carousel-item {{ $index == 0 ? 'active' : '' }}">
                                     <div class="hero__item set-bg rounded" data-setbg="{{ asset( $sliders->image) }}">
                                         <div class="hero__text p-5">
-                                            <h2 class="text-white">{{ $sliders->deskripsi }}</h2>
-                                            <a href="{{ $sliders->url }}" class="primary-btn rounded mt-5 ">{{ $sliders->tombol }}</a>
+                                            <h2 class="text-white">{{ $sliders->description }}</h2>
+                                            <a href="{{ $sliders->url }}" class="primary-btn rounded mt-5 ">{{ $sliders->button }}</a>
                                         </div>
                                     </div>
                                 </div>

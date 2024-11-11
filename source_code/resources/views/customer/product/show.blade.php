@@ -144,7 +144,7 @@
                         </div>
                     </div>
                     
-                    @auth
+                @auth
                     <a href="#" class="primary-btn add-to-cart-btn {{ $product->stock == 0 ? 'muted' : '' }}" id="add-to-cart" data-id="{{ $product->id }}" {{ $product->stock == 0 ? 'disabled' : '' }}>
                         {{ $product->stock == 0 ? 'Stock Habis :(' : __('messages.add') }}
                     </a>
@@ -157,63 +157,61 @@
                 <a href="javascript:void(0)" class="heart-icon" data-product-id="{{ $product->id }}">
                     <i class="fas fa-heart {{ $isFavorite ? 'favorite' : '' }}"></i>
                 </a>
-
+                
+                <a href="#" class="share-icon" data-bs-toggle="modal" data-bs-target="#shareModal">
+                    <i class="fas fa-share-alt"></i>
+                </a>
+                
                 <script>
                     $(document).ready(function() {
+                        // Click event only for the heart icon to add to wishlist
                         $('.heart-icon').on('click', function() {
                             var productId = $(this).data('product-id');
-                
+                            
                             $.ajax({
-                                url: '{{ route('wishlist.add') }}', // URL to your route
+                                url: '{{ route('wishlist.add') }}',
                                 type: 'POST',
                                 data: {
                                     product_id: productId,
-                                    _token: '{{ csrf_token() }}' // CSRF token for security
+                                    _token: '{{ csrf_token() }}'
                                 },
                                 success: function(response) {
-                                    // Show the custom notification
                                     var message = response.success ? response.message : 'Product already in wishlist';
                                     $('#wishlist-message .notification-text').text(message);
-                                    $('#wishlist-message').removeClass('d-none').fadeIn(); // Show notification
+                                    $('#wishlist-message').removeClass('d-none').fadeIn();
                 
-                                    // Optional: highlight the heart if the product is added
                                     if (response.success) {
-                                        $(this).find('i').addClass('favorite'); // Highlight the heart
+                                        $(this).find('i').addClass('favorite');
                                     }
-                                }.bind(this), // Bind the current context for 'this'
+                                }.bind(this),
                                 error: function(xhr) {
                                     $('#wishlist-message .notification-text').text('An error occurred while adding the product to your wishlist.');
-                                    $('#wishlist-message').removeClass('d-none').fadeIn(); // Show notification
+                                    $('#wishlist-message').removeClass('d-none').fadeIn();
                                 }
                             });
                         });
                     });
                 </script>
                 
-
-                <a href="#" class="heart-icon" data-bs-toggle="modal" data-bs-target="#shareModal">
-                    <i class="fas fa-share-alt"></i>
-                </a>
-                        <style>
-                        .heart-icon {
-                            color: gray;
-                            cursor: pointer;
-                        }
-
-                        .heart-icon .icon_heart_alt {
-                            color: gray;
-                            transition: color 0.3s ease; /* Smooth transition */
-                        }
-
-                        .heart-icon .favorite {
-                            color: red; /* Warna merah penuh ketika menjadi favorit */
-                        }
-
-                        .heart-icon:hover .icon_heart_alt {
-                            color: #ff0000; /* Hover effect */
-                        }
-
-                        </style>
+                <style>
+                    /* Style for both heart and share icons */
+                    .heart-icon, .share-icon {
+                        color: gray;
+                        cursor: pointer;
+                    }
+                
+                    .heart-icon .favorite {
+                        color: red; /* Full red color when favorited */
+                    }
+                
+                    /* Hover effect for both icons */
+                    .heart-icon:hover i,
+                    .share-icon:hover i {
+                        color: #ff0000;
+                        transition: color 0.3s ease;
+                    }
+                </style>
+                
 
 
                     <div class="product__details__subtotal hidden">

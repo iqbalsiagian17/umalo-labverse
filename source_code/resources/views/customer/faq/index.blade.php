@@ -3,19 +3,19 @@
 <div class="container mt-5 mb-5">
     <h2 class="mb-4 text-center">Frequently Asked Questions (FAQ)</h2>
     <div class="accordion" id="faqAccordion">
-        @foreach($qna as $index => $item)
+        @foreach($faq as $index => $item)
         <div class="card border-0 shadow-sm mb-3">
-            <div style="background-color: #416bbf" class="card-header text-white" id="heading{{ $index }}">
+            <div class="card-header text-white bg-primary" id="heading{{ $index }}">
                 <h5 class="mb-0">
                     <button class="btn btn-link d-flex justify-content-between align-items-center w-100 text-decoration-none text-white" type="button" data-toggle="collapse" data-target="#collapse{{ $index }}" aria-expanded="{{ $index == 0 ? 'true' : 'false' }}" aria-controls="collapse{{ $index }}">
-                        <span>{{ $item->pertanyaan }}</span>
+                        <span>{{ $item->question }}</span>
                         <i class="fas {{ $index == 0 ? 'fa-chevron-up' : 'fa-chevron-down' }}"></i>
                     </button>
                 </h5>
             </div>
             <div id="collapse{{ $index }}" class="collapse {{ $index == 0 ? 'show' : '' }}" aria-labelledby="heading{{ $index }}" data-parent="#faqAccordion">
                 <div class="card-body">
-                    {{ $item->jawaban }}
+                    {{ $item->answer }}
                 </div>
             </div>
         </div>

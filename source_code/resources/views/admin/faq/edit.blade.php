@@ -15,20 +15,20 @@
         </div>
     @endif
 
-    <form action="{{ route('qas.update', $qa->id) }}" method="POST">
+    <form action="{{ route('faq.update', $faq->id) }}" method="POST">
         @csrf
         @method('PUT')
 
         <div class="form-group">
-            <label for="pertanyaan">Pertanyaan:</label>
-            <input type="text" name="pertanyaan" class="form-control" id="pertanyaan" value="{{ $qa->pertanyaan }}" required>
+            <label for="question">Pertanyaan:</label>
+            <input type="text" name="question" class="form-control" id="question" value="{{ $faq->question }}" required>
         </div>
         <div class="form-group">
-            <label for="jawaban">Jawaban:</label>
-            <textarea name="jawaban" class="form-control" id="jawaban" rows="4" required>{{ $qa->jawaban }}</textarea>
+            <label for="answer">Jawaban:</label>
+            <textarea name="answer" class="form-control" id="answer" rows="4" required>{{ $faq->answer }}</textarea>
         </div>
         <button type="submit" class="btn btn-primary mt-3">Update</button>
-        <a href="{{ route('qas.index') }}" class="btn btn-secondary mt-3">Kembali</a>
+        <a href="{{ route('faq.index') }}" class="btn btn-secondary mt-3">Kembali</a>
     </form>
 </div>
 @endsection

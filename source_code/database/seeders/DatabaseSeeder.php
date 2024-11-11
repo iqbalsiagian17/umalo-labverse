@@ -23,7 +23,7 @@ class DatabaseSeeder extends Seeder
             CategorySeeder::class,
             SubCategorySeeder::class,
             ProductSeeder::class,
-            QaSeeder::class,
+            FaqSeeder::class,
         ]);
     }
 }

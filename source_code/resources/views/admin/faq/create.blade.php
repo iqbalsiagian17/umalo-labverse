@@ -18,19 +18,19 @@
                     </div>
                 @endif
 
-                <form action="{{ route('qas.store') }}" method="POST">
+                <form action="{{ route('faq.store') }}" method="POST">
                     @csrf
 
                     <div class="form-group">
-                        <label for="pertanyaan">Pertanyaan:</label>
-                        <input type="text" name="pertanyaan" class="form-control" id="pertanyaan" value="{{ old('pertanyaan') }}" required>
+                        <label for="question">Pertanyaan:</label>
+                        <input type="text" name="question" class="form-control" id="question" value="{{ old('question') }}" required>
                     </div>
                     <div class="form-group">
-                        <label for="jawaban">Jawaban:</label>
-                        <textarea name="jawaban" class="form-control" id="jawaban" rows="4" required>{{ old('jawaban') }}</textarea>
+                        <label for="answer">Jawaban:</label>
+                        <textarea name="answer" class="form-control" id="answer" rows="4" required>{{ old('answer') }}</textarea>
                     </div>
                     <button type="submit" class="btn btn-primary mt-3">Simpan</button>
-                    <a href="{{ route('qas.index') }}" class="btn btn-secondary mt-3">Kembali</a>
+                    <a href="{{ route('faq.index') }}" class="btn btn-secondary mt-3">Kembali</a>
                 </form>
 
 

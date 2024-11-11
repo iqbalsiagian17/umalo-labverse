@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Auth\SocialiteController;
+use App\Http\Controllers\Costumer\Faq\FaqCustomerController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Admin\MasterData\CategoryController;
@@ -15,7 +16,7 @@ use App\Http\Controllers\Admin\MasterData\PPNController;
 use App\Http\Controllers\Admin\MasterData\ShippingServiceController;
 use App\Http\Controllers\Admin\Order\OrderHandleAdminController;
 use App\Http\Controllers\Admin\Payment\PaymentHandleAdminController;
-use App\Http\Controllers\Admin\QnA\QaController;
+use App\Http\Controllers\Admin\Faq\FaqController;
 use App\Http\Controllers\Admin\Transaksi\TransaksiController;
 use App\Http\Controllers\Admin\User\UserController;
 use App\Http\Controllers\Costumer\Cart\CartController;
@@ -30,16 +31,18 @@ use App\Http\Controllers\LanguageController;
 Auth::routes();
 
 Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-Route::get('/shop', [App\Http\Controllers\Costumer\Shop\ShopController::class, 'shop'])->name('shop');
-Route::get('/shop/{category_slug?}', [ShopController::class, 'shop'])->name('shop');
-Route::get('/shop/{category_slug?}/{subcategory_slug?}', [ShopController::class, 'shop'])->name('shop');
-Route::get('/shop/rating/{rating}', [ShopController::class, 'shop'])->name('shop.rating');
 
+// Define each shop route with a unique name
+Route::get('/shop', [App\Http\Controllers\Costumer\Shop\ShopController::class, 'shop'])->name('shop');
+Route::get('/shop/{category_slug?}', [ShopController::class, 'shop'])->name('shop.category');
+Route::get('/shop/{category_slug?}/{subcategory_slug?}', [ShopController::class, 'shop'])->name('shop.subcategory');
+Route::get('/shop/rating/{rating}', [ShopController::class, 'filterByRating'])->name('shop.rating');
+
+// Other routes
 Route::get('/product/lab/{id}', [ProductCostumerController::class, 'userShow'])->name('Product_customer.user.show');
 Route::get('/search', [ProductCostumerController::class, 'search'])->name('Product.search');
 Route::get('/labverse/lab/product/{slug}', [ProductCostumerController::class, 'userShow'])->name('product.show');
-Route::get('/faq', [QnaController::class, 'index'])->name('faq');
-Route::get('/shop/rating/{rating}', [ShopController::class, 'filterByRating'])->name('shop.rating');
+Route::get('/customer/faq', [FaqCustomerController::class, 'index'])->name('customer.faq');
 Route::get('/order/{id}/generate-pdf', [OrderHandleAdminController::class, 'generatePdf'])->name('order.generate_pdf');
 
 
@@ -110,7 +113,7 @@ Route::middleware(['auth', 'user-access:admin'])->group(function () {
     });
 
     Route::resource('slider', SliderController::class);
-    Route::resource('qas', QaController::class);
+    Route::resource('faq', FaqController::class);
     Route::resource('users', UserController::class);
     Route::put('/users/{id}/password', [UserController::class, 'updatePassword'])->name('users.update.password');
 

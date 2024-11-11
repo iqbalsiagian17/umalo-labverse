@@ -44,9 +44,9 @@ class SliderController extends Controller
     {
         $request->validate([
             'image' => 'required|image',
-            'deskripsi' => 'required',
+            'description' => 'required',
             'url' => 'nullable|string',
-            'tombol' => 'nullable|string',
+            'button' => 'nullable|string',
         ]);
 
         $imagePath = null;
@@ -69,9 +69,9 @@ class SliderController extends Controller
         // Membuat slider dengan data yang diberikan
         Slider::create([
             'image' => $imagePath,
-            'deskripsi' => $request->input('deskripsi'),
+            'description' => $request->input('description'),
             'url' => $url,
-            'tombol' => $request->input('tombol'),
+            'button' => $request->input('button'),
         ]);
 
         return redirect()->route('slider.index')->with('success', 'Slider created successfully.');
@@ -112,9 +112,9 @@ class SliderController extends Controller
     {
         $request->validate([
             'image' => 'nullable|image',
-            'deskripsi' => 'required',
+            'description' => 'required',
             'url' => 'nullable|string',
-            'tombol' => 'nullable|string',
+            'button' => 'nullable|string',
         ]);
 
         $slider = Slider::findOrFail($id);
@@ -142,9 +142,9 @@ class SliderController extends Controller
         // Update slider dengan data yang diberikan
         $slider->update([
             'image' => $imagePath,
-            'deskripsi' => $request->input('deskripsi'),
+            'description' => $request->input('description'),
             'url' => $request->input('url'),
-            'tombol' => $request->input('tombol'),
+            'button' => $request->input('button'),
         ]);
 
         return redirect()->route('slider.index')->with('success', 'Slider updated successfully.');

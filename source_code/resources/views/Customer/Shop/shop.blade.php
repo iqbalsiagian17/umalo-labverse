@@ -22,14 +22,13 @@
                                                value="{{ request('max_price') }}" class="form-control input-range" oninput="formatInput(this);">
                                     </div>
                                     <button type="submit" class="btn btn-primary mt-3">{{ __('messages.apply_filter') }}</button>
-                                    <button type="button" class="btn btn-secondary mt-3" onclick="resetFields()" title="{{ __('messages.refresh') }}">
+                                    <button type="button" class="btn btn-primary mt-3" onclick="resetFields()" title="{{ __('messages.refresh') }}">
                                         <i class="fas fa-sync-alt"></i>
                                     </button>
                                 </div>
                             </form>
                         </div>
                         
-
                         <script>
                             function formatInput(input) {
                                 let value = input.value;
@@ -50,8 +49,6 @@
                             }
                         </script>
                         
-
-
                         <div class="sidebar__item">
                             <h4 style="color:#42378C;">{{ __('messages.Category') }}</h4>
                             <ul>
@@ -79,8 +76,6 @@
                             </ul>
                         </div>
                         
-
-
                         {{-- <div class="sidebar__item">
                             <h4 style="color:#42378C;">{{ __('Rating') }}</h4>
                             <ul>
@@ -126,7 +121,7 @@
                                 </div>
                             </div>
 
-                            <div class="col-lg-4 col-md-3">
+                            <div class="col-lg-4 col-md-3 d-md-none">
                                 <div class="filter__option">
                                     <span class="icon_grid-2x2" id="grid-view"></span>
                                     <span class="icon_ul" id="list-view"></span>
@@ -143,7 +138,6 @@
                         </a>
                     </div>
                     @endif
-                    
                     
                     
                     <div class="row" id="product-list">
@@ -214,7 +208,4 @@
     <!-- Product Section End -->
 
 
-    <div id="notification" style="display: none; position: fixed; top: 20px; right: 20px; background-color: #f44336; color: white; padding: 10px; border-radius: 5px; z-index: 1000;">
-        Not recommended: This view mode is still under development.
-    </div>
 @endsection

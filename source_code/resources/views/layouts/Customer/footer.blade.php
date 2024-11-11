@@ -52,7 +52,7 @@
 {{--                                 <li><a href="/company">{{ __('messages.about_us') }}</a></li>
                                 <li><a href="/company">{{ __('messages.our_brand') }}</a></li>
                                 <li><a href="/company">{{ __('messages.contact_us') }}</a></li>
- --}}                                <li><a href="{{ route('faq') }}">{{ __('messages.qna') }}</a></li>
+ --}}                                <li><a href="{{ route('customer.faq') }}">{{ __('messages.qna') }}</a></li>
                             </ul>
                         </div>
                     </div>

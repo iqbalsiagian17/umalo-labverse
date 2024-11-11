@@ -6,7 +6,7 @@
         <div class="card">
             <div class="card-header d-flex justify-content-between align-items-center">
             <div class="card-title"><h1>FAQ</h1></div>
-            <a href="{{ route('qas.create') }}" class="btn btn-primary mb-3">Tambah Q&A</a>
+            <a href="{{ route('faq.create') }}" class="btn btn-primary mb-3">Tambah Q&A</a>
             </div>
         @if (session('success'))
             <div class="alert alert-success">
@@ -27,15 +27,15 @@
             </tr>
         </thead>
         <tbody>
-            @foreach ($qas as $qa)
+            @foreach ($faq as $index => $qa)
             <tr>
-                <td>{{ $loop->iteration }}</td>
-                <td>{{ $qa->pertanyaan }}</td>
-                <td>{{ $qa->jawaban }}</td>
+                <td>{{ ($faq->currentPage() - 1) * $faq->perPage() + $index + 1 }}</td>
+                <td>{{ $qa->question }}</td>
+                <td>{{ $qa->answer }}</td>
                 <td>
-                    <form action="{{ route('qas.destroy', $qa->id) }}" method="POST">
-                        <a class="btn btn-info btn-sm" href="{{ route('qas.show', $qa->id) }}">Show</a>
-                        <a class="btn btn-primary btn-sm" href="{{ route('qas.edit', $qa->id) }}">Edit</a>
+                    <form action="{{ route('faq.destroy', $qa->id) }}" method="POST">
+                        <a class="btn btn-info btn-sm" href="{{ route('faq.show', $qa->id) }}">Show</a>
+                        <a class="btn btn-primary btn-sm" href="{{ route('faq.edit', $qa->id) }}">Edit</a>
 
                         @csrf
                         @method('DELETE')
@@ -49,7 +49,7 @@
     </table>
             </div>
     <div class="d-flex justify-content-center">
-        {{ $qas->links('pagination::bootstrap-5') }}
+        {{ $faq->links('pagination::bootstrap-5') }}
     </div>
 </div>
     </div>

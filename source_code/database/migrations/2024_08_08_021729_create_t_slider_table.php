@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('t_slider', function (Blueprint $table) {
             $table->id();
             $table->string('image');
-            $table->text('deskripsi')->nullable();
+            $table->text('description')->nullable();
             $table->string('url')->nullable();
             $table->string('button')->nullable(); // Menambahkan kolom tombol
             $table->timestamps();
