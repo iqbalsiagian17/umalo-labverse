@@ -95,7 +95,11 @@
                     @foreach($payments as $payment)
                     <tr>
                         <td>{{ $payment->id }}</td>
-                        <td>{{ $payment->order_id }}</td>
+                        <td>
+                            <a href="{{ route('admin.orders.show', ['id' => $payment->order_id]) }}">
+                                {{ $payment->order_id }}
+                            </a>
+                        </td>
                         <td>{{ $payment->order->invoice_number }} 
                         </span>
                         @if (!$payment->is_viewed_by_admin)

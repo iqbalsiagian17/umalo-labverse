@@ -6,8 +6,10 @@ use App\Models\BigSale;
 use App\Models\Category;
 use App\Models\Komoditas;
 use App\Models\Order;
+use App\Models\Payment;
 use App\Models\Product;
 use App\Models\Slider;
+use App\Models\TParameter;
 use App\Models\User;
 use App\Models\Visit;
 use Carbon\Carbon;
@@ -88,33 +90,26 @@ class HomeController extends Controller
 
         $orderNotFinishCount = Order::where('status', '!=', 'selesai')->count();
 
-
         $totalSales = Order::where('status', 'selesai')->sum('total');
 
-        // Menghitung jumlah kunjungan ke halaman home hari ini oleh pengguna biasa
-        $visitorCountToday = Visit::whereDate('visited_at', Carbon::today())->count();
+        $payments = Payment::orderBy('created_at', 'desc')->paginate(10);
 
-        // Statistik kunjungan berdasarkan interval waktu (misalnya per jam dalam sehari)
-        $hourlyVisits = Visit::select(DB::raw('HOUR(visited_at) as hour'), DB::raw('count(*) as visits'))
-            ->whereDate('visited_at', Carbon::today())
-            ->groupBy('hour')
-            ->orderBy('hour', 'asc')
-            ->get()
-            ->mapWithKeys(function ($item) {
-                return [$item['hour'] => $item['visits']];
-            });
+        $orders = Order::orderBy('created_at', 'desc')->paginate(10);
 
-        // Hitung durasi kunjungan individu per pengguna hari ini
-        $visitDurations = Visit::whereDate('visited_at', Carbon::today())
-            ->select(DB::raw('TIMESTAMPDIFF(SECOND, MIN(visited_at), MAX(visited_at)) as duration'))
-            ->groupBy('user_id')
-            ->pluck('duration');
+        $parameterExists = TParameter::exists(); // Checks if there are any records
+        
+        if (!$parameterExists) {
+            session()->flash('warning', 'Data Parameter Kosong, Silahkan Isi Data Parameter Terlebih Dahulu Dikarenakan Berkatian Dengan Halaman Ecommerce dan Transaksi Pembayaran ');
+        }
+        
+        $waitingApprovalOrders = Order::where('status', Order::STATUS_WAITING_APPROVAL)->get();
+        $processingOrders = Order::where('status', Order::STATUS_PROCESSING)->get();
+        $pendingPaymentOrders = Order::where('status', Order::STATUS_APPROVED)->get();
+        $confirmPaymentOrders = Order::where('status', Order::STATUS_CONFIRMED)->get();
 
-        // Hitung rata-rata durasi kunjungan hari ini
-        $averageVisitTimeToday = $visitDurations->avg();
-
+        
         // Mengirim variabel ke view
-        return view('admin.dashboard.dashboard', compact('customerCount', 'orderCount', 'orderNotFinishCount', 'visitorCountToday', 'hourlyVisits', 'averageVisitTimeToday', 'totalSales'));
+        return view('admin.dashboard.dashboard', compact('customerCount', 'orderCount', 'orderNotFinishCount', 'payments', 'totalSales', 'orders' ,'parameterExists','waitingApprovalOrders', 'processingOrders', 'pendingPaymentOrders', 'confirmPaymentOrders'));
     }
 
 }

@@ -2,29 +2,6 @@
 
 @section('content')
 
-@php
-    $userId = Auth::id();
-
-    // Fetch unseen orders count
-    $unseenCount = \App\Models\Order::whereDoesntHave('seen_by_users', function($query) use ($userId) {
-        $query->where('user_id', $userId);
-    })->count();
-
-    // Fetch unseen users (customers) count
-    $unseenUserCount = \App\Models\User::where('role', 0) // Assuming role 0 is for customers
-        ->whereDoesntHave('seenByAdmins', function($query) use ($userId) {
-            $query->where('admin_id', $userId);
-        })
-        ->count();
-
-    // Fetch unseen users (customers) list
-    $unseenUsers = \App\Models\User::where('role', 0)
-        ->whereDoesntHave('seenByAdmins', function($query) use ($userId) {
-            $query->where('admin_id', $userId);
-        })
-        ->get()->pluck('id')->toArray();
-@endphp
-
     <div class="card">
         <div class="card-header d-flex justify-content-between align-items-center">
             <h4 class="mb-0">User Management</h4>
@@ -81,12 +58,9 @@
                             <tr>
                                 <td>
                                     {{ $user->name }}
-                                    @if(in_array($user->id, $unseenUsers))
-                                        <span class="badge bg-warning text-dark">New</span>
-                                    @endif
                                 </td>
                                 <td>{{ $user->email }}</td>
-                                <td>{{ $user->userDetail->perusahaan ?? 'N/A' }}</td>
+                                <td>{{ $user->company ?? 'N/A' }}</td>
                                 <td>{{ $user->role == 1 ? 'Admin' : 'Customer' }}</td>
                                 <td>{{ $user->created_at->format('Y-m-d') }}</td>
                                 <td>
@@ -118,6 +92,44 @@
             <!-- Pagination -->
             <div class="d-flex justify-content-center">
                 {{ $users->appends(request()->query())->links('pagination::bootstrap-5') }}
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card shadow-sm text-center">
+                <div class="card-header text-white">
+                    <h4 class="card-title">
+                        <i class="fas fa-comments me-2"></i> Chat Live by Tawk
+                    </h4>
+                </div>
+                <div class="card-body">
+                    <h5 class="text-muted">Tawk.to Account</h5>
+                    <p class="mb-1 text-start"><strong>Email:</strong> <a href="mailto:labserveags@gmail.com">labserveags@gmail.com</a></p>
+                    <p class="mb-3 text-start"><strong>Password:</strong> <span class="text-danger">ags123.</span></p>
+                    <!-- Button to Tawk.to Dashboard -->
+                    <div class="text-center">
+                        <button onclick="window.open('https://dashboard.tawk.to/login', 'newwindow', 'width=1200,height=600'); return false;" class="btn btn-success">
+                            <i class="fas fa-external-link-alt me-2"></i> Go to Tawk.to Dashboard
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    
+        <div class="col-md-6">
+            <div class="card shadow-sm text-center">
+                <div class="card-header text-white">
+                    <h4 class="card-title">
+                        <i class="fas fa-envelope me-2"></i> Google Account
+                    </h4>
+                </div>
+                <div class="card-body">
+                    <h5 class="text-muted">Google Account</h5>
+                    <p class="mb-1 text-start"><strong>Email:</strong> <a href="mailto:labserveags@gmail.com">labserveags@gmail.com</a></p>
+                    <p class="mb-3 text-start"><strong>Password:</strong> <span class="text-danger">labverse123123</span></p>
+                </div>
             </div>
         </div>
     </div>

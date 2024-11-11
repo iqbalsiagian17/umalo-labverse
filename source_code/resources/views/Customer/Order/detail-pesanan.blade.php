@@ -23,15 +23,16 @@
                         <p><strong>{{ __('messages.status') }}:</strong> <span
                                 class="badge bg-info text-dark">{{ $order->status }}</span></p>
 
-                        <p>
-                            <strong>{{ __('messages.total_price') }}:</strong>
-                                <span class="text-success">
-                                    {{ 'Rp ' . number_format($order->total, 0, ',', '.') }}
-                                </span>
-                        </p>
+                                <p>
+                                    <strong>{{ __('messages.total_price') }}:</strong>
+                                    <span class="text-success">
+                                        {{ 'Rp ' . number_format($order->negotiation_total ?? $order->total, 0, ',', '.') }}
+                                    </span>
+                                </p>
+                                
                     </div>
                     <div class="col-md-6 text-md-right">
-                        @if(!in_array($order->status, ['cancelled','waiting_approval', 'cancelled_by_system', 'cancelled_by_admin']))
+                        @if(!in_array($order->status, ['cancelled','waiting_approval', '', 'cancelled_by_system', 'cancelled_by_admin']))
                             <a href="{{ route('order.generate_pdf', $order->id) }}" class="btn btn-success btn-sm">
                                 <i class="fas fa-file-download"></i> {{ __('messages.download_invoice') }}
                             </a>
@@ -84,14 +85,44 @@
                                 <td colspan="3" class="text-right"><strong>{{ __('messages.total') }}</strong></td>
                                 <td class="text-right">
                                     <strong>
+                                        @if ($order->negotiation_total)
+                                            <span style="text-decoration: line-through; color: #999;">
+                                                {{ 'Rp ' . number_format(
+                                                    $order->items->sum(function ($item) {
+                                                        return $item->price * $item->quantity;
+                                                    }),
+                                                    0,
+                                                    ',',
+                                                    '.'
+                                                ) }}
+                                            </span>
+                                            <br>
+                                            <span>{{ 'Rp ' . number_format($order->negotiation_total, 0, ',', '.') }}</span>
+                                        @else
+                                            {{ 'Rp ' . number_format(
+                                                $order->items->sum(function ($item) {
+                                                    return $item->price * $item->quantity;
+                                                }),
+                                                0,
+                                                ',',
+                                                '.'
+                                            ) }}
+                                        @endif
+                                    </strong>
+                                </td>
+                                
+                                
+                            </tr>
+                            <tr>
+                                <td colspan="3" class="text-right"><strong>{{ __('messages.total_final_payment') }}</strong></td>
+                                <td class="text-right">
+                                    <strong>
                                         {{ 'Rp ' . number_format(
-                                            $order->items->sum(function ($item) {
-                                                return $item->price * $item->quantity;
-                                            }),
+                                            $order->negotiation_total ?? $order->total,
                                             0,
                                             ',',
                                             '.'
-                                        ) }}
+                                        ) }};
                                     </strong>
                                 </td>
                             </tr>
@@ -220,7 +251,7 @@
                             @foreach($order->payments as $payment)
                             <tr>
                                 <td>
-                                    <a href="{{ asset($payment->payment_proof) }}" target="_blank" class="btn btn-sm btn-primary">View Proof</a>
+                                    <a href="{{ asset($payment->payment_proof) }}" target="_blank" class="btn btn-primary btn-sm">View Proof</a>
                                 </td>
                                 <td>
                                     <span class="badge {{ $payment->status == 'verified' ? 'bg-success' : 'bg-warning' }}">
@@ -238,105 +269,163 @@
 
 
                 <!-- Transaction History -->
-                @if ($order->waiting_approval_at || $order->approved_at || $order->pending_payment_at || $order->confirmed_at || $order->processing_at || $order->shipped_at || $order->delivered_at || $order->cancelled_at || $order->cancelled_by_admin_at || $order->cancelled_by_system_at)
                 <div class="container">
-                    <div class="mt-5">
-                        <h4>{{ __('messages.transaction_history') }}</h4>
-                        <ul class="timeline">
-                            @if ($order->waiting_approval_at)
-                                <li class="timeline-item">
-                                    <div class="timeline-marker"></div>
-                                    <div class="timeline-content">
-                                        <span class="timeline-date">{{ \Carbon\Carbon::parse($order->waiting_approval_at)->format('d-m-Y H:i') }}</span>
-                                        <h5 class="timeline-status">{{ __('messages.waiting_approval') }}</h5>
-                                    </div>
-                                </li>
-                            @endif
-                            @if ($order->approved_at)
-                                <li class="timeline-item">
-                                    <div class="timeline-marker"></div>
-                                    <div class="timeline-content">
-                                        <span class="timeline-date">{{ \Carbon\Carbon::parse($order->approved_at)->format('d-m-Y H:i') }}</span>
-                                        <h5 class="timeline-status">{{ __('messages.approved') }}</h5>
-                                    </div>
-                                </li>
-                            @endif
-                            @if ($order->pending_payment_at)
-                                <li class="timeline-item">
-                                    <div class="timeline-marker"></div>
-                                    <div class="timeline-content">
-                                        <span class="timeline-date">{{ \Carbon\Carbon::parse($order->pending_payment_at)->format('d-m-Y H:i') }}</span>
-                                        <h5 class="timeline-status">{{ __('messages.pending_payment') }}</h5>
-                                    </div>
-                                </li>
-                            @endif
-                            @if ($order->confirmed_at)
-                                <li class="timeline-item">
-                                    <div class="timeline-marker"></div>
-                                    <div class="timeline-content">
-                                        <span class="timeline-date">{{ \Carbon\Carbon::parse($order->confirmed_at)->format('d-m-Y H:i') }}</span>
-                                        <h5 class="timeline-status">{{ __('messages.confirmed') }}</h5>
-                                    </div>
-                                </li>
-                            @endif
-                            @if ($order->processing_at)
-                                <li class="timeline-item">
-                                    <div class="timeline-marker"></div>
-                                    <div class="timeline-content">
-                                        <span class="timeline-date">{{ \Carbon\Carbon::parse($order->processing_at)->format('d-m-Y H:i') }}</span>
-                                        <h5 class="timeline-status">{{ __('messages.processing') }}</h5>
-                                    </div>
-                                </li>
-                            @endif
-                            @if ($order->shipped_at)
-                                <li class="timeline-item">
-                                    <div class="timeline-marker"></div>
-                                    <div class="timeline-content">
-                                        <span class="timeline-date">{{ \Carbon\Carbon::parse($order->shipped_at)->format('d-m-Y H:i') }}</span>
-                                        <h5 class="timeline-status">{{ __('messages.shipped') }}</h5>
-                                    </div>
-                                </li>
-                            @endif
-                            @if ($order->delivered_at)
-                                <li class="timeline-item">
-                                    <div class="timeline-marker"></div>
-                                    <div class="timeline-content">
-                                        <span class="timeline-date">{{ \Carbon\Carbon::parse($order->delivered_at)->format('d-m-Y H:i') }}</span>
-                                        <h5 class="timeline-status">{{ __('messages.delivered') }}</h5>
-                                    </div>
-                                </li>
-                            @endif
-                            @if ($order->cancelled_at)
-                                <li class="timeline-item">
-                                    <div class="timeline-marker"></div>
-                                    <div class="timeline-content">
-                                        <span class="timeline-date">{{ \Carbon\Carbon::parse($order->cancelled_at)->format('d-m-Y H:i') }}</span>
-                                        <h5 class="timeline-status">{{ __('messages.cancelled') }}</h5>
-                                    </div>
-                                </li>
-                            @endif
-                            @if ($order->cancelled_by_admin_at)
-                                <li class="timeline-item">
-                                    <div class="timeline-marker"></div>
-                                    <div class="timeline-content">
-                                        <span class="timeline-date">{{ \Carbon\Carbon::parse($order->cancelled_by_admin_at)->format('d-m-Y H:i') }}</span>
-                                        <h5 class="timeline-status">{{ __('messages.cancelled_by_admin') }}</h5>
-                                    </div>
-                                </li>
-                            @endif
-                            @if ($order->cancelled_by_system_at)
-                                <li class="timeline-item">
-                                    <div class="timeline-marker"></div>
-                                    <div class="timeline-content">
-                                        <span class="timeline-date">{{ \Carbon\Carbon::parse($order->cancelled_by_system_at)->format('d-m-Y H:i') }}</span>
-                                        <h5 class="timeline-status">{{ __('messages.cancelled_by_system') }}</h5>
-                                    </div>
-                                </li>
-                            @endif
-                        </ul>
+                    <div class="row mt-5">
+                        <!-- Main Order Timeline -->
+                        @if ($order->waiting_approval_at || $order->approved_at || $order->pending_payment_at || $order->confirmed_at || $order->processing_at || $order->shipped_at || $order->delivered_at || $order->cancelled_at || $order->cancelled_by_admin_at || $order->cancelled_by_system_at)
+                            <div class="col-md-6">
+                                <h4>{{ __('messages.transaction_history') }}</h4>
+                                <ul class="timeline">
+                                    @if ($order->waiting_approval_at)
+                                        <li class="timeline-item">
+                                            <div class="timeline-marker"></div>
+                                            <div class="timeline-content">
+                                                <span class="timeline-date">{{ \Carbon\Carbon::parse($order->waiting_approval_at)->format('d-m-Y H:i') }}</span>
+                                                <h5 class="timeline-status">{{ __('messages.waiting_approval') }}</h5>
+                                            </div>
+                                        </li>
+                                    @endif
+                                    @if ($order->approved_at)
+                                        <li class="timeline-item">
+                                            <div class="timeline-marker"></div>
+                                            <div class="timeline-content">
+                                                <span class="timeline-date">{{ \Carbon\Carbon::parse($order->approved_at)->format('d-m-Y H:i') }}</span>
+                                                <h5 class="timeline-status">{{ __('messages.approved') }}</h5>
+                                            </div>
+                                        </li>
+                                    @endif
+                                    @if ($order->pending_payment_at)
+                                        <li class="timeline-item">
+                                            <div class="timeline-marker"></div>
+                                            <div class="timeline-content">
+                                                <span class="timeline-date">{{ \Carbon\Carbon::parse($order->pending_payment_at)->format('d-m-Y H:i') }}</span>
+                                                <h5 class="timeline-status">{{ __('messages.pending_payment') }}</h5>
+                                            </div>
+                                        </li>
+                                    @endif
+                                    @if ($order->confirmed_at)
+                                        <li class="timeline-item">
+                                            <div class="timeline-marker"></div>
+                                            <div class="timeline-content">
+                                                <span class="timeline-date">{{ \Carbon\Carbon::parse($order->confirmed_at)->format('d-m-Y H:i') }}</span>
+                                                <h5 class="timeline-status">{{ __('messages.confirmed') }}</h5>
+                                            </div>
+                                        </li>
+                                    @endif
+                                    @if ($order->processing_at)
+                                        <li class="timeline-item">
+                                            <div class="timeline-marker"></div>
+                                            <div class="timeline-content">
+                                                <span class="timeline-date">{{ \Carbon\Carbon::parse($order->processing_at)->format('d-m-Y H:i') }}</span>
+                                                <h5 class="timeline-status">{{ __('messages.processing') }}</h5>
+                                            </div>
+                                        </li>
+                                    @endif
+                                    @if ($order->shipped_at)
+                                        <li class="timeline-item">
+                                            <div class="timeline-marker"></div>
+                                            <div class="timeline-content">
+                                                <span class="timeline-date">{{ \Carbon\Carbon::parse($order->shipped_at)->format('d-m-Y H:i') }}</span>
+                                                <h5 class="timeline-status">{{ __('messages.shipped') }}</h5>
+                                            </div>
+                                        </li>
+                                    @endif
+                                    @if ($order->delivered_at)
+                                        <li class="timeline-item">
+                                            <div class="timeline-marker"></div>
+                                            <div class="timeline-content">
+                                                <span class="timeline-date">{{ \Carbon\Carbon::parse($order->delivered_at)->format('d-m-Y H:i') }}</span>
+                                                <h5 class="timeline-status">{{ __('messages.delivered') }}</h5>
+                                            </div>
+                                        </li>
+                                    @endif
+                                    @if ($order->cancelled_at)
+                                        <li class="timeline-item">
+                                            <div class="timeline-marker"></div>
+                                            <div class="timeline-content">
+                                                <span class="timeline-date">{{ \Carbon\Carbon::parse($order->cancelled_at)->format('d-m-Y H:i') }}</span>
+                                                <h5 class="timeline-status">{{ __('messages.cancelled') }}</h5>
+                                            </div>
+                                        </li>
+                                    @endif
+                                    @if ($order->cancelled_by_admin_at)
+                                        <li class="timeline-item">
+                                            <div class="timeline-marker"></div>
+                                            <div class="timeline-content">
+                                                <span class="timeline-date">{{ \Carbon\Carbon::parse($order->cancelled_by_admin_at)->format('d-m-Y H:i') }}</span>
+                                                <h5 class="timeline-status">{{ __('messages.cancelled_by_admin') }}</h5>
+                                            </div>
+                                        </li>
+                                    @endif
+                                    @if ($order->cancelled_by_system_at)
+                                        <li class="timeline-item">
+                                            <div class="timeline-marker"></div>
+                                            <div class="timeline-content">
+                                                <span class="timeline-date">{{ \Carbon\Carbon::parse($order->cancelled_by_system_at)->format('d-m-Y H:i') }}</span>
+                                                <h5 class="timeline-status">{{ __('messages.cancelled_by_system') }}</h5>
+                                            </div>
+                                        </li>
+                                    @endif
+                                </ul>
+                            </div>
+                        @endif
+                
+                        <!-- Negotiation Timeline -->
+                        @if ($order->negotiation_pending_at || $order->negotiation_approved_at || $order->negotiation_rejected_at || $order->negotiation_in_progress_at || $order->negotiation_completed_at)
+                            <div class="col-md-6">
+                                <h4>{{ __('messages.negotiation_history') }}</h4>
+                                <ul class="timeline">
+                                    @if ($order->negotiation_pending_at)
+                                        <li class="timeline-item">
+                                            <div class="timeline-marker"></div>
+                                            <div class="timeline-content">
+                                                <span class="timeline-date">{{ \Carbon\Carbon::parse($order->negotiation_pending_at)->format('d-m-Y H:i') }}</span>
+                                                <h5 class="timeline-status">{{ __('messages.negotiation_pending') }}</h5>
+                                            </div>
+                                        </li>
+                                    @endif
+                                    @if ($order->negotiation_approved_at)
+                                        <li class="timeline-item">
+                                            <div class="timeline-marker"></div>
+                                            <div class="timeline-content">
+                                                <span class="timeline-date">{{ \Carbon\Carbon::parse($order->negotiation_approved_at)->format('d-m-Y H:i') }}</span>
+                                                <h5 class="timeline-status">{{ __('messages.negotiation_approved') }}</h5>
+                                            </div>
+                                        </li>
+                                    @endif
+                                    @if ($order->negotiation_in_progress_at)
+                                        <li class="timeline-item">
+                                            <div class="timeline-marker"></div>
+                                            <div class="timeline-content">
+                                                <span class="timeline-date">{{ \Carbon\Carbon::parse($order->negotiation_in_progress_at)->format('d-m-Y H:i') }}</span>
+                                                <h5 class="timeline-status">{{ __('messages.negotiation_in_progress') }}</h5>
+                                            </div>
+                                        </li>
+                                    @endif
+                                    @if ($order->negotiation_rejected_at)
+                                        <li class="timeline-item">
+                                            <div class="timeline-marker"></div>
+                                            <div class="timeline-content">
+                                                <span class="timeline-date">{{ \Carbon\Carbon::parse($order->negotiation_rejected_at)->format('d-m-Y H:i') }}</span>
+                                                <h5 class="timeline-status">{{ __('messages.negotiation_rejected') }}</h5>
+                                            </div>
+                                        </li>
+                                    @endif
+                                    @if ($order->negotiation_finished_at)
+                                        <li class="timeline-item">
+                                            <div class="timeline-marker"></div>
+                                            <div class="timeline-content">
+                                                <span class="timeline-date">{{ \Carbon\Carbon::parse($order->negotiation_finished_at)->format('d-m-Y H:i') }}</span>
+                                                <h5 class="timeline-status">{{ __('messages.negotiation_finished') }}</h5>
+                                            </div>
+                                        </li>
+                                    @endif
+                                </ul>
+                            </div>
+                        @endif
                     </div>
                 </div>
-            @endif
+                
             
 
                 <style>

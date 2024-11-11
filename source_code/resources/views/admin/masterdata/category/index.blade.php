@@ -11,13 +11,13 @@
                 </div>
                 <div class="d-flex align-items-center">
                     <!-- Form Pencarian di ujung kanan -->
-                    <form action="{{ route('admin.masterdata.Category.index') }}" method="GET" class="d-flex me-3">
+                    <form action="{{ route('admin.masterdata.category.index') }}" method="GET" class="d-flex me-3">
                         <input type="text" name="search" class="form-control me-2" placeholder="Cari Nama Category" value="{{ request('search') }}">
                         <button type="submit" class="btn btn-primary me-2">Cari</button>
-                        <a href="{{ route('admin.masterdata.Category.index') }}" class="btn btn-secondary">Refresh</a>
+                        <a href="{{ route('admin.masterdata.category.index') }}" class="btn btn-secondary">Refresh</a>
                     </form>
                     <!-- Tombol Buat Category di sebelah kanan form -->
-                    <a href="{{ route('admin.masterdata.Category.create') }}" class="btn btn-primary">Buat Category</a>
+                    <a href="{{ route('admin.masterdata.category.create') }}" class="btn btn-primary">Buat Category</a>
                 </div>
             </div>
             
@@ -40,17 +40,17 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @forelse ($Categorys as $index => $Category)
+                                @forelse ($categories as $index => $category)
                                 <tr>
-                                    <td>{{ $Categorys->firstItem() + $index }}</td>
-                                    <td>{{ $Category->nama }}</td>
+                                    <td>{{ $categories->firstItem() + $index }}</td>
+                                    <td>{{ $category->name }}</td>
                                     <td>
-                                        <a href="{{ route('admin.masterdata.Category.edit', $Category->id) }}" class="btn btn-warning btn-sm">Edit</a>
-                                        <form action="{{ route('admin.masterdata.Category.destroy', $Category->id) }}" method="POST" style="display:inline-block;">
+                                        <a href="{{ route('admin.masterdata.category.edit', $category->id) }}" class="btn btn-warning btn-sm">Edit</a>
+                                        <form action="{{ route('admin.masterdata.category.destroy', $category->id) }}" method="POST" style="display:inline-block;">
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Apakah Anda yakin ingin menghapus Category ini?')">Hapus</button>
-                                        </form>
+                                        </form>                                        
                                     </td>
                                 </tr>
                                 @empty
@@ -65,7 +65,7 @@
 
                 <!-- Pagination -->
                 <div class="d-flex justify-content-center mt-3">
-                    {{ $Categorys->appends(request()->query())->links('pagination::bootstrap-5') }}
+                    {{ $categories->appends(request()->query())->links('pagination::bootstrap-5') }}
                 </div>
             </div>
         </div>

@@ -6,19 +6,19 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Carbon\Carbon;
 
-
 class Order extends Model
 {
     use HasFactory;
 
     protected $table = 't_orders';
 
-
     protected $fillable = [
         'user_id',
         'total',
+        'negotiation_total',
         'status',
         'is_negotiated',
+        'negotiation_status',
         'tracking_number',
         'shipping_service_id',
         'waiting_approval_at',
@@ -28,6 +28,11 @@ class Order extends Model
         'processing_at',
         'shipped_at',
         'delivered_at',
+        'negotiation_pending_at',
+        'negotiation_approved_at',
+        'negotiation_rejected_at',
+        'negotiation_in_progress_at',
+        'negotiation_finished_at',
         'cancelled_at',
         'cancelled_by_admin_at',
         'cancelled_by_system_at',
@@ -37,8 +42,7 @@ class Order extends Model
     ];
 
     const STATUS_WAITING_APPROVAL = 'waiting_approval';
-    const STATUS_APPROVED = 'approved'; // Status approved yang ditambahkan
-
+    const STATUS_APPROVED = 'approved';
     const STATUS_PENDING_PAYMENT = 'pending_payment';
     const STATUS_CONFIRMED = 'confirmed';
     const STATUS_PROCESSING = 'processing';
@@ -48,15 +52,60 @@ class Order extends Model
     const STATUS_CANCELLED_BY_ADMIN = 'cancelled_by_admin';
     const STATUS_CANCELLED_BY_SYSTEM = 'cancelled_by_system';
 
+    // Negotiation statuses
+    const STATUS_NEGOTIATION_PENDING = 'negotiation_pending';
+    const STATUS_NEGOTIATION_APPROVED = 'negotiation_approved';
+    const STATUS_NEGOTIATION_REJECTED = 'negotiation_rejected';
+    const STATUS_NEGOTIATION_IN_PROGRESS = 'negotiation_in_progress';
+    const STATUS_NEGOTIATION_FINISHED = 'negotiation_finished';
+
     public function setStatus($status)
     {
         $this->update([
             'status' => $status,
             $status . '_at' => Carbon::now(),
-            'is_viewed_by_customer' => false, // Atur ulang ke false setiap kali status berubah
+            'is_viewed_by_customer' => false,
         ]);
     }
 
+    public function startNegotiation()
+    {
+        $this->update([
+            'negotiation_status' => self::STATUS_NEGOTIATION_PENDING,
+            'negotiated_pending_at' => Carbon::now(),
+            'is_viewed_by_customer' => false,
+        ]);
+    }
+
+    public function approveNegotiation()
+    {
+        $this->update([
+            'negotiation_status' => self::STATUS_NEGOTIATION_APPROVED,
+            'negotiated_approved_at' => Carbon::now(),
+            'is_viewed_by_customer' => false,
+        ]);
+    }
+
+    public function rejectNegotiation()
+    {
+        $this->update([
+            'negotiation_status' => self::STATUS_NEGOTIATION_REJECTED,
+            'negotiated_rejected_at' => Carbon::now(),
+            'is_viewed_by_customer' => false,
+        ]);
+    }
+
+    public function finalizeNegotiation($newTotal)
+    {
+        $this->update([
+            'total' => $newTotal,
+            'status' => self::STATUS_PENDING_PAYMENT,
+            'pending_payment_at' => Carbon::now(),
+            'negotiation_status' => self::STATUS_NEGOTIATION_FINISHED,
+            'negotiation_completed_at' => Carbon::now(),
+            'is_viewed_by_customer' => false,
+        ]);
+    }
 
     public function user()
     {
@@ -111,10 +160,16 @@ class Order extends Model
                 return 'Dibatalkan oleh Admin';
             case self::STATUS_CANCELLED_BY_SYSTEM:
                 return 'Dibatalkan oleh Sistem';
+            case self::STATUS_NEGOTIATION_PENDING:
+                return 'Menunggu Persetujuan Negoisasi';
+            case self::STATUS_NEGOTIATION_APPROVED:
+                return 'Negoisasi Disetujui';
+            case self::STATUS_NEGOTIATION_REJECTED:
+                return 'Negoisasi Ditolak';
+            case self::STATUS_NEGOTIATION_IN_PROGRESS:
+                return 'Negoisasi Sedang Berlangsung';
             default:
                 return 'Status Tidak Diketahui';
         }
     }
-
-    
 }

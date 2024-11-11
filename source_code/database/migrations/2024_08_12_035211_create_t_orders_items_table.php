@@ -17,7 +17,8 @@ return new class extends Migration
             $table->foreignId('product_id')->constrained('t_product')->onDelete('cascade');
             $table->integer('quantity');
             $table->decimal('price', 15, 2);
-            $table->decimal('total', 15, 2);        
+            $table->decimal('total', 15, 2); 
+            $table->boolean('is_negotiated')->default(false);       
             $table->timestamps();
         
             $table->foreign('order_id')->references('id')->on('t_orders')->onDelete('cascade');

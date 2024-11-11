@@ -1,3 +1,22 @@
+<?php
+use App\Models\Order;
+use App\Models\Payment;
+
+$unseenOrders = Order::where('is_viewed_by_admin', false)->get();
+
+// Fetch unpaid or pending payments (you can adjust the status as needed)
+$unseenPayments = Payment::where('is_viewed_by_admin', false)
+                          ->whereIn('status', [Payment::STATUS_UNPAID, Payment::STATUS_PENDING])
+                          ->get();
+
+$unseenOrderCount = $unseenOrders->count();
+$unseenPaymentCount = $unseenPayments->count();
+
+
+$totalUnseenCount = $unseenOrderCount + $unseenPaymentCount;
+        
+
+?>
 <div class="main-panel">
     <div class="main-header">
       <div class="main-header-logo">
@@ -149,62 +168,72 @@
               </ul>
             </li> --}}
 
-<li class="nav-item topbar-icon dropdown hidden-caret">
-    <a
-        class="nav-link dropdown-toggle"
-        href="#"
-        id="notifDropdown"
-        role="button"
-        data-bs-toggle="dropdown"
-        aria-haspopup="true"
-        aria-expanded="false"
-    >
-        <i class="fa fa-bell"></i>
-    </a>
-    <ul class="dropdown-menu notif-box animated fadeIn" aria-labelledby="notifDropdown">
-        <li>
-            <div class="dropdown-title">
-                You have  new notifications
-            </div>
-        </li>
-        <li>
-            <div class="notif-scroll scrollbar-outer">
-                <div class="notif-center">
-                    <!-- Unseen Orders -->
-{{--                     @foreach($unseenOrders as $order)
-                        <a href="{{ route('transaksi.show', $order->id) }}">
-                            <div class="notif-icon notif-primary">
-                                <i class="fa fa-shopping-cart"></i>
-                            </div>
-                            <div class="notif-content">
-                                <span class="block">New Order #{{ $order->id }} - {{ $order->user->userdetail->perusahaan ?? 'Unknown Company' }}</span>
-                                <span class="time">{{ $order->created_at->diffForHumans() }}</span>
-                            </div>
-                        </a>
-                    @endforeach
-
-                    <!-- Unseen User Registrations -->
-                    @foreach($unseenUsers as $user)
-                        <a href="{{ route('users.show', $user->id) }}">
-                            <div class="notif-icon notif-primary">
-                                <i class="fa fa-user"></i>
-                            </div>
-                            <div class="notif-content">
-                                <span class="block">New User: {{ $user->name }} - {{ $user->userDetail->perusahaan ?? 'Unknown Company' }}</span>
-                                <span class="time">{{ $user->created_at->diffForHumans() }}</span>
-                            </div>
-                        </a>
-                    @endforeach
- --}}                </div>
-            </div>
-        </li>
-        <li>
-            <a class="see-all" href="{{ route('admin.orders.index') }}">
-                See all notifications<i class="fa fa-angle-right"></i>
-            </a>
-        </li>
-    </ul>
-</li>
+      <li class="nav-item topbar-icon dropdown hidden-caret">
+          <a
+              class="nav-link dropdown-toggle"
+              href="#"
+              id="notifDropdown"
+              role="button"
+              data-bs-toggle="dropdown"
+              aria-haspopup="true"
+              aria-expanded="false"
+          >
+          <i class="fa fa-bell position-relative"></i>
+          @if ($totalUnseenCount > 0)
+              <span class="badge badge-danger position-absolute translate-middle rounded-circle">
+                  {{ $totalUnseenCount }}
+              </span>
+          @endif
+          
+          </a>
+          <ul class="dropdown-menu notif-box animated fadeIn" aria-labelledby="notifDropdown">
+            <li>
+                <div class="dropdown-title">
+                    You have new notifications
+                </div>
+            </li>
+            <li>
+                <div class="notif-scroll scrollbar-outer">
+                    <div class="notif-center">
+        
+                        <!-- Unseen Orders -->
+                        @foreach($unseenOrders as $order)
+                            <a href="{{ route('admin.orders.show', $order->id) }}">
+                                <div class="notif-icon notif-primary">
+                                    <i class="fa fa-shopping-cart"></i>
+                                </div>
+                                <div class="notif-content">
+                                    <span class="block">New Order #{{ $order->id }} - {{ $order->user->userdetail->perusahaan ?? 'Unknown Company' }}</span>
+                                    <span class="time">{{ $order->created_at->diffForHumans() }}</span>
+                                    <span class="status">{{ $order->statusMessage() }}</span> <!-- Displaying the status message -->
+                                </div>
+                            </a>
+                        @endforeach
+        
+                        <!-- Unseen Payments -->
+                        @foreach($unseenPayments as $payment)
+                            <a href="{{ route('admin.payments.index') }}">
+                                <div class="notif-icon notif-success">
+                                    <i class="fa fa-credit-card"></i>
+                                </div>
+                                <div class="notif-content">
+                                    <span class="block">New Payment for Order #{{ $payment->order->id }} - Status: {{ $payment->statusMessage() }}</span>
+                                    <span class="time">{{ $payment->created_at->diffForHumans() }}</span>
+                                </div>
+                            </a>
+                        @endforeach
+        
+                    </div>
+                </div>
+            </li>
+            <li>
+                <a class="see-all" href="{{ route('admin.orders.index') }}">
+                    See all notifications <i class="fa fa-angle-right"></i>
+                </a>
+            </li>
+        </ul>
+        
+      </li>
 
           
             <li class="nav-item topbar-icon dropdown hidden-caret">

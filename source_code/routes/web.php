@@ -12,17 +12,16 @@ use App\Http\Controllers\Admin\Slider\SliderController;
 use App\Http\Controllers\Costumer\User\UserDetailController;
 use App\Http\Controllers\Costumer\Product\ProductCostumerController;
 use App\Http\Controllers\Admin\MasterData\MateraiController;
-use App\Http\Controllers\Admin\MasterData\PPNController;
 use App\Http\Controllers\Admin\MasterData\ShippingServiceController;
 use App\Http\Controllers\Admin\Order\OrderHandleAdminController;
 use App\Http\Controllers\Admin\Payment\PaymentHandleAdminController;
 use App\Http\Controllers\Admin\Faq\FaqController;
+use App\Http\Controllers\Admin\MasterData\TParameterController;
 use App\Http\Controllers\Admin\Transaksi\TransaksiController;
 use App\Http\Controllers\Admin\User\UserController;
 use App\Http\Controllers\Costumer\Cart\CartController;
 use App\Http\Controllers\Costumer\Order\OrderHandleCustomerController;
 use App\Http\Controllers\Costumer\Payment\PaymentHandleCustomerController;
-use App\Http\Controllers\Costumer\QnA\QnaController;
 use App\Http\Controllers\Costumer\Shop\ShopController;
 use App\Http\Controllers\Costumer\Wishlist\WishlistController;
 use App\Http\Controllers\Costumer\Review\ReviewCustomerController;
@@ -132,6 +131,12 @@ Route::middleware(['auth', 'user-access:admin'])->group(function () {
     Route::put('admin/orders/{order}/payment', [OrderHandleAdminController::class, 'allowPayment'])->name('customer.orders.payment');
     Route::put('/admin/orders/{order}/cancel', [OrderHandleAdminController::class, 'cancelOrder'])->name('admin.orders.cancel');
 
+    Route::put('/admin/orders/{order}/start-negotiation', [OrderHandleAdminController::class, 'startNegotiation'])->name('admin.orders.startNegotiation');
+    Route::put('/admin/orders/{order}/approve-negotiation', [OrderHandleAdminController::class, 'approveNegotiation'])->name('admin.orders.approveNegotiation');
+    Route::put('/admin/orders/{order}/reject-negotiation', [OrderHandleAdminController::class, 'rejectNegotiation'])->name('admin.orders.rejectNegotiation');
+    Route::put('/admin/orders/{order}/finalize-negotiation', [OrderHandleAdminController::class, 'finalizeNegotiation'])->name('admin.orders.finalizeNegotiation');
+
+
 
     Route::get('/admin/payments', [PaymentHandleAdminController::class, 'index'])->name('admin.payments.index');
     Route::get('admin/payments/{id}', [PaymentHandleAdminController::class, 'show'])->name('admin.payments.show');
@@ -140,10 +145,30 @@ Route::middleware(['auth', 'user-access:admin'])->group(function () {
 
 
     Route::prefix('admin/masterdata')->name('admin.masterdata.')->group(function () {
-        Route::resource('Category', CategoryController::class);
-        Route::resource('subCategory', SubCategoryController::class);
-        Route::resource('ppn', PPNController::class);
-        Route::resource('materai', MateraiController::class);
+        Route::get('category', [CategoryController::class, 'index'])->name('category.index');
+        Route::get('category/create', [CategoryController::class, 'create'])->name('category.create');
+        Route::post('category', [CategoryController::class, 'store'])->name('category.store');
+        Route::get('category/{category}', [CategoryController::class, 'show'])->name('category.show');
+        Route::get('category/{category}/edit', [CategoryController::class, 'edit'])->name('category.edit');
+        Route::put('category/{category}', [CategoryController::class, 'update'])->name('category.update');
+        Route::delete('category/{category}', [CategoryController::class, 'destroy'])->name('category.destroy');
+        
+        Route::get('subcategory', [SubCategoryController::class, 'index'])->name('subcategory.index');
+        Route::get('subcategory/create', [SubCategoryController::class, 'create'])->name('subcategory.create');
+        Route::post('subcategory', [SubCategoryController::class, 'store'])->name('subcategory.store');
+        Route::get('subcategory/{id}', [SubCategoryController::class, 'show'])->name('subcategory.show');
+        Route::get('subcategory/{id}/edit', [SubCategoryController::class, 'edit'])->name('subcategory.edit');
+        Route::put('subcategory/{id}', [SubCategoryController::class, 'update'])->name('subcategory.update');
+        Route::delete('subcategory/{id}', [SubCategoryController::class, 'destroy'])->name('subcategory.destroy');
+        
+        // Routes untuk TParameterController
+        Route::get('parameter', [TParameterController::class, 'index'])->name('parameter.index');
+        Route::get('parameter/create', [TParameterController::class, 'create'])->name('parameter.create');
+        Route::post('parameter', [TParameterController::class, 'store'])->name('parameter.store');
+        Route::get('parameter/{id}', [TParameterController::class, 'show'])->name('parameter.show');
+        Route::get('parameter/{id}/edit', [TParameterController::class, 'edit'])->name('parameter.edit');
+        Route::put('parameter/{id}', [TParameterController::class, 'update'])->name('parameter.update');
+        Route::delete('parameter/{id}', [TParameterController::class, 'destroy'])->name('parameter.destroy');
 
         Route::get('shipping-services', [ShippingServiceController::class, 'index'])->name('shippingservice.index');
         Route::get('shipping-services/create', [ShippingServiceController::class, 'create'])->name('shippingservice.create');

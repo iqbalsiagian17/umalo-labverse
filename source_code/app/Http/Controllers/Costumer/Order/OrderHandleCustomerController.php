@@ -73,6 +73,8 @@ class OrderHandleCustomerController extends Controller
             }
         }
 
+        $isNegotiable = false;
+
         // Mulai transaksi database
         DB::beginTransaction();
         try {
@@ -91,30 +93,40 @@ class OrderHandleCustomerController extends Controller
 
             // Tambahkan item ke pesanan
             foreach ($cartItems as $item) {
+                $negotiable = $item->product->negotiable === 'yes';
+                if ($negotiable) $isNegotiable = true;
+
                 $order->items()->create([
                     'product_id' => $item->product_id,
                     'quantity' => $item->quantity,
                     'price' => $item->product->discount_price ?? $item->product->price,
                     'total' => $item->quantity * ($item->product->discount_price ?? $item->product->price),
+                    'is_negotiated' => $negotiable,
                 ]);
 
-                // Kurangi stok produk
                 $item->product->decrement('stock', $item->quantity);
             }
 
             // Kosongkan keranjang setelah checkout
             Cart::where('user_id', $user->id)->delete();
 
-            // Commit transaksi database
-            DB::commit();
+            if ($isNegotiable) {
+                $order->update([
+                    'status' => null, // Set status to null
+                    'negotiation_status' => Order::STATUS_NEGOTIATION_PENDING, // use negotiation_status
+                    'negotiation_pending_at' => now(),
+                ]);
+                DB::commit();
+                return redirect()->route('customer.order.show', $order->id)->with('success', 'Order submitted for negotiation.');
+            }
 
+            DB::commit();
             return redirect()->route('customer.order.show', $order->id)->with('success', 'Checkout completed.');
 
         } catch (\Exception $e) {
             DB::rollBack();
             return redirect()->back()->with('error', 'An error occurred during checkout: ' . $e->getMessage());
         }
-        
     }
 
    

@@ -187,28 +187,23 @@
             <div class="collapse" id="base">
               <ul class="nav nav-collapse">
                 <li>
-                  <a href="{{ route('admin.masterdata.Category.index') }}">
+                  <a href="{{ route('admin.masterdata.category.index') }}">
                     <span class="sub-item">Category</span>
                   </a>
                 </li>
                 <li>
-                  <a href="{{ route('admin.masterdata.subCategory.index') }}">
+                  <a href="{{ route('admin.masterdata.subcategory.index') }}">
                     <span class="sub-item">Sub-Category</span>
-                  </a>
-                </li>
-                <li>
-                  <a href="{{ route('admin.masterdata.ppn.index') }}">
-                    <span class="sub-item">PPN</span>
-                  </a>
-                </li>
-                <li>
-                  <a href="{{ route('admin.masterdata.materai.index') }}">
-                    <span class="sub-item">Materai</span>
                   </a>
                 </li>
                 <li>
                   <a href="{{ route('admin.masterdata.shippingservice.index') }}">
                     <span class="sub-item">Shipping Service</span>
+                  </a>
+                </li>
+                <li>
+                  <a href="{{ route('admin.masterdata.parameter.index') }}">
+                    <span class="sub-item">Parameter</span>
                   </a>
                 </li>
               </ul>

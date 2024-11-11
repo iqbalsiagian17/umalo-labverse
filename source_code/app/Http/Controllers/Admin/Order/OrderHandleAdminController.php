@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin\Order;
 use App\Http\Controllers\Controller;
 use App\Models\Order;
 use App\Models\ShippingService;
+use App\Models\TParameter;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Barryvdh\DomPDF\Facade\Pdf; 
@@ -49,19 +50,20 @@ class OrderHandleAdminController extends Controller
         if ($request->input('total_range')) {
             switch ($request->input('total_range')) {
                 case 'less_1m':
-                    $query->where('total', '<', 1000000);
+                    $query->whereRaw('COALESCE(negotiation_total, total) < ?', [1000000]);
                     break;
                 case '1m_5m':
-                    $query->whereBetween('total', [1000000, 5000000]);
+                    $query->whereBetween(DB::raw('COALESCE(negotiation_total, total)'), [1000000, 5000000]);
                     break;
                 case '5m_10m':
-                    $query->whereBetween('total', [5000000, 10000000]);
+                    $query->whereBetween(DB::raw('COALESCE(negotiation_total, total)'), [5000000, 10000000]);
                     break;
                 case '10m_up':
-                    $query->where('total', '>', 10000000);
+                    $query->whereRaw('COALESCE(negotiation_total, total) > ?', [10000000]);
                     break;
             }
         }
+        
 
         // Filter by status
         if ($request->input('status') && $request->input('status') != 'all') {
@@ -223,6 +225,122 @@ class OrderHandleAdminController extends Controller
         return redirect()->back()->with('error', 'Order has already been cancelled.');
     }
 
+    public function startNegotiation($orderId)
+    {
+        $order = Order::find($orderId);
+
+        if (!$order) {
+            return back()->with('error', 'Order not found.');
+        }
+
+        DB::beginTransaction();
+        try {
+            $order->update([
+                'status' => Order::STATUS_NEGOTIATION_PENDING,
+                'negotiation_pending_at' => now(),
+                'is_viewed_by_customer' => false,
+            ]);
+
+            DB::commit();
+            return back()->with('success', 'Negotiation started successfully.');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return back()->with('error', 'Failed to start negotiation: ' . $e->getMessage());
+        }
+    }
+
+    public function approveNegotiation($orderId)
+    {
+        $order = Order::find($orderId);
+
+        if (!$order || $order->negotiation_status !== Order::STATUS_NEGOTIATION_PENDING) {
+            return back()->with('error', 'Order is not eligible for negotiation approval.');
+        }
+
+        DB::beginTransaction();
+        try {
+            $order->update([
+                'negotiation_status' => Order::STATUS_NEGOTIATION_APPROVED,
+                'status' => Order::STATUS_NEGOTIATION_IN_PROGRESS,
+                'negotiation_approved_at' => now(),
+                'negotiation_in_progress_at' => now(),
+                'is_viewed_by_customer' => false,
+            ]);
+
+            DB::commit();
+            return back()->with('success', 'Negotiation approved successfully.');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return back()->with('error', 'Failed to approve negotiation: ' . $e->getMessage());
+        }
+    }
+
+    public function rejectNegotiation($orderId)
+    {
+        $order = Order::find($orderId);
+
+        if (!$order || !in_array($order->negotiation_status, [Order::STATUS_NEGOTIATION_PENDING, Order::STATUS_NEGOTIATION_APPROVED])) {
+            return back()->with('error', 'Order is not eligible for negotiation rejection.');
+        }        
+
+        DB::beginTransaction();
+        try {
+            $order->update([
+                'negotiation_status' => Order::STATUS_NEGOTIATION_REJECTED,
+                'status' => Order::STATUS_WAITING_APPROVAL,
+                'negotiation_rejected_at' => now(),
+                'negotiation_finished_at' => now(),
+                'is_viewed_by_customer' => false,
+            ]);
+
+            DB::commit();
+            return back()->with('success', 'Negotiation rejected successfully.');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return back()->with('error', 'Failed to reject negotiation: ' . $e->getMessage());
+        }
+    }
+
+    public function finalizeNegotiation(Request $request, $orderId)
+    {
+        $request->validate([
+            'negotiated_total' => 'required|numeric|min:0',
+        ]);
+
+        $order = Order::find($orderId);
+
+        if (!$order || $order->negotiation_status !== Order::STATUS_NEGOTIATION_APPROVED) {
+            return back()->with('error', 'Order is not eligible for negotiation finalization.');
+        }
+
+        DB::beginTransaction();
+        try {
+            // Generate an invoice number if one doesn’t already exist
+            if (!$order->invoice_number) {
+                $order->invoice_number = self::generateInvoiceNumber();
+            }
+
+            // Update the order with the finalized negotiation total and new status
+            $order->update([
+                'negotiation_total' => $request->input('negotiated_total'),
+                'status' => Order::STATUS_PENDING_PAYMENT,
+                'negotiation_status' => Order::STATUS_NEGOTIATION_FINISHED,
+                'negotiation_finished_at' => now(),
+                'pending_payment_at' => now(),
+                'is_viewed_by_customer' => false,
+                'invoice_number' => $order->invoice_number, // save the generated invoice number
+            ]);
+
+            DB::commit();
+            return back()->with('success', 'Negotiation finalized successfully and order is now pending payment.');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return back()->with('error', 'Failed to finalize negotiation: ' . $e->getMessage());
+        }
+    }
+
+    
+
 
 
     public static function generateInvoiceNumber()
@@ -255,6 +373,8 @@ class OrderHandleAdminController extends Controller
     {
         // Retrieve the order along with related items, user details, and addresses
         $order = Order::with(['items.product', 'user.userAddresses'])->findOrFail($id);
+
+        $parameter = TParameter::first();
 
         // Retrieve the user and their addresses
         $user = $order->user;
@@ -307,7 +427,7 @@ class OrderHandleAdminController extends Controller
         
         // Pass all the images to the view along with other data
         $pdf = PDF::loadView('customer.order.pdf', compact(
-            'order', 'user', 'userAddresses', 'agsLogo', 'mapsIcon', 'emailIcon', 'phoneIcon', 'invoiceNumber'
+            'order', 'user', 'userAddresses', 'agsLogo', 'mapsIcon', 'emailIcon', 'phoneIcon', 'invoiceNumber', 'parameter'
         ));
 
         // Sanitize the company name for the filename

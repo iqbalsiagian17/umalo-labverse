@@ -11,7 +11,7 @@ class SubCategory extends Model
 
     protected $table = 't_p_sub_category';
 
-    protected $fillable = ['nama', 'category_id','slug']; // Tambahkan flag ke fillable
+    protected $fillable = ['name', 'category_id','slug']; // Tambahkan flag ke fillable
 
     public function getRouteKeyName()
     {

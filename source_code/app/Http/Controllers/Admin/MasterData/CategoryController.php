@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers\Admin\MasterData;
+
 use App\Http\Controllers\Controller;
 use App\Models\Category;
 use Illuminate\Http\Request;
@@ -12,21 +13,20 @@ class CategoryController extends Controller
     {
         // Ambil input pencarian dari form
         $search = $request->input('search');
-    
+
         // Query untuk mendapatkan Category yang di-flag 'yes' dan filter jika ada pencarian
-        $query = Category::all();
-    
+        $query = Category::query();
+
         // Jika ada pencarian, tambahkan filter where untuk name
         if ($search) {
             $query->where('name', 'like', '%' . $search . '%');
         }
-    
+
         // Paginate hasil pencarian atau semua Category
-        $categorys = $query->paginate(10); // Sesuaikan jumlah item per halaman
-    
-        return view('admin.masterdata.category.index', compact('categorys', 'search'));
+        $categories = $query->paginate(10); // Sesuaikan jumlah item per halaman
+
+        return view('admin.masterdata.category.index', compact('categories', 'search'));
     }
-    
 
     public function create()
     {
@@ -43,43 +43,47 @@ class CategoryController extends Controller
 
         Category::create([
             'name' => $request->name,
-            'slug' => $slug
+            'slug' => $slug,
         ]);
 
         return redirect()->route('admin.masterdata.category.index')->with('success', 'Category berhasil dibuat.');
     }
 
-    public function show(Category $category)
+    public function show($id)
     {
-        return view('admin.masterdata.kCategory.show', compact('category'));
+        $category = Category::findOrFail($id);
+        return view('admin.masterdata.category.show', compact('category'));
     }
 
-    public function edit(Category $category)
+    public function edit($id)
     {
+        $category = Category::findOrFail($id);
         return view('admin.masterdata.category.edit', compact('category'));
     }
 
-    public function update(Request $request, Category $category)
+    public function update(Request $request, $id)
     {
         // Validasi name
         $request->validate([
-            'name' => 'required|max:255|unique:t_p_category,name', // Validasi name harus unik
+            'name' => 'required|max:255|unique:t_p_category,name,' . $id, // Validasi name harus unik selain untuk kategori ini
         ]);
 
         // Buat slug dari name
         $slug = Str::slug($request->name);
 
-        // Update data kategori dengan slug yang dihasilkan
+        // Cari kategori berdasarkan ID dan update dengan slug baru
+        $category = Category::findOrFail($id);
         $category->update([
             'name' => $request->name,
-            'slug' => $slug
+            'slug' => $slug,
         ]);
 
         return redirect()->route('admin.masterdata.category.index')->with('success', 'Category berhasil diperbarui.');
     }
 
-    public function destroy(Category $category)
+    public function destroy($id)
     {
+        $category = Category::findOrFail($id);
         $category->delete();
 
         return redirect()->route('admin.masterdata.category.index')->with('success', 'Category berhasil dihapus.');

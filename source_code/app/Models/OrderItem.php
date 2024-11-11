@@ -11,13 +11,13 @@ class OrderItem extends Model
 
     protected $table = 't_orders_items';
 
-
     protected $fillable = [
         'order_id',
         'product_id',
         'quantity',
         'price',
         'total',
+        'is_negotiated',
     ];
 
     public function order()
@@ -28,6 +28,11 @@ class OrderItem extends Model
     public function product()
     {
         return $this->belongsTo(Product::class);
+    }
+
+    public function isNegotiable()
+    {
+        return $this->product->negotiable;
     }
 
     public function completedOrderCount()

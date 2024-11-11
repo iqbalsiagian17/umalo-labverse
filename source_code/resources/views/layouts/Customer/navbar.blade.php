@@ -7,12 +7,14 @@
 <?php 
 use App\Models\Order;
 use App\Models\Payment;
+use App\Models\TParameter;
 use Illuminate\Support\Facades\Auth;
 
 $orders = Order::where('user_id', Auth::id())->where('is_viewed_by_customer', false)->get();
 
 $payments = Payment::whereHas('order', function($query) { $query->where('user_id', Auth::id()); })->where('is_viewed_by_customer', false)->get();
 
+$parameter = TParameter::first();
 ?>
 
 
@@ -20,7 +22,9 @@ $payments = Payment::whereHas('order', function($query) { $query->where('user_id
     <div class="humberger__menu__overlay"></div>
     <div class="humberger__menu__wrapper">
         <div class="humberger__menu__logo">
-            <a href="{{ route('home') }}"><img src="{{ asset('assets/images/logo-nobg.png') }}" alt=""></a>
+            <a href="{{ route('home') }}">
+                <img src="{{ asset($parameter->logo1 ? $parameter->logo1 : 'assets/images/logo-nobg.png') }}" alt="Logo">
+            </a>            
         </div>
         <div class="humberger__menu__cart">
             <ul>
@@ -101,9 +105,9 @@ $payments = Payment::whereHas('order', function($query) { $query->where('user_id
         </div>
         <div class="humberger__menu__contact">
             <ul>
-                <li><i class="fa fa-envelope"></i> info@labtek.id</li>
-                <li>Level-Up Your Output With Labverse</li>
-            </ul>
+                <li><i class="fa fa-envelope"></i> {{ $parameter->email1 ? $parameter->email1 : 'info@labtek.id' }}</li>
+                <li>{{ $parameter->slogan ? $parameter->slogan : 'Level-Up Your Output With Labverse' }}</li>
+            </ul>            
         </div>
     </div>
     <!-- Humberger End -->
@@ -120,9 +124,9 @@ $payments = Payment::whereHas('order', function($query) { $query->where('user_id
                     <div class="col-lg-6 col-md-6">
                         <div class="header__top__left">
                             <ul>
-                                <li><i class="fa fa-envelope"></i>info@labtek.id</li>
-                                <li>Level-Up Your Output With Labverse</li>
-                            </ul>
+                                <li><i class="fa fa-envelope"></i> {{ $parameter->email1 ? $parameter->email1 : 'info@labtek.id' }}</li>
+                                <li>{{ $parameter->slogan ? $parameter->slogan : 'Level-Up Your Output With Labverse' }}</li>
+                            </ul>                            
                         </div>
                     </div>
                     <div class="col-lg-6 col-md-6">
@@ -160,8 +164,9 @@ $payments = Payment::whereHas('order', function($query) { $query->where('user_id
                 <div class="row align-items-center">
                     <div class="col-lg-3">
                         <div class="header__logo text-center mb-3">
-                            <a href="{{ route('home') }}"><img src="{{ asset('assets/images/logo-nobg.png') }}"
-                                    alt="" style="width: 100%; height: 100px;"></a>
+                            <a href="{{ route('home') }}">
+                                <img src="{{ asset($parameter->logo1 ? $parameter->logo1 : 'assets/images/logo-nobg.png') }}" alt="Logo" style="width: 100%; height: 100px;">
+                            </a>
                         </div>
                     </div>
                     <div class="col-lg-6">

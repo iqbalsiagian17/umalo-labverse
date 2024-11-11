@@ -229,4 +229,13 @@ return [
     'shipped' => 'Shipped',
     'delivered' => 'Delivered',
 
+    "negotiation_history" => "Negotiation History",
+    "negotiation_pending" => "Negotiation Pending",
+    "negotiation_approved" => "Negotiation Approved",
+    "negotiation_rejected" => "Negotiation Rejected",
+    "negotiation_finished" => "Negotiation Finished",
+    "negotiation_in_progress" => "Negotiation In Progress",
+    
+    "total_final_payment" => "Negotiation Total Payment",
+
 ];

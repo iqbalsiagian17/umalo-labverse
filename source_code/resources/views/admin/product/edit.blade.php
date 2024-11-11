@@ -71,6 +71,17 @@
                                     <small class="text-danger">{{ $errors->first('status') }}</small>
                                 @endif  
                             </div>
+
+                            <div class="form-group">
+                                <label for="negotiable">Status Negosiasi:</label>
+                                <select name="negotiable" class="form-control" required>
+                                    <option value="yes" {{ old('negotiable', $product->negotiable) == 'yes' ? 'selected' : '' }}>Ya</option>
+                                    <option value="no" {{ old('negotiable', $product->negotiable) == 'no' ? 'selected' : '' }}>Tidak</option>
+                                </select>
+                                @if ($errors->has('negotiable'))
+                                    <small class="text-danger">{{ $errors->first('negotiable') }}</small>
+                                @endif
+                            </div>
                             
                             <div class="row">
                                 <div class="col-md-6">

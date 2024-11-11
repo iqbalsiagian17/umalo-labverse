@@ -24,6 +24,7 @@ class DatabaseSeeder extends Seeder
             SubCategorySeeder::class,
             ProductSeeder::class,
             FaqSeeder::class,
+            TParameterSeeder::class,
         ]);
     }
 }

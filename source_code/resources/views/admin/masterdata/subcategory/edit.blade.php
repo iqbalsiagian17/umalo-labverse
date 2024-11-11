@@ -19,31 +19,31 @@
                     </div>
                 @endif
 
-                <form action="{{ route('admin.masterdata.subCategory.update', $subCategory->id) }}" method="POST">
+                <form action="{{ route('admin.masterdata.subcategory.update', $subcategory->id) }}" method="POST">
                     @csrf
                     @method('PUT')
                     <div class="form-group">
-                        <label for="Category_id">Category</label>
-                        <select name="Category_id" class="form-control" id="Category_id">
-                            @foreach ($Category as $item)
-                                <option value="{{ $item->id }}" {{ old('Category_id', $subCategory->Category_id) == $item->id ? 'selected' : '' }}>
-                                    {{ $item->nama }}
+                        <label for="category_id">Category</label>
+                        <select name="category_id" class="form-control" id="category_id">
+                            @foreach ($categories as $item)
+                                <option value="{{ $item->id }}" {{ old('category_id', $subcategory->categories) == $item->id ? 'selected' : '' }}>
+                                    {{ $item->name }}
                                 </option>
                             @endforeach
                         </select>
-                        @if ($errors->has('Category_id'))
-                            <small class="text-danger">{{ $errors->first('Category_id') }}</small>
+                        @if ($errors->has('category_id'))
+                            <small class="text-danger">{{ $errors->first('category_id') }}</small>
                         @endif
                     </div>
                     <div class="form-group">
-                        <label for="nama">Nama Sub Category</label>
-                        <input type="text" name="nama" class="form-control" id="nama" value="{{ old('nama', $subCategory->nama) }}" placeholder="Masukkan nama sub Category">
-                        @if ($errors->has('nama'))
-                            <small class="text-danger">{{ $errors->first('nama') }}</small>
+                        <label for="name">Nama Sub Category</label>
+                        <input type="text" name="name" class="form-control" id="name" value="{{ old('name', $subcategory->name) }}" placeholder="Masukkan name sub Category">
+                        @if ($errors->has('name'))
+                            <small class="text-danger">{{ $errors->first('name') }}</small>
                         @endif
                     </div>
                     <button type="submit" class="btn btn-success">Simpan</button>
-                    <a href="{{ route('admin.masterdata.subCategory.index') }}" class="btn btn-secondary">Kembali</a>
+                    <a href="{{ route('admin.masterdata.subcategory.index') }}" class="btn btn-secondary">Kembali</a>
                 </form>
             </div>
         </div>

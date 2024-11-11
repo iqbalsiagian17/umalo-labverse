@@ -54,86 +54,9 @@
                     <!-- Contact Information Section -->
                     <h5 class="mb-3">Informasi Kontak</h5>
 
-                    <div class="mb-3">
-                        <label for="no_telepone" class="form-label">Nomor Telephone / WhatsApp</label>
-                        <input type="text" class="form-control" id="no_telepone" name="no_telepone" value="{{ optional($user->userDetail)->no_telepone }}">
-                        @error('no_telepone')
-                            <small class="text-danger">{{ $message }}</small>
-                        @enderror
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="alamat" class="form-label">Alamat</label>
-                        <input type="text" class="form-control" id="alamat" name="alamat" value="{{ optional($user->addresses->first())->alamat }}">
-                        @error('alamat')
-                            <small class="text-danger">{{ $message }}</small>
-                        @enderror
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="kota" class="form-label">Kota</label>
-                        <input type="text" class="form-control" id="kota" name="kota" value="{{ optional($user->addresses->first())->kota }}">
-                        @error('kota')
-                            <small class="text-danger">{{ $message }}</small>
-                        @enderror
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="provinsi" class="form-label">Provinsi</label>
-                        <input type="text" class="form-control" id="provinsi" name="provinsi" value="{{ optional($user->addresses->first())->provinsi }}">
-                        @error('provinsi')
-                            <small class="text-danger">{{ $message }}</small>
-                        @enderror
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="tambahan" class="form-label">Detail Alamat</label>
-                        <input type="text" class="form-control" id="tambahan" name="tambahan" value="{{ optional($user->addresses->first())->tambahan }}">
-                        @error('tambahan')
-                            <small class="text-danger">{{ $message }}</small>
-                        @enderror
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="kode_pos" class="form-label">Kode Pos</label>
-                        <input type="text" class="form-control" id="kode_pos" name="kode_pos" value="{{ optional($user->addresses->first())->kode_pos }}">
-                        @error('kode_pos')
-                            <small class="text-danger">{{ $message }}</small>
-                        @enderror
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="perusahaan" class="form-label">Perusahaan</label>
-                        <input type="text" class="form-control" id="perusahaan" name="perusahaan" value="{{ optional($user->userDetail)->perusahaan }}">
-                        @error('perusahaan')
-                            <small class="text-danger">{{ $message }}</small>
-                        @enderror
-                    </div>
-
                     <hr>
 
                     <!-- Personal Details Section -->
-                    <h5 class="mb-3">Detail Pribadi</h5>
-
-                    <div class="mb-3">
-                        <label for="lahir" class="form-label">Tanggal lahir</label>
-                        <input type="date" class="form-control" id="lahir" name="lahir" value="{{ optional($user->userDetail)->lahir }}">
-                        @error('lahir')
-                            <small class="text-danger">{{ $message }}</small>
-                        @enderror
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="jenis_kelamin" class="form-label">Jenis Kelamin</label>
-                        <select class="form-control" id="jenis_kelamin" name="jenis_kelamin" required>
-                            <option value="Laki-Laki" {{ optional($user->userDetail)->jenis_kelamin === 'Laki-Laki' ? 'selected' : '' }}>Male</option>
-                            <option value="Perempuan" {{ optional($user->userDetail)->jenis_kelamin === 'Perempuan' ? 'selected' : '' }}>Female</option>
-                        </select>
-                        @error('jenis_kelamin')
-                            <small class="text-danger">{{ $message }}</small>
-                        @enderror
-                    </div>
-
                     <button type="submit" class="btn btn-primary">Perbarui</button>
                 </form>
             </div>

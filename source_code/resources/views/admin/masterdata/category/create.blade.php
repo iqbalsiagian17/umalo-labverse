@@ -19,17 +19,17 @@
                     </div>
                 @endif
 
-                <form action="{{ route('admin.masterdata.Category.store') }}" method="POST">
+                <form action="{{ route('admin.masterdata.category.store') }}" method="POST">
                     @csrf
                     <div class="form-group">
-                        <label for="nama">Nama</label>
-                        <input type="text" name="nama" class="form-control" id="nama" value="{{ old('nama') }}" placeholder="Masukkan nama Category">
-                        @if ($errors->has('nama'))
-                            <small class="text-danger">{{ $errors->first('nama') }}</small>
+                        <label for="name">Nama</label>
+                        <input type="text" name="name" class="form-control" id="name" value="{{ old('name') }}" placeholder="Masukkan nama Category">
+                        @if ($errors->has('name'))
+                            <small class="text-danger">{{ $errors->first('name') }}</small>
                         @endif
                     </div>
                     <button type="submit" class="btn btn-success">Simpan</button>
-                    <a href="{{ route('admin.masterdata.Category.index') }}" class="btn btn-secondary">Kembali</a>
+                    <a href="{{ route('admin.masterdata.category.index') }}" class="btn btn-secondary">Kembali</a>
                 </form>
             </div>
         </div>

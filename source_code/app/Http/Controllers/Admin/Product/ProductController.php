@@ -217,6 +217,7 @@ class ProductController extends Controller
             'price' => 'required|numeric|min:0',
             'discount_price' => 'nullable|numeric|min:0|lt:price|required_if:allow_discount,1',
             'e_catalog_link' => 'nullable',
+            'negotiable' => 'required|in:yes,no',
             'category_id' => 'required|exists:t_p_category,id',
             'subcategory_id' => 'required|exists:t_p_sub_category,id',
             'image.*' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:15000',
@@ -245,6 +246,7 @@ class ProductController extends Controller
             'tool_type' => $request->tool_type,
             'function' => $request->function,
             'status' => $request->status,
+            'negotiable' => $request->negotiable,
             'product_specifications' => $request->product_specifications,
             'is_price_displayed' => $request->is_price_displayed,
             'price' => str_replace('.', '', $request->price), // Remove formatting before saving

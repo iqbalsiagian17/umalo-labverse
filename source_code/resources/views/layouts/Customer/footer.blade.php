@@ -1,4 +1,8 @@
  <!-- Footer Section Begin -->
+<?php 
+$parameter = App\Models\TParameter::first();
+?>
+
 <footer class="footer spad">
     <div class="container">
         <div class="row">
@@ -9,27 +13,28 @@
                     <div class="item" style="display: flex; align-items: flex-start; margin-bottom: 10px;">
                         <i class="fas fa-home" style="margin-right: 10px; font-size: 16px; margin-top: 2px;"></i>
                         <span class="address info" style="display: inline-block; max-width: calc(100% - 30px); line-height: 1.5; font-size: 14px;">
-                            {{ __('messages.address') }}
+                            {{ $parameter->address ? $parameter->address : 'Alamat belum tersedia' }}
                         </span>
                     </div>
                     <div class="item" style="display: flex; align-items: flex-start; margin-bottom: 10px;">
                         <i class="fas fa-phone-alt" style="margin-right: 10px; font-size: 16px; margin-top: 2px;"></i>
                         <span class="phone info" style="display: inline-block; max-width: calc(100% - 30px); line-height: 1.5; font-size: 14px;">
-                            (021) 2204 3144
+                            {{ $parameter->telephone_number ? $parameter->telephone_number : '(021) 2204 3144' }}
                         </span>
                     </div>
                     <div class="item" style="display: flex; align-items: flex-start;">
                         <i class="fas fa-envelope" style="margin-right: 10px; font-size: 16px; margin-top: 2px;"></i>
                         <span class="email info" style="display: inline-block; max-width: calc(100% - 30px); line-height: 1.5; font-size: 14px;">
-                            info@labtek.id
+                            {{ $parameter->email1 ? $parameter->email1 : 'info@labtek.id' }}
                         </span>
                     </div>
                     <div class="item" style="display: flex; align-items: flex-start;">
                         <i class="fas fa-envelope" style="margin-right: 10px; font-size: 16px; margin-top: 2px;"></i>
                         <span class="email info" style="display: inline-block; max-width: calc(100% - 30px); line-height: 1.5; font-size: 14px;">
-                            sales@labtek.id
+                            {{ $parameter->email2 ? $parameter->email2 : 'sales@labtek.id' }}
                         </span>
                     </div>
+                    
                 </div>
             </div>
 
@@ -81,7 +86,7 @@
                         &copy;
                         <script>
                             document.write(new Date().getFullYear());
-                        </script> {{ __('messages.created_by') }} PT Arkamaya Guna Saharsa
+                        </script> {{ __('messages.created_by') }} {{ $parameter->company_name ?? 'PT. Arkamaya Guna Saharsa' }}
                     </div>
                     
                 </div>

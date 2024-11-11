@@ -223,4 +223,13 @@ return [
     'shipped' => 'Dikirim',
     'delivered' => 'Terkirim',
 
+    "negotiation_history" => "Riwayat Negoisasi",
+    "negotiation_pending" => "Menunggu Persetujuan Negoisasi",
+    "negotiation_approved" => "Disetujui Negoisasi",
+    "negotiation_rejected" => "Ditolak Negoisasi",
+    "negotiation_finished" => "Selesai Negoisasi",
+    "negotiation_in_progress" => "Negoisasi Sedang Berlangsung",
+    
+    "total_final_payment" => "Total Pembayaran Akhir",
+
 ];

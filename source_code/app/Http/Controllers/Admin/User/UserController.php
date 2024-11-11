@@ -18,7 +18,7 @@ class UserController extends Controller
     $search = $request->input('search');
 
     // Inisialisasi query
-    $query = User::with('userDetail');
+    $query = User::query();
 
     // Filter berdasarkan role
     if (!is_null($role)) {
@@ -43,41 +43,6 @@ class UserController extends Controller
         return view('admin.users.create');
     }
 
-    public function store(Request $request)
-    {
-        $validatedData = $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email',
-            'password' => 'required|string|min:8|confirmed',
-            'role' => 'required|in:0,1', // 0 for customer, 1 for admin
-        ]);
-
-        // Hash the password
-        $validatedData['password'] = bcrypt($validatedData['password']);
-
-        $user = User::create($validatedData);
-        UserDetail::create([
-            'user_id' => $user->id,
-            'no_telepone' => $request->no_telepone,
-            'perusahaan' => $request->perusahaan,  // Save perusahaan field
-            'lahir' => $request->lahir,
-            'jenis_kelamin' => $request->jenis_kelamin,
-
-        ]);
-
-        UserAddress::create([
-            'user_id' => $user->id,
-            'alamat' => $request->alamat,
-            'kota' => $request->kota,
-            'provinsi' => $request->provinsi,
-            'kode_pos' => $request->kode_pos,
-            'tambahan' => $request->tambahan,
-
-        ]);
-
-        return redirect()->route('users.index')->with('success', 'User created successfully.');
-    }
-
     public function show($id)
     {
         $user = User::findOrFail($id);
@@ -93,7 +58,7 @@ class UserController extends Controller
 
     public function edit($id)
     {
-        $user = User::with('userDetail')->findOrFail($id);
+        $user = User::findOrFail($id);
         return view('admin.users.edit', compact('user'));
     }
 

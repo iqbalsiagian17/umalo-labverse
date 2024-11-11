@@ -79,7 +79,7 @@
                             <th>ID Pesanan</th>
                             <th>Invoice</th>
                             <th>Pelanggan</th>
-                            <th>Total</th>
+                            <th>Final Price</th>
                             <th class="text-center">Status</th>
                             <th>Aksi</th>
                         </tr>
@@ -94,7 +94,9 @@
                                 </a>
                             </td>                        
                             <td>{{ optional($order->user)->full_name ?? optional($order->user)->name }}</td>
-                            <td>Rp{{ number_format($order->total, 0, ',', '.') }}</td>
+                            <td>
+                                Rp{{ number_format($order->negotiation_total ?? $order->total, 0, ',', '.') }}
+                            </td>
                             <td class="text-center">
                                 <span class="badge 
                                     @switch($order->status)
@@ -108,7 +110,13 @@
                                         @case(Order::STATUS_CANCELLED)
                                         @case(Order::STATUS_CANCELLED_BY_SYSTEM)
                                         @case(Order::STATUS_CANCELLED_BY_ADMIN) bg-danger @break
+                                        @case(Order::STATUS_NEGOTIATION_PENDING) bg-warning @break <!-- Background color for negotiation pending -->
                                         @default bg-light
+                                    @endswitch
+                            
+                                    @switch($order->negotiation_status)
+                                        @case(Order::STATUS_NEGOTIATION_PENDING) bg-warning text-dark @break <!-- Color for negotiation pending -->
+                                        @default
                                     @endswitch
                                 ">
                                     @switch($order->status)
@@ -141,11 +149,20 @@
                                         @default
                                             {{ ucfirst($order->status) }}
                                     @endswitch
+                            
+                                    @switch($order->negotiation_status)
+                                        @case(Order::STATUS_NEGOTIATION_PENDING)
+                                            Menunggu Persetujuan Negoisasi
+                                            @break
+                                        @default
+                                    @endswitch
                                 </span>
+                            
                                 @if (!$order->is_viewed_by_admin)
                                     <span class="badge bg-danger ms-2">Baru</span>
                                 @endif
                             </td>
+                            
                             
                             
                             <td>
