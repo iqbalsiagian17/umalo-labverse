@@ -123,7 +123,7 @@
                   <span class="sub-item">Slider - Landing Page</span>
                 </a>
               </li><li>
-                <a href="{{-- {{ route('bigsale.index') }} --}}">
+                <a href="{{ route('admin.bigsales.index') }}">
                   <span class="sub-item">BigSale Event</span>
                 </a>
               </li>

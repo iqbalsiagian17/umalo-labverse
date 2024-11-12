@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\Bigsales\BigSaleAdminHandleController;
 use App\Http\Controllers\Auth\SocialiteController;
 use App\Http\Controllers\Costumer\Faq\FaqCustomerController;
 use Illuminate\Support\Facades\Route;
@@ -109,12 +110,21 @@ Route::middleware(['auth', 'user-access:admin'])->group(function () {
     Route::delete('admin/product/{product}', [ProductController::class, 'destroy'])->name('admin.product.destroy');
     Route::post('/admin/product/update-status/{product}', [ProductController::class, 'updateStatus'])->name('product.update-status');
     Route::get('get-subcategories/{category_id}', [ProductController::class, 'getSubcategories']);
-    });
 
     Route::resource('slider', SliderController::class);
     Route::resource('faq', FaqController::class);
     Route::resource('users', UserController::class);
     Route::put('/users/{id}/password', [UserController::class, 'updatePassword'])->name('users.update.password');
+
+
+    Route::get('/admin/bigsale/index', [BigSaleAdminHandleController::class, 'index'])->name('admin.bigsales.index');
+    Route::get('/admin/bigsale/create', [BigSaleAdminHandleController::class, 'create'])->name('admin.bigsales.create');
+    Route::post('/admin/bigsale/store', [BigSaleAdminHandleController::class, 'store'])->name('admin.bigsales.store');
+    Route::get('/admin/bigsale/{bigSale}', [BigSaleAdminHandleController::class, 'show'])->name('admin.bigsales.show');
+    Route::get('/admin/bigsale/{bigSale}/edit', [BigSaleAdminHandleController::class, 'edit'])->name('admin.bigsales.edit');
+    Route::put('/admin/bigsale/update/{bigSale}', [BigSaleAdminHandleController::class, 'update'])->name('admin.bigsales.update');
+    Route::delete('/admin/bigsale/{bigSale}', [BigSaleAdminHandleController::class, 'destroy'])->name('admin.bigsales.destroy');
+
 
 
     Route::get('admin/Product/getSubCategory/{CategoryId}', [ProductController::class, 'getSubCategory']);
@@ -179,6 +189,7 @@ Route::middleware(['auth', 'user-access:admin'])->group(function () {
     });
 
 
+});
 
 
 //switch language

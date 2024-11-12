@@ -85,6 +85,12 @@ class Product extends Model
     {
         return $this->hasMany(ProductList::class, 'product_id');
     }
+
+    public function bigSales()
+    {
+        return $this->belongsToMany(BigSale::class, 't_bigsales_product', 'product_id', 'bigsale_id');
+    }
+
     
 
 

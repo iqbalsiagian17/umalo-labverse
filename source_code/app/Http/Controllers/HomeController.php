@@ -36,23 +36,38 @@ class HomeController extends Controller
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function index()
-    {
+{
 
-        $slider = Slider::all();
-    
-        $user = User::find(auth()->id());
+    // Ambil data slider, user, dan order terkait user yang sedang login
+    $slider = Slider::all();
+    $user = User::find(auth()->id());
+    $orders = Order::where('user_id', Auth::id())->get();
 
-        $orders = Order::where('user_id', Auth::id())->get();
+    // Ambil Big Sale aktif
+    $bigSales = BigSale::where('status', true)
+        ->where('start_time', '<=', now())
+        ->where('end_time', '>=', now())
+        ->with('products.images') // Memuat produk dan gambar yang terkait dengan Big Sale
+        ->first();
 
-        $product = Product::with('images')
+    // Ambil ID dari produk yang termasuk dalam Big Sale aktif (jika ada)
+    $bigSaleProductIds = $bigSales ? $bigSales->products->pluck('id')->toArray() : [];
+
+    // Ambil produk yang tidak termasuk dalam Big Sale aktif
+    $product = Product::with('images')
         ->where('status', 'publish')
-        ->orderBy('created_at', 'desc')
-        ->take(8)
+        ->whereNotIn('id', $bigSaleProductIds) // Kecualikan produk yang ada dalam Big Sale
+        ->orderBy('created_at', 'desc') // Urutkan berdasarkan produk terbaru
+        ->take(8) // Batas produk yang diambil sebanyak 8
         ->get();
-    
-        return view('customer.home.home', compact( 'slider' , 'product', 'user', 'orders'));
-    }
-    
+
+        
+
+    // Kirim data ke view
+    return view('customer.home.home', compact('slider', 'product', 'user', 'orders', 'bigSales'));
+}
+
+
 
 
 
