@@ -16,6 +16,7 @@ class BigSale extends Model
         'title',
         'slug',
         'banner',
+        'modal_image',
         'start_time',
         'end_time',
         'discount_amount',

@@ -9,6 +9,7 @@ use App\Models\Order;
 use App\Models\Payment;
 use App\Models\Product;
 use App\Models\Slider;
+use App\Models\SubCategory;
 use App\Models\TParameter;
 use App\Models\User;
 use App\Models\Visit;
@@ -36,36 +37,36 @@ class HomeController extends Controller
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function index()
-{
+    {
 
-    // Ambil data slider, user, dan order terkait user yang sedang login
-    $slider = Slider::all();
-    $user = User::find(auth()->id());
-    $orders = Order::where('user_id', Auth::id())->get();
+        // Ambil data slider, user, dan order terkait user yang sedang login
+        $slider = Slider::all();
+        $user = User::find(auth()->id());
+        $orders = Order::where('user_id', Auth::id())->get();
 
-    // Ambil Big Sale aktif
-    $bigSales = BigSale::where('status', true)
-        ->where('start_time', '<=', now())
-        ->where('end_time', '>=', now())
-        ->with('products.images') // Memuat produk dan gambar yang terkait dengan Big Sale
-        ->first();
+        // Ambil Big Sale aktif
+        $bigSales = BigSale::where('status', true)
+            ->where('start_time', '<=', now())
+            ->where('end_time', '>=', now())
+            ->with('products.images') // Memuat produk dan gambar yang terkait dengan Big Sale
+            ->first();
 
-    // Ambil ID dari produk yang termasuk dalam Big Sale aktif (jika ada)
-    $bigSaleProductIds = $bigSales ? $bigSales->products->pluck('id')->toArray() : [];
+        // Ambil ID dari produk yang termasuk dalam Big Sale aktif (jika ada)
+        $bigSaleProductIds = $bigSales ? $bigSales->products->pluck('id')->toArray() : [];
 
-    // Ambil produk yang tidak termasuk dalam Big Sale aktif
-    $product = Product::with('images')
-        ->where('status', 'publish')
-        ->whereNotIn('id', $bigSaleProductIds) // Kecualikan produk yang ada dalam Big Sale
-        ->orderBy('created_at', 'desc') // Urutkan berdasarkan produk terbaru
-        ->take(8) // Batas produk yang diambil sebanyak 8
-        ->get();
+        // Ambil produk yang tidak termasuk dalam Big Sale aktif
+        $product = Product::with('images')
+            ->where('status', 'publish')
+            ->whereNotIn('id', $bigSaleProductIds) // Kecualikan produk yang ada dalam Big Sale
+            ->orderBy('created_at', 'desc') // Urutkan berdasarkan produk terbaru
+            ->take(8) // Batas produk yang diambil sebanyak 8
+            ->get();
 
-        
+            
 
-    // Kirim data ke view
-    return view('customer.home.home', compact('slider', 'product', 'user', 'orders', 'bigSales'));
-}
+        // Kirim data ke view
+        return view('customer.home.home', compact('slider', 'product', 'user', 'orders', 'bigSales'));
+    }
 
 
 
@@ -101,11 +102,11 @@ class HomeController extends Controller
         $customerCount = User::where('role', 'customer')->count();
 
         // Menghitung jumlah pesanan
-        $orderCount = Order::where('status', 'selesai')->count();
+        $orderCount = Order::where('status', 'delivered')->count();
 
-        $orderNotFinishCount = Order::where('status', '!=', 'selesai')->count();
+        $orderNotFinishCount = Order::where('status', '!=', 'delivered')->count();
 
-        $totalSales = Order::where('status', 'selesai')->sum('total');
+        $totalSales = Order::where('status', 'delivered')->sum('total');
 
         $payments = Payment::orderBy('created_at', 'desc')->paginate(10);
 
@@ -126,5 +127,33 @@ class HomeController extends Controller
         // Mengirim variabel ke view
         return view('admin.dashboard.dashboard', compact('customerCount', 'orderCount', 'orderNotFinishCount', 'payments', 'totalSales', 'orders' ,'parameterExists','waitingApprovalOrders', 'processingOrders', 'pendingPaymentOrders', 'confirmPaymentOrders'));
     }
+
+
+    public function bigsale($slug)
+    {
+        $bigSales = BigSale::where('slug', $slug)
+            ->where('status', true)
+            ->where('start_time', '<=', now())
+            ->where('end_time', '>=', now())
+            ->with(['products' => function ($query) {
+                // Only apply the category filter if 'category' is present in the request
+                if (request()->has('category') && request()->category) {
+                    $query->where('category_id', request()->category);
+                }
+            }, 'products.images']) // Load images for products
+            ->first();
+    
+        if (!$bigSales) {
+            abort(404, 'Big Sale not found or inactive.');
+        }
+    
+        // Retrieve categories for the sidebar
+        $categories = Category::all();
+    
+        // Pass the Big Sale, filtered (or all) products, and categories to the view
+        return view('customer.bigsale.index', compact('bigSales', 'categories'));
+    }
+    
+
 
 }

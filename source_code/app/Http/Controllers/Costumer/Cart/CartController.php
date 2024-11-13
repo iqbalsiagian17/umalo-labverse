@@ -3,11 +3,13 @@
 namespace App\Http\Controllers\Costumer\Cart;
 
 use App\Http\Controllers\Controller;
+use App\Models\BigSale;
 use App\Models\Cart;
 use Illuminate\Http\Request;
 use App\Models\Product;
 use App\Models\Order;
 use App\Models\OrderItem;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 
 class CartController extends Controller
@@ -41,21 +43,41 @@ class CartController extends Controller
     // Get the product
     $product = Product::findOrFail($productId);
 
-    // Cek jika stok produk kurang dari 1 (stok nol atau kurang)
+    // Check if the product is out of stock
     if ($product->stock <= 0) {
         return response()->json(['error' => 'Product is out of stock.'], 400);
     }
 
-    // Check if the stock is available
+    // Check if the requested quantity is available in stock
     if ($product->stock < $quantity) {
         return response()->json(['error' => 'Not enough stock available.'], 400);
     }
 
-    // Determine which price to use (discount or regular price)
-    $price = $product->discount_price ?? $product->price; // If discount_price exists, use it, otherwise use price
+    // Determine if the product is part of an active Big Sale
+    $bigSalePrice = $product->price; // Default to the regular price
 
-    // Calculate the total price for this item
-    $totalPrice = $price * $quantity;
+    $activeBigSale = BigSale::where('status', true)
+        ->where('start_time', '<=', now())
+        ->where('end_time', '>=', now())
+        ->whereHas('products', function ($query) use ($product) {
+            $query->where('t_product.id', $product->id);
+        })
+        ->first();
+
+    if ($activeBigSale) {
+        // Apply Big Sale discount
+        if ($activeBigSale->discount_amount) {
+            $bigSalePrice = $product->price - $activeBigSale->discount_amount;
+        } elseif ($activeBigSale->discount_percentage) {
+            $bigSalePrice = $product->price - ($activeBigSale->discount_percentage / 100) * $product->price;
+        }
+    } elseif ($product->discount_price) {
+        // If no Big Sale, apply the product-specific discount price
+        $bigSalePrice = $product->discount_price;
+    }
+
+    // Calculate the total price for this item based on the determined price
+    $totalPrice = $bigSalePrice * $quantity;
 
     // Check if the product is already in the cart
     $cartItem = Cart::where('user_id', Auth::id())
@@ -63,14 +85,14 @@ class CartController extends Controller
                     ->first();
 
     if ($cartItem) {
-        // Update the quantity and total price if product already exists in the cart
+        // Update quantity and total price if the product is already in the cart
         $cartItem->quantity += $quantity;
         $cartItem->total_price += $totalPrice;
         $cartItem->save();
     } else {
         // Add new item to the cart
         Cart::create([
-            'user_id' => Auth::id(), // or session ID for guest users
+            'user_id' => Auth::id(), // Use user ID, or session ID for guest users if needed
             'product_id' => $productId,
             'quantity' => $quantity,
             'total_price' => $totalPrice, // Store the calculated total price
@@ -78,7 +100,8 @@ class CartController extends Controller
     }
 
     return response()->json(['success' => 'Product added to cart.']);
-    }
+}
+
 
     public function removeFromCart($id)
     {
@@ -106,33 +129,92 @@ class CartController extends Controller
     }
     
     public function updateQuantity(Request $request)
-    {
-        $cartItem = Cart::find($request->id);
+{
+    try {
+        // Retrieve the cart item based on the provided ID
+        $cartItem = Cart::findOrFail($request->id);
 
-        if ($cartItem) {
-            $cartItem->quantity = $request->quantity;
-            $cartItem->save();
+        // Update the quantity in the database
+        $cartItem->quantity = $request->quantity;
+        $cartItem->save();
 
-            // Calculate subtotal and total
-            $price = $cartItem->product->discount_price ?? $cartItem->product->price;
-            $subtotal = $price * $cartItem->quantity;
-
-            $total = Cart::where('user_id', auth()->id())->get()->sum(function($item) {
-                return ($item->product->discount_price ?? $item->product->price) * $item->quantity;
-            });
-
+        // Retrieve the associated product
+        $product = $cartItem->product;
+        if (!$product) {
             return response()->json([
-                'success' => true,
-                'subtotal' => $subtotal,
-                'total' => $total
-            ]);
+                'success' => false,
+                'message' => 'Product not found for this cart item.'
+            ], 404);
         }
+
+        // Calculate the price, checking for active Big Sale discounts
+        $price = $product->price;
+        $activeBigSale = BigSale::where('status', true)
+            ->where('start_time', '<=', now())
+            ->where('end_time', '>=', now())
+            ->whereHas('products', function ($query) use ($product) {
+                $query->where('t_product.id', $product->id);
+            })
+            ->first();
+
+        if ($activeBigSale) {
+            if ($activeBigSale->discount_amount) {
+                $price = $product->price - $activeBigSale->discount_amount;
+            } elseif ($activeBigSale->discount_percentage) {
+                $price = $product->price - ($activeBigSale->discount_percentage / 100) * $product->price;
+            }
+        } elseif ($product->discount_price) {
+            $price = $product->discount_price;
+        }
+
+        // Calculate the subtotal for this cart item
+        $subtotal = $price * $cartItem->quantity;
+
+        // Calculate the total for all items in the cart
+        $total = Cart::where('user_id', auth()->id())->get()->sum(function ($item) {
+            $itemPrice = $item->product->price;
+
+            $activeBigSale = BigSale::where('status', true)
+                ->where('start_time', '<=', now())
+                ->where('end_time', '>=', now())
+                ->whereHas('products', function ($query) use ($item) {
+                    $query->where('t_product.id', $item->product->id);
+                })
+                ->first();
+
+            if ($activeBigSale) {
+                if ($activeBigSale->discount_amount) {
+                    $itemPrice = $item->product->price - $activeBigSale->discount_amount;
+                } elseif ($activeBigSale->discount_percentage) {
+                    $itemPrice = $item->product->price - ($activeBigSale->discount_percentage / 100) * $item->product->price;
+                }
+            } elseif ($item->product->discount_price) {
+                $itemPrice = $item->product->discount_price;
+            }
+
+            return $itemPrice * $item->quantity;
+        });
+
+        return response()->json([
+            'success' => true,
+            'subtotal' => $subtotal,
+            'total' => $total
+        ]);
+    } catch (\Exception $e) {
+        // Log the error for debugging
+        Log::error('Error updating cart quantity:', [
+            'error' => $e->getMessage(),
+            'request_data' => $request->all()
+        ]);
 
         return response()->json([
             'success' => false,
-            'message' => 'Failed to update cart item.'
-        ]);
+            'message' => 'Error updating cart: ' . $e->getMessage()
+        ], 500);
     }
+}
+
+
 
 
     

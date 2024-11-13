@@ -33,6 +33,7 @@ class BigSaleAdminHandleController extends Controller
         $request->validate([
             'title' => 'required|string|max:255',
             'banner' => 'nullable|image',
+            'modal_image' => 'nullable|image',
             'start_time' => 'required|date',
             'end_time' => 'required|date|after:start_time',
             'discount_amount' => 'nullable|numeric|min:0|required_without:discount_percentage',
@@ -75,6 +76,13 @@ class BigSaleAdminHandleController extends Controller
             $data['banner'] = 'bigsales/' . $bannerName;
         }
 
+        if($request->hasFile('modal_image')) {
+            $modalPath = public_path('bigsales');
+            $modalName = time() . '_' . $request->file('modal_image')->getClientOriginalName();
+            $request->file('modal_image')->move($modalPath, $modalName);
+            $data['modal_image'] = 'bigsales/' . $modalName;
+        }
+
         // Default status to active if not provided
         $data['status'] = $request->input('status', true);
 
@@ -109,6 +117,7 @@ class BigSaleAdminHandleController extends Controller
         $request->validate([
             'title' => 'required|string|max:255',
             'banner' => 'nullable|image',
+            'modal_image' => 'nullable|image',
             'start_time' => 'required|date',
             'end_time' => 'required|date|after:start_time',
             'discount_amount' => 'nullable|numeric|min:0|required_without:discount_percentage',
@@ -159,6 +168,18 @@ class BigSaleAdminHandleController extends Controller
             $data['banner'] = 'bigsales/' . $bannerName;
         }
 
+        if($request->hasFile('modal_image')) {
+            // Delete the old banner if it exists
+            if ($bigSale->modal_image && file_exists(public_path($bigSale->modal_image))) {
+                unlink(public_path($bigSale->modal_image));
+            }
+
+            $modalPath = public_path('bigsales');
+            $modalName = time() . '_' . $request->file('modal_image')->getClientOriginalName();
+            $request->file('modal_image')->move($modalPath, $modalName);
+            $data['modal_image'] = 'bigsales/' . $modalName;
+        }
+
         // Update status, defaulting to active if not provided
         $data['status'] = $request->input('status', true);
 
@@ -189,6 +210,10 @@ class BigSaleAdminHandleController extends Controller
         // Delete the banner image from public path if it exists
         if ($bigSale->banner && file_exists(public_path($bigSale->banner))) {
             unlink(public_path($bigSale->banner));
+        }
+
+        if($bigSale->modal_image && file_exists(public_path($bigSale->modal_image))) {
+            unlink(public_path($bigSale->modal_image));
         }
 
         $bigSale->delete();

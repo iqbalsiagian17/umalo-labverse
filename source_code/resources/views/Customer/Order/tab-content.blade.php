@@ -15,7 +15,7 @@
                 <div>
                     <h5 class="mb-1"><strong>{{ __('messages.order_no') }}:</strong> {{ $order->id }}</h5>
                     <p class="mb-1"><strong>{{ __('messages.order_date') }}:</strong> {{ $order->created_at->format('d M Y') }}</p>
-                    <p class="mb-1"><strong>{{ __('messages.status') }}:</strong> {{ $order->status }}</p>
+                    <p class="mb-1"><strong>{{ __('messages.status') }}:</strong> {{ __('messages.' . $order->status) }}</p>
                 </div>
                 <div>
                     <a href="{{ route('customer.order.show', $order->id) }}" class="btn btn-sm text-white" style="background-color: #42378C;">{{ __('messages.view_detail') }}</a>

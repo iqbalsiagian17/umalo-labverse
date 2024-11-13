@@ -103,9 +103,41 @@
                     <h3>{{ $product->name }}
                     </h3>
                     <div class="product__details__price">
-                        <div class="product__details__price">
-                            @if ($product->is_price_displayed === 'yes')
-                            @if ($product->discount_price > 0)
+                        @if ($product->is_price_displayed === 'yes')
+                            @php
+                                // Determine the final price to display
+                                $finalPrice = $product->price;
+                                $isBigSaleProduct = isset($activeBigSale) && $activeBigSale->products->contains($product->id);
+
+                                if ($isBigSaleProduct) {
+                                    // Apply Big Sale discount
+                                    if ($activeBigSale->discount_amount) {
+                                        $finalPrice = $product->price - $activeBigSale->discount_amount;
+                                    } elseif ($activeBigSale->discount_percentage) {
+                                        $finalPrice = $product->price - ($activeBigSale->discount_percentage / 100) * $product->price;
+                                    }
+                                } elseif ($product->discount_price > 0) {
+                                    // If no Big Sale, use product-specific discount price
+                                    $finalPrice = $product->discount_price;
+                                }
+
+                                // Calculate discount percentage for display purposes
+                                $discountPercentage = ($product->price > $finalPrice) ? round((($product->price - $finalPrice) / $product->price) * 100) : null;
+                            @endphp
+
+                            {{-- Display Price --}}
+                            @if ($isBigSaleProduct)
+                                <span style="text-decoration: line-through; color: #ff0000;">
+                                    Rp{{ number_format($product->price, 0, ',', '.') }}
+                                </span>
+                                <br>
+                                <span style="color: #000000;">
+                                    Rp{{ number_format($finalPrice, 0, ',', '.') }}
+                                </span>
+                                <span style="color: green;">
+                                    ({{ $discountPercentage }}% Off - Big Sale!)
+                                </span>
+                            @elseif ($product->discount_price > 0)
                                 <span style="text-decoration: line-through; color: #ff0000;">
                                     Rp{{ number_format($product->price, 0, ',', '.') }}
                                 </span>
@@ -113,25 +145,20 @@
                                 <span style="color: #000000;">
                                     Rp{{ number_format($product->discount_price, 0, ',', '.') }}
                                 </span>
+                                <span style="color: green;">
+                                    ({{ $discountPercentage }}% Off)
+                                </span>
                             @else
                                 <span style="color: #000000;">
                                     Rp{{ number_format($product->price, 0, ',', '.') }}
                                 </span>
                             @endif
-                            <style>
-                                .icon-above {
-                                    color: black;       /* Set the icon color to black */
-                                    font-size: 12px;    /* Set the font size to make the icon smaller */
-                                    vertical-align: super; /* Position the icon above the baseline of the text */
-                                }
-                            </style>
                         @else
                             {{ __('messages.contact_admin_for_price') }}
                         @endif
-                        </div>
-
 
                     </div>
+                    
 
 
                     <div class="product__details__quantity {{ $product->stock == 0 ? 'muted' : '' }}">

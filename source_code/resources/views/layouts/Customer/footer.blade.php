@@ -47,7 +47,7 @@ $parameter = App\Models\TParameter::first();
                             <ul style="text-decoration: underline;">
                                 <li><a href="{{ route('shop') }}">{{ __('messages.find_product') }}</a></li>
 {{--                                 <li><a href="/sign-up">{{ __('messages.login_member') }}</a></li> --}}
-                                <li><a href="{{ 'cart' }}">{{ __('messages.shopping_cart') }}</a></li>
+                                <li><a href="{{route ('cart.show') }}">{{ __('messages.shopping_cart') }}</a></li>
                                 <li><a href="{{ route('home')  }}">{{ __('messages.home') }}</a></li>
                             </ul>
                         </div>

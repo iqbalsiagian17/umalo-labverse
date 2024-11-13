@@ -2,6 +2,11 @@
 
 @section('content')
 
+@include('customer.partials.home.welcome__messages')
+
+
+
+
     <!-- Hero Section Begin -->
     <section class="hero mt-5">
         <div class="container">
@@ -119,47 +124,53 @@
                         <section class="exclusive-deal-area">
                             <div class="container-fluid">
                                 <div class="row justify-content-center align-items-center rounded"
-                                     style="background: url('{{ asset($bigSales->banner) }}') no-repeat center center/cover; position: relative;">
-                                    <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.7);">
+                                     style="background: url('{{ asset($bigSales->banner) }}') no-repeat center center/cover; position: relative; border-radius: 10px;">
+                                    <!-- Transparent overlay -->
+                                    <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.6); border-radius: 10px;">
                                     </div>
                                     <div class="col-lg-6 no-padding exclusive-left" style="position: relative; z-index: 1;">
                                         <div class="row clock_sec clockdiv" id="clockdiv">
                                             <div class="col-lg-12 text-center">
                                                 <br><br>
-                                                <h2 style="color: white;">{{ $bigSales->title }}</h2>
+                                                <h2 style="color: #ffffff; text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);">{{ $bigSales->title }}</h2>
                                                 <br>
                                             </div>
                                             <div class="col-lg-12 text-center">
                                                 <div class="row clock-wrap" style="gap: 10px">
-                                                    <div class="col clockinner1 clockinner" style="border-radius: 20px; background-color: rgb(255, 255, 255);">
+                                                    <!-- Countdown section with smooth animation and rounded styles -->
+                                                    <div class="col clockinner1 clockinner" style="border-radius: 20px; background-color: rgba(255, 255, 255, 0.9); padding: 10px; animation: pulse 1s infinite;">
                                                         <h1 id="days" class="days" style="color: black;">00</h1>
                                                         <span class="smalltext" style="color: black;">{{ __('messages.days') }}</span>
                                                     </div>
-                                                    <div class="col clockinner clockinner1" style="border-radius: 20px; background-color: rgb(255, 255, 255);">
+                                                    <div class="col clockinner clockinner1" style="border-radius: 20px; background-color: rgba(255, 255, 255, 0.9); padding: 10px; animation: pulse 1s infinite;">
                                                         <h1 id="hours" class="hours" style="color: black;">00</h1>
                                                         <span class="smalltext" style="color: black;">{{ __('messages.hours') }}</span>
                                                     </div>
-                                                    <div class="col clockinner clockinner1" style="border-radius: 20px; background-color: rgb(255, 255, 255);">
+                                                    <div class="col clockinner clockinner1" style="border-radius: 20px; background-color: rgba(255, 255, 255, 0.9); padding: 10px; animation: pulse 1s infinite;">
                                                         <h1 id="minutes" class="minutes" style="color: black;">00</h1>
                                                         <span class="smalltext" style="color: black;">{{ __('messages.minutes') }}</span>
                                                     </div>
-                                                    <div class="col clockinner clockinner1" style="border-radius: 20px; background-color: rgb(255, 255, 255);">
+                                                    <div class="col clockinner clockinner1" style="border-radius: 20px; background-color: rgba(255, 255, 255, 0.9); padding: 10px; animation: pulse 1s infinite;">
                                                         <h1 id="seconds" class="seconds" style="color: black;">00</h1>
                                                         <span class="smalltext" style="color: black;">{{ __('messages.seconds') }}</span>
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div><br><br>
-                                        <a href="{{-- {{ route('bigsale.now.index') }} --}}" class="primary-btn text-center"
-                                           style="color: black; background-color: rgba(255, 255, 255); padding: 10px 20px; border-radius: 5px; display: block; width: fit-content; margin: 0 auto;">
-                                            {{ __('messages.shop_now') }}</a><br><br>
+                                        </div>
+                                        <br><br>
+                                        <!-- Enhanced button with hover effect -->
+                                        <a href="{{ route('customer.bigsale.index', ['slug' => $bigSales->slug ?? 'default-slug']) }}" class="primary-btn text-center"
+                                           style="color: black; background-color: rgba(255, 255, 255, 0.9); padding: 10px 20px; border-radius: 5px; display: block; width: fit-content; margin: 0 auto; transition: background-color 0.3s ease;">
+                                            {{ __('messages.shop_now') }}
+                                        </a>
+                                        <br><br>
                                     </div>
                                 </div>
                             </div>
                         </section>
                         <script>
                             const bigSaleEndTime = new Date("{{ date('Y-m-d\TH:i:s', strtotime($bigSales->end_time)) }}").getTime();
-                            
+    
                             function startCountdown(endTime) {
                                 const countdownInterval = setInterval(function() {
                                     const now = new Date().getTime();
@@ -187,32 +198,46 @@
     
                             startCountdown(bigSaleEndTime);
                         </script>
+                        <style>
+                            /* Button hover effect */
+                            .primary-btn:hover {
+                                background-color: rgba(255, 255, 255, 1);
+                            }
+    
+                            /* Smooth pulse animation for countdown */
+                            @keyframes pulse {
+                                0% { transform: scale(1); }
+                                50% { transform: scale(1.05); }
+                                100% { transform: scale(1); }
+                            }
+                        </style>
                     @endif
                 </div>
             </div>
         </div>
     </section>
+    
 
     <section class="hero">
         <div class="container">
             <div class="row">
                 <div class="col-lg-12">
-                    @if($bigSales && $bigSales->banner)
+                    @if($bigSales && $bigSales->modal_image)
                     <!-- Modal with Image -->
                     <div class="modal fade" id="myModal" tabindex="-1" aria-labelledby="myModalLabel" aria-hidden="true">
-                        <div class="modal-dialog">
-                            <div class="modal-content">
-                                <div class="modal-body p-0">
-                                    <!-- Display the image from BigSale, no card, only image -->
-                                    <img src="{{ asset($bigSales->banner) }}" alt="Big Sale Banner" class="img-fluid w-100">
-                                </div>
-                                <div class="modal-footer p-0">
-                                    <!-- Close button -->
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        <div class="modal-dialog modal-lg">
+                            <div class="modal-content custom-modal-content">
+                                <div class="modal-body p-0 position-relative">
+                                    <!-- Link the image to the Big Sale page -->
+                                    <a href="{{ route('customer.bigsale.index', ['slug' => $bigSales->slug]) }}">
+                                        <img src="{{ asset($bigSales->modal_image) }}" alt="Big Sale Banner" class="img-fluid" style="width: 50; height: 50; object-fit: cover; border-radius: 8px;">
+                                    </a>
+                                    <button type="button" class="btn-close btn-close-custom" data-bs-dismiss="modal" aria-label="Close">✕</button>
                                 </div>
                             </div>
                         </div>
                     </div>
+                    
     
                     <!-- Bootstrap 5 JS Modal activation script -->
                     <script type="text/javascript">
@@ -226,6 +251,50 @@
             </div>
         </div>
     </section>
+    
+    <style>
+        /* Custom modal content styling */
+        .custom-modal-content {
+            background: #000;
+            color: #fff;
+            border-radius: 8px;
+            overflow: hidden;
+            border: none;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        
+        .modal-body {
+            padding: 0;
+            position: relative;
+        }
+        
+        /* Improved Close Button Styling */
+        .btn-close-custom {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            width: 35px;
+            height: 35px;
+            background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+            color: #fff; /* White icon color */
+            border-radius: 50%;
+            border: none;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        
+        .btn-close-custom:hover {
+            background-color: rgba(255, 0, 0, 0.7); /* Red hover effect */
+            color: #fff;
+        }
+        
+        </style>
+        
+        
     
     
     

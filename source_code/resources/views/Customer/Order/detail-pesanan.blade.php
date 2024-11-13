@@ -1,5 +1,14 @@
 @extends('layouts.customer.master')
+
 @section('content')
+
+@php
+    use App\Models\Order;
+    use App\Models\Payment;
+@endphp
+
+
+
     <div class="container mt-5 mb-3">
         <div class="card shadow rounded border-0">
             <div class="card-header rounded border-0">
@@ -7,10 +16,62 @@
             </div>
         </div>
         @if (session('success'))
-            <div class="alert alert-success">
-                {{ session('success') }}
-            </div>
-        @endif
+    <div id="fixedSuccessAlert" class="alert alert-dismissible fade show d-flex align-items-center" role="alert" 
+         style="background-color: #d1e7dd; color: #0f5132; border: 1px solid #badbcc; box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08); padding: 12px 16px; border-radius: 6px; position: fixed; top: 20px; right: 20px; z-index: 1050; min-width: 250px; animation: fadeIn 0.5s ease;">
+        <i class="fas fa-check-circle me-2" style="font-size: 1.3em; color: #0f5132;"></i>
+        <span style="flex: 1; font-size: 0.95em; padding-left: 10px;">
+            {{ session('success') }}
+        </span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" 
+                style="background: none; border: none; font-size: 1em; color: #0f5132; cursor: pointer;">
+            &times;
+        </button>
+    </div>
+
+    <style>
+        /* Animation for fading in the notification */
+        @keyframes fadeIn {
+            0% {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Animation for fading out the notification */
+        @keyframes fadeOut {
+            0% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+        }
+
+        /* Button hover effect for close icon */
+        .btn-close:hover {
+            color: #0c3924;
+        }
+    </style>
+
+    <script>
+        // Automatically hide the alert after 5 seconds
+        setTimeout(function() {
+            let alert = document.getElementById('fixedSuccessAlert');
+            if (alert) {
+                alert.style.animation = 'fadeOut 0.5s ease';
+                setTimeout(() => alert.remove(), 500); // Remove from DOM after fade out
+            }
+        }, 5000);
+    </script>
+@endif
+
+    
     </div>
 
     <div class="container mb-5">
@@ -20,9 +81,12 @@
                     <div class="col-md-6">
                         <h4 class="mb-3">{{ __('Invoice') }}: <strong>{{ $order->invoice_number }}</strong></h4>
                         <h4 class="mb-3">{{ __('messages.order_number') }}: <strong>{{ $order->id }}</strong></h4>
-                        <p><strong>{{ __('messages.status') }}:</strong> <span
-                                class="badge bg-info text-dark">{{ $order->status }}</span></p>
-
+                        <p><strong>{{ __('messages.status') }}:</strong> 
+                            <span class="badge bg-info text-dark">
+                                {{ __('messages.' . $order->status) }}
+                            </span>
+                        </p>
+                        
                                 <p>
                                     <strong>{{ __('messages.total_price') }}:</strong>
                                     <span class="text-success">
@@ -36,6 +100,15 @@
                             <a href="{{ route('order.generate_pdf', $order->id) }}" class="btn btn-success btn-sm">
                                 <i class="fas fa-file-download"></i> {{ __('messages.download_invoice') }}
                             </a>
+                        @endif
+                        @if(!in_array($order->status, ['processing', 'shipped', 'delivered','cancelled_by_admin','cancelled_by_system','cancelled']))
+                            <form action="{{ route('customer.order.cancel', $order->id) }}" method="POST" class="d-inline-block mt-2">
+                                @csrf
+                                @method('PUT')
+                                <button type="submit" class="btn btn-danger btn-sm">
+                                    <i class="fas fa-times-circle"></i> Cancel Order
+                                </button>
+                            </form>
                         @endif
                         <a href="{{ route('customer.orders.index') }}" class="btn btn-secondary btn-sm">
                             <i class="fas fa-arrow-left"></i> {{ __('messages.back_to_order_history') }}
@@ -55,6 +128,41 @@
                         </div>
                         @endif
 
+                        @if($order->status == 'negotiation_in_progress')
+                            <div class="mt-4 p-4 bg-white rounded shadow-sm" style="border: 1px solid #ddd;">
+                                <h5 class="fw-bold text-primary mb-3">Negosiasi Dikonfirmasi</h5>
+                                <p class="text-muted mb-4">Jika admin belum menghubungi Anda, silakan hubungi admin melalui kontak di bawah ini:</p>
+                                
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <ul class="list-unstyled">
+                                            <li class="d-flex align-items-center mb-3">
+                                                <span class="fw-semibold text-secondary me-2">Telepon:</span>
+                                                <span class="text-dark">{{ $parameter->telephone_number ?? 'Tidak tersedia' }}</span>
+                                            </li>
+                                            <li class="d-flex align-items-center mb-3">
+                                                <span class="fw-semibold text-secondary me-2">WhatsApp:</span>
+                                                <span class="text-dark">{{ $parameter->whatsapp_number ?? 'Tidak tersedia' }}</span>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <ul class="list-unstyled">
+                                            <li class="d-flex align-items-center mb-3">
+                                                <span class="fw-semibold text-secondary me-2">Email 1:</span>
+                                                <span class="text-dark">{{ $parameter->email1 ?? 'Tidak tersedia' }}</span>
+                                            </li>
+                                            <li class="d-flex align-items-center mb-3">
+                                                <span class="fw-semibold text-secondary me-2">Email 2:</span>
+                                                <span class="text-dark">{{ $parameter->email2 ?? 'Tidak tersedia' }}</span>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        @endif
+
+
                     </div>
                 </div>
 
@@ -71,13 +179,30 @@
                         </thead>
                         <tbody>
                             @foreach ($order->items as $index => $item)
-                                <tr>
-                                    <td>{{ $index + 1 }}. {{ $item->product->name }}</td>
-                                    <td class="text-center">{{ $item->quantity }}</td>
-                                    <td class="text-right">{{ 'Rp ' . number_format($item->price, 0, ',', '.') }}</td>
-                                    <td class="text-right">
-                                        {{ 'Rp ' . number_format($item->price * $item->quantity, 0, ',', '.') }}</td>
-                                </tr>
+                            <tr>
+                                <td>
+                                    {{ $index + 1 }}. {{ $item->product->name }}
+                                    
+                                    {{-- Check if the item is part of an active Big Sale --}}
+                                    @php
+                                        $activeBigSale = App\Models\BigSale::where('status', true)
+                                            ->where('start_time', '<=', now())
+                                            ->where('end_time', '>=', now())
+                                            ->whereHas('products', function ($query) use ($item) {
+                                                $query->where('t_product.id', $item->product->id);
+                                            })
+                                            ->first();
+                                    @endphp
+                            
+                                    @if ($activeBigSale)
+                                        <span class="badge bg-success text-white">Big Sale</span>
+                                    @endif
+                                </td>
+                                <td class="text-center">{{ $item->quantity }}</td>
+                                <td class="text-right">{{ 'Rp ' . number_format($item->price, 0, ',', '.') }}</td>
+                                <td class="text-right">{{ 'Rp ' . number_format($item->price * $item->quantity, 0, ',', '.') }}</td>
+                            </tr>
+                            
                             @endforeach
 
                             <!-- Total -->
@@ -149,6 +274,12 @@
 
                 <!-- Payment Proof Submission -->
                 @if($order->status == 'pending_payment')
+                @php
+                    // Check the number of submitted payment proofs
+                    $paymentCount = $order->payments->count();
+                @endphp
+
+                @if($paymentCount < 2)
                     <div class="mt-5">
                         <h5 class="fw-bold">Submit Payment Proof</h5>
                         <div class="alert alert-warning" role="alert">
@@ -157,17 +288,17 @@
 
                         @php
                             // Calculate the time left for payment (48 hours)
-                            $approvedTime = $order->approved_at; // The timestamp when the order was approved
+                            $approvedTime = $order->approved_at;
                             $timeLimit = 48 * 60 * 60; // 48 hours in seconds
-                            $currentTime = now(); // Current timestamp
-                            $elapsedTime = $currentTime->diffInSeconds($approvedTime); // Time elapsed since approved
-                            $remainingTime = max(0, $timeLimit - $elapsedTime); // Calculate remaining time
-                            $hours = floor($remainingTime / 3600); // Calculate hours only
+                            $currentTime = now();
+                            $elapsedTime = $currentTime->diffInSeconds($approvedTime);
+                            $remainingTime = max(0, $timeLimit - $elapsedTime);
+                            $hours = floor($remainingTime / 3600);
                         @endphp
 
                         <div id="countdown-timer" class="mt-2">
                             Waktu tersisa untuk menyelesaikan pembayaran: <strong>{{ $hours }} jam</strong>.
-                        </div> <!-- Countdown timer display -->
+                        </div>
 
                         <form action="{{ route('customer.payment.submit', $order->id) }}" method="POST" enctype="multipart/form-data">
                             @csrf
@@ -180,31 +311,29 @@
                     </div>
 
                     <script>
-                        // Set the countdown time in seconds for this order
                         let remainingTime = {{ $remainingTime }};
-                        
-                        function updateTimer() {
-                            // Calculate hours only
-                            const hours = Math.floor(remainingTime / 3600);
 
-                            // Display the countdown timer
+                        function updateTimer() {
+                            const hours = Math.floor(remainingTime / 3600);
                             document.getElementById('countdown-timer').innerHTML = 
                                 `Waktu tersisa untuk menyelesaikan pembayaran: <strong>${hours} jam</strong>.`;
 
-                            // If time is up, you can implement logic to handle this case
                             if (remainingTime <= 0) {
                                 clearInterval(timerInterval);
-                                // Logic to cancel the order can be added here (optional)
                             }
-
-                            remainingTime--; // Decrease the remaining time by one second
+                            remainingTime--;
                         }
 
-                        // Update timer every second
                         const timerInterval = setInterval(updateTimer, 1000);
-                        updateTimer(); // Initial call to display timer immediately
+                        updateTimer();
                     </script>
+                @else
+                    <div class="alert alert-info mt-3" role="alert">
+                        Anda telah mengirimkan bukti pembayaran sebanyak dua kali. Harap menunggu verifikasi oleh admin.
+                    </div>
                 @endif
+            @endif
+
 
                 @if($order->payments->where('status', 'pending')->isNotEmpty())
                     <div class="alert alert-warning mt-2" role="alert">
@@ -218,53 +347,106 @@
                 @endif
 
 
-                @if($order->payments->where('status', 'failed')->isNotEmpty())
-                @if($order->status === 'payment_pending')
+                @if($order->status === Order::STATUS_PENDING_PAYMENT)
+                @if($order->payments->where('status', Payment::STATUS_FAILED)->isNotEmpty())
+                @php
+                    // Check if the most recent payment status is failed
+                    $latestPayment = $order->payments->sortByDesc('created_at')->first();
+                @endphp
+            
+                @if($latestPayment && $latestPayment->status === Payment::STATUS_FAILED)
                     <div class="alert alert-danger mt-2" role="alert">
-                        <strong>Hati Hati!</strong> Silahkan lakukan pembayaran kembali, dan Anda hanya memiliki 1 kesempatan lagi sebelum pesanan Anda dibatalkan oleh sistem karena terdeteksi kejanggalan dalam pembayaran Anda.
-                    </div>
-                @elseif($order->status === 'cancelled_by_system')
-                    <div class="alert alert-danger mt-2" role="alert">
-                        <strong>Pesanan Dibatalkan!</strong>  Pesanan Anda telah dibatalkan oleh sistem karena terdeteksi adanya aktivitas yang mencurigakan dan berpotensi merugikan. Mohon diperhatikan untuk transaksi berikutnya.
+                        <strong>Hati-Hati!</strong> Pembayaran Anda gagal. Silakan coba kembali. Anda hanya memiliki satu kesempatan lagi sebelum pesanan dibatalkan oleh sistem karena deteksi kejanggalan dalam pembayaran.
                     </div>
                 @endif
-            @endif
+                @endif
+                @endif
+
+                @if($order->status === Order::STATUS_CANCELLED_BY_SYSTEM)
+                    <div class="alert alert-danger mt-2" role="alert">
+                        <strong>Pesanan Dibatalkan!</strong> Pesanan Anda telah dibatalkan oleh sistem karena aktivitas yang mencurigakan. Mohon diperhatikan untuk transaksi berikutnya.
+                    </div>
+                @endif
+
             
-            
-
-
-
 
                 <!-- Payment Details -->
                 @if($order->payments->isNotEmpty())
                 <div class="mt-5">
-                    <h5 class="fw-bold">Payment Details</h5>
+                    <h5 class="fw-bold mb-4">Detail Pembayaran</h5>
                     <table class="table table-bordered">
-                        <thead class="bg-light">
+                        <thead class="table-light text-white" style="background-color: #416bbf;">
                             <tr>
-                                <th>Payment Proof</th>
-                                <th>Status</th>
-                                <th>Date</th>
+                                <th>Status Pembayaran</th>
+                                <th>Bukti Pembayaran</th>
+                                <th>Tanggal</th>
                             </tr>
                         </thead>
                         <tbody>
                             @foreach($order->payments as $payment)
-                            <tr>
-                                <td>
-                                    <a href="{{ asset($payment->payment_proof) }}" target="_blank" class="btn btn-primary btn-sm">View Proof</a>
-                                </td>
-                                <td>
-                                    <span class="badge {{ $payment->status == 'verified' ? 'bg-success' : 'bg-warning' }}">
-                                        {{ ucfirst($payment->status) }}
-                                    </span>
-                                </td>
-                                <td>{{ $payment->created_at->format('d M Y H:i') }}</td>
-                            </tr>
+                                <tr>
+                                    <td>
+                                        <span class="badge rounded-pill {{ $payment->status == 'verified' ? 'bg-success' : 'bg-warning' }}">
+                                            {{ $payment->statusMessage() }}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <button type="button" class="btn btn-outline-primary btn-sm" 
+                                                data-bs-toggle="modal" 
+                                                data-bs-target="#paymentProofModal"
+                                                data-image-url="{{ asset($payment->payment_proof) }}">
+                                            Lihat Bukti
+                                        </button>
+                                    </td>
+                                    <td>{{ $payment->created_at->translatedFormat('d M Y, H:i') }}</td>
+                                </tr>
                             @endforeach
                         </tbody>
                     </table>
                 </div>
+
+                <!-- Modal for Payment Proof -->
+                <div class="modal fade" id="paymentProofModal" tabindex="-1" aria-labelledby="paymentProofModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered modal-lg">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="paymentProofModalLabel">Bukti Pembayaran</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" 
+                                style="position: absolute; top: 10px; right: 10px; border: none; background-color: #f8f9fa; 
+                                    color: #333; font-size: 18px; padding: 5px 10px; border-radius: 50%; cursor: pointer; 
+                                    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2); transition: background-color 0.3s, color 0.3s;">
+                            X
+                        </button>
+                        <script>
+                            document.querySelector('.btn-close').addEventListener('mouseenter', function() {
+                                this.style.backgroundColor = '#e0e0e0';
+                                this.style.color = '#000';
+                            });
+                            document.querySelector('.btn-close').addEventListener('mouseleave', function() {
+                                this.style.backgroundColor = '#f8f9fa';
+                                this.style.color = '#333';
+                            });
+                        </script>
+                        <script>
+                            document.addEventListener('DOMContentLoaded', function () {
+                                const paymentProofModal = document.getElementById('paymentProofModal');
+                                paymentProofModal.addEventListener('show.bs.modal', function (event) {
+                                    const button = event.relatedTarget;
+                                    const imageUrl = button.getAttribute('data-image-url');
+                                    const image = paymentProofModal.querySelector('#paymentProofImage');
+                                    image.setAttribute('src', imageUrl);
+                                });
+                            });
+                            </script>
+                            </div>
+                            <div class="modal-body text-center">
+                                <img src="" id="paymentProofImage" alt="Bukti Pembayaran" class="img-fluid rounded">
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 @endif
+
 
 
 

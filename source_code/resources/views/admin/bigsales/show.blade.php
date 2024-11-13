@@ -30,6 +30,18 @@
                     @endif
                 </div>
 
+                <!-- Modal Image -->
+                <div class="mb-4">
+                    <h5 class="text-uppercase text-muted">Modal Image</h5>
+                    @if($bigSale->modal_image)
+                        <div class="mb-3">
+                            <img src="{{ asset($bigSale->modal_image) }}" alt="Modal Image" class="img-fluid rounded" style="max-width: 300px; max-height: 200px;">
+                        </div>
+                    @else
+                        <p class="text-muted fst-italic">No modal image uploaded</p>
+                    @endif
+                </div>
+
                 <!-- Start and End Time -->
                 <div class="row">
                     <div class="col-md-6 mb-4">

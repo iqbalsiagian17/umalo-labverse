@@ -35,13 +35,39 @@
                             @foreach($cartItems as $cartItem)
                                 @php 
                                     $product = $cartItem->product;
-                                    $price = $product->discount_price ?? $product->price;
+                                    $price = $product->price;
+                        
+                                    // Check for active Big Sale for each product in the cart
+                                    $activeBigSale = App\Models\BigSale::where('status', true)
+                                        ->where('start_time', '<=', now())
+                                        ->where('end_time', '>=', now())
+                                        ->whereHas('products', function ($query) use ($product) {
+                                            $query->where('t_product.id', $product->id);
+                                        })
+                                        ->first();
+                        
+                                    if ($activeBigSale) {
+                                        // Apply Big Sale discount
+                                        if ($activeBigSale->discount_amount) {
+                                            $price = $product->price - $activeBigSale->discount_amount;
+                                        } elseif ($activeBigSale->discount_percentage) {
+                                            $price = $product->price - ($activeBigSale->discount_percentage / 100) * $product->price;
+                                        }
+                                    } elseif ($product->discount_price) {
+                                        // Use product-specific discount price if no Big Sale
+                                        $price = $product->discount_price;
+                                    }
+                        
                                     $subtotal = $price * $cartItem->quantity;
                                     $total += $subtotal;
                                 @endphp
                                 <tr>
                                     <td class="shoping__cart__item align-middle text-center">
                                         {{ $product->name ?? __('messages.product_name_unavailable') }}
+
+                                        @if ($activeBigSale)
+                                            <span class="badge bg-success text-white">Big Sale</span>
+                                        @endif
                                     </td>
                                     <td class="shoping__cart__item align-middle text-center">
                                         <img src="{{ asset($product->images->first()->images ?? 'default.png') }}" alt="{{ $product->name }}" class="img-thumbnail" style="max-width: 100px;">
@@ -57,15 +83,14 @@
                                         Rp {{ number_format($subtotal, 0, ',', '.') }}
                                     </td>
                                     <td>
-                                        <form action="{{ route('cart.remove', $cartItem->id) }}" method="POST">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="btn btn-danger">{{ __('messages.remove') }}</button>
-                                        </form>
+                                        <button type="button" class="btn btn-danger" onclick="removeFromCart({{ $cartItem->id }})">
+                                            {{ __('messages.remove') }}
+                                        </button>
                                     </td>
                                 </tr>
                             @endforeach
                         </tbody>
+                        
                     </table>
 
                     <div class="row">
@@ -105,38 +130,74 @@
 
 <script>
     function updateQuantity(element) {
-        let quantity = parseInt(element.value);
-        let cartItemId = element.getAttribute('data-id');
-        let maxQuantity = parseInt(element.getAttribute('data-max'));
-        
-        // Ensure quantity does not exceed available stock
-        if (quantity > maxQuantity) {
-            quantity = maxQuantity;
-            element.value = quantity;
-        } else if (quantity < 1) {
-            quantity = 1;
-            element.value = quantity;
-        }
+    let quantity = parseInt(element.value);
+    let cartItemId = element.getAttribute('data-id');
+    let maxQuantity = parseInt(element.getAttribute('data-max'));
 
-        // AJAX request to update quantity
+    if (quantity > maxQuantity) {
+        quantity = maxQuantity;
+        element.value = quantity;
+    } else if (quantity < 1) {
+        quantity = 1;
+        element.value = quantity;
+    }
+
+    $.ajax({
+        url: '/cart/update',
+        type: 'POST',
+        data: {
+            _token: '{{ csrf_token() }}',
+            id: cartItemId,
+            quantity: quantity
+        },
+        success: function(response) {
+            if (response.success) {
+                document.querySelector(`.subtotal[data-id="${cartItemId}"]`).textContent = 'Rp ' + response.subtotal.toLocaleString();
+                document.getElementById('total').textContent = 'Rp ' + response.total.toLocaleString();
+            } else {
+                alert(response.message || 'Could not update quantity. Please try again.');
+            }
+        },
+        error: function(xhr, status, error) {
+            console.error('AJAX Error:', error, xhr.responseText);
+            alert('An error occurred while updating the cart. Please try again.');
+        }
+    });
+}
+
+
+</script>
+
+<script>
+    function removeFromCart(cartItemId) {
+        console.log("Attempting to remove item from cart:", cartItemId);
+
         $.ajax({
-            url: '/cart/update', // Define your route here
-            type: 'POST',
+            url: `/customer/cart/remove/${cartItemId}`, // Updated URL to match the route
+            type: 'DELETE',
             data: {
-                _token: '{{ csrf_token() }}',
-                id: cartItemId,
-                quantity: quantity
+                _token: '{{ csrf_token() }}' // Include CSRF token for security
             },
             success: function(response) {
-                if(response.success) {
-                    // Update subtotal
-                    document.querySelector(`.subtotal[data-id="${cartItemId}"]`).textContent = 'Rp ' + response.subtotal.toLocaleString();
+                console.log("AJAX call success response:", response); // Log the full response
 
-                    // Update total
-                    document.getElementById('total').textContent = 'Rp ' + response.total.toLocaleString();
+                if (response.success) {
+                    $(`tr[data-id="${cartItemId}"]`).remove(); // Remove item row from the table
+                    location.reload(); // Optionally reload to update totals
                 } else {
-                    alert(response.message);
+                    alert("Failed to remove item from cart: " + (response.message || "Unknown error."));
                 }
+            },
+            error: function(xhr, status, error) {
+                console.error("AJAX error details:", {
+                    status: status,
+                    error: error,
+                    responseText: xhr.responseText
+                });
+
+                // Display the error message from the server response if available
+                const errorMessage = xhr.responseJSON?.message || "An error occurred. Please try again.";
+                alert(errorMessage);
             }
         });
     }

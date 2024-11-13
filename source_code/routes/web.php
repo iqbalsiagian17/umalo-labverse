@@ -28,6 +28,7 @@ use App\Http\Controllers\Costumer\Wishlist\WishlistController;
 use App\Http\Controllers\Costumer\Review\ReviewCustomerController;
 use App\Http\Controllers\LanguageController;
 
+
 Auth::routes();
 
 Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
@@ -37,6 +38,8 @@ Route::get('/shop', [App\Http\Controllers\Costumer\Shop\ShopController::class, '
 Route::get('/shop/{category_slug?}', [ShopController::class, 'shop'])->name('shop.category');
 Route::get('/shop/{category_slug?}/{subcategory_slug?}', [ShopController::class, 'shop'])->name('shop.subcategory');
 Route::get('/shop/rating/{rating}', [ShopController::class, 'filterByRating'])->name('shop.rating');
+
+Route::get('/bigsale/{slug}', [App\Http\Controllers\HomeController::class, 'bigsale'])->name('customer.bigsale.index');
 
 // Other routes
 Route::get('/product/lab/{id}', [ProductCostumerController::class, 'userShow'])->name('Product_customer.user.show');
@@ -186,6 +189,7 @@ Route::middleware(['auth', 'user-access:admin'])->group(function () {
         Route::get('shipping-services/{id}/edit', [ShippingServiceController::class, 'edit'])->name('shippingservice.edit');
         Route::put('shipping-services/{id}', [ShippingServiceController::class, 'update'])->name('shippingservice.update');
         Route::delete('shipping-services/{id}', [ShippingServiceController::class, 'destroy'])->name('shippingservice.destroy');
+        
     });
 
 

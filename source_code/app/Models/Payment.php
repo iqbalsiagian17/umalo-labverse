@@ -51,7 +51,7 @@ class Payment extends Model
             case self::STATUS_PAID:
                 return 'Pembayaran Berhasil';
             case self::STATUS_FAILED:
-                return 'Pembayaran Gagal';
+                return 'Pembayaran Ditolak Admin';
             case self::STATUS_REFUNDED:
                 return 'Pembayaran Dikembalikan';
             case self::STATUS_PARTIALLY_REFUNDED:

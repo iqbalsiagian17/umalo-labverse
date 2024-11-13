@@ -66,6 +66,24 @@
                                 @enderror
                             </div>
 
+                            <!-- Modal Image -->
+                            <div class="mb-3">
+                                <label for="modal_image" class="form-label">Modal Image</label>
+
+                                <!-- Display the current modal image if it exists -->
+                                @if($bigSale->modal_image)
+                                    <div class="mb-2">
+                                        <img src="{{ asset($bigSale->modal_image) }}" alt="Current Modal Image" style="max-width: 200px; max-height: 200px;">
+                                    </div>
+                                @endif
+
+                                <!-- File input for uploading a new modal image -->
+                                <input type="file" name="modal_image" id="modal_image" class="form-control @error('modal_image') is-invalid @enderror">
+                                @error('modal_image')
+                                    <span class="invalid-feedback">{{ $message }}</span>
+                                @enderror
+                            </div>
+
                             <!-- Start Time -->
                             <div class="mb-3">
                                 <label for="start_time" class="form-label">Start Time</label>
@@ -279,7 +297,6 @@
     let currentDateTime = `${year}-${month}-${day}T${hours}:${minutes}`;
 
     // Set the min attribute for both start and end time input fields
-    document.getElementById('start_time').setAttribute('min', currentDateTime);
     document.getElementById('end_time').setAttribute('min', currentDateTime);
 });
 

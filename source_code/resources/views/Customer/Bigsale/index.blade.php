@@ -8,49 +8,88 @@
                     <div class="sidebar__item">
                         <h4 style="color:#42378C;">{{ __('messages.Category') }}</h4>
                         <ul>
-                            @foreach ($Category as $Categorys)
+                            @foreach ($categories as $category)
                                 <li>
-                                    <a href="{{ route('shop.category.discounted', $Categorys->id) }}">
-                                        {{ $Categorys->nama }}
+                                    <a href="{{ route('customer.bigsale.index', ['slug' => $bigSales->slug, 'category' => $category->id]) }}">
+                                        {{ $category->name }}
                                     </a>
                                 </li>
                             @endforeach
                         </ul>
                     </div>
+                    
 
                 </div>
             </div>
             <div class="col-lg-9 col-md-7">
 
                 <!-- Countdown Timer Begin -->
-                @if($bigSale)
-                <div class="countdown__timer">
-                    <div class="col-lg-12 text-center">
-                        <div class="row clock-wrap" style="gap: 10px">
-                            <div class="col clockinner1 clockinner"
-                                style="border-radius: 20px; background-color: rgb(224, 224, 224);">
-                                <h1 id="days" class="days" style="color: black;">00</h1>
-                                <span class="smalltext" style="color: black;">{{ __('messages.days') }}</span>
-                            </div>
-                            <div class="col clockinner1 clockinner"
-                                style="border-radius: 20px; background-color: rgb(224, 224, 224);">
-                                <h1 id="hours" class="hours" style="color: black;">00</h1>
-                                <span class="smalltext" style="color: black;">{{ __('messages.hours') }}</span>
-                            </div>
-                            <div class="col clockinner1 clockinner"
-                                style="border-radius: 20px; background-color: rgb(224, 224, 224);">
-                                <h1 id="minutes" class="minutes" style="color: black;">00</h1>
-                                <span class="smalltext" style="color: black;">{{ __('messages.minutes') }}</span>
-                            </div>
-                            <div class="col clockinner1 clockinner"
-                                style="border-radius: 20px; background-color: rgb(224, 224, 224);">
-                                <h1 id="seconds" class="seconds" style="color: black;">00</h1>
-                                <span class="smalltext" style="color: black;">{{ __('messages.seconds') }}</span>
+                @if($bigSales)
+                    <div class="countdown__timer">
+                        <div class="col-lg-12 text-center">
+                            <!-- Big Sale Title -->
+                            <h2 class="bigsale-title" style="color: #444; margin-bottom: 20px; font-weight: bold;">
+                                {{ $bigSales->title }}
+                            </h2>
+                            
+                            <!-- Countdown Timer -->
+                            <div class="row clock-wrap justify-content-center" style="gap: 10px;">
+                                <!-- Days Box -->
+                                <div class="col clockinner1 clockinner" style="border-radius: 10px; background-color: #f5f5f5; padding: 15px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
+                                    <h1 id="days" class="days" style="color: #333; font-size: 1.8em; font-weight: bold;">00</h1>
+                                    <span class="smalltext" style="color: #666;">{{ __('messages.days') }}</span>
+                                </div>
+                                <!-- Hours Box -->
+                                <div class="col clockinner clockinner1" style="border-radius: 10px; background-color: #f5f5f5; padding: 15px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
+                                    <h1 id="hours" class="hours" style="color: #333; font-size: 1.8em; font-weight: bold;">00</h1>
+                                    <span class="smalltext" style="color: #666;">{{ __('messages.hours') }}</span>
+                                </div>
+                                <!-- Minutes Box -->
+                                <div class="col clockinner clockinner1" style="border-radius: 10px; background-color: #f5f5f5; padding: 15px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
+                                    <h1 id="minutes" class="minutes" style="color: #333; font-size: 1.8em; font-weight: bold;">00</h1>
+                                    <span class="smalltext" style="color: #666;">{{ __('messages.minutes') }}</span>
+                                </div>
+                                <!-- Seconds Box -->
+                                <div class="col clockinner clockinner1" style="border-radius: 10px; background-color: #f5f5f5; padding: 15px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
+                                    <h1 id="seconds" class="seconds" style="color: #333; font-size: 1.8em; font-weight: bold;">00</h1>
+                                    <span class="smalltext" style="color: #666;">{{ __('messages.seconds') }}</span>
+                                </div>
                             </div>
                         </div>
+                        
+                        <script>
+                            const bigSaleEndTime = new Date("{{ date('Y-m-d\\TH:i:s', strtotime($bigSales->end_time)) }}").getTime();
+                            
+                            function startCountdown(endTime) {
+                                const countdownInterval = setInterval(function() {
+                                    const now = new Date().getTime();
+                                    const distance = endTime - now;
+
+                                    if (distance < 0) {
+                                        clearInterval(countdownInterval);
+                                        document.getElementById("days").innerHTML = "00";
+                                        document.getElementById("hours").innerHTML = "00";
+                                        document.getElementById("minutes").innerHTML = "00";
+                                        document.getElementById("seconds").innerHTML = "00";
+                                    } else {
+                                        const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+                                        const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                                        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                                        const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+                                        document.getElementById("days").innerHTML = days < 10 ? "0" + days : days;
+                                        document.getElementById("hours").innerHTML = hours < 10 ? "0" + hours : hours;
+                                        document.getElementById("minutes").innerHTML = minutes < 10 ? "0" + minutes : minutes;
+                                        document.getElementById("seconds").innerHTML = seconds < 10 ? "0" + seconds : seconds;
+                                    }
+                                }, 1000);
+                            }
+
+                            startCountdown(bigSaleEndTime);
+                        </script>
                     </div>
-                </div>
                 @endif
+
                 <!-- Countdown Timer End -->
 
                 <div class="filter__item">
@@ -61,45 +100,63 @@
                 </div>
 
                 <div class="row">
-                    @foreach($products as $product)
+                    @foreach($bigSales->products as $product)
                         <div class="col-lg-4 col-md-6 col-sm-6">
-                            <div class="product__item">
+                            <div class="product__item" data-href="{{ route('product.show', $product->slug) }}?source={{ Str::random(10) }}">
                                 @php
                                     $imagePath = $product->images->isNotEmpty()
-                                        ? $product->images->first()->gambar
+                                        ? $product->images->first()->images
                                         : 'path/to/default/image.jpg';
+                
+                                    // Calculate the Big Sale discounted price if applicable
+                                    $finalPrice = $product->price;
+                                    if ($bigSales->discount_amount) {
+                                        // Apply a fixed discount amount
+                                        $finalPrice -= $bigSales->discount_amount;
+                                    } elseif ($bigSales->discount_percentage) {
+                                        // Apply a percentage discount
+                                        $finalPrice -= ($bigSales->discount_percentage / 100) * $product->price;
+                                    }
+                
+                                    // Calculate the discount percentage for display purposes
+                                    $discountPercentage = ($product->price - $finalPrice) / $product->price * 100;
                                 @endphp
-                                <div class="product__item__pic"
-                                    style="background-image: url('{{ asset($imagePath) }}') ; border-radius: 10px;">
-                                    @if ($product->nego === 'ya')
-                                        <span class="nego-badge">{{ __('messages.bisa_nego') }}</span>
+                
+                                <div class="featured__item__pic"
+                                    style="background-image: url('{{ asset($imagePath) }}'); background-size: cover; background-position: center; border-radius: 10px;">
+                                    @if ($bigSales->discount_percentage || $bigSales->discount_amount)
+                                        <span class="nego-badge bg-danger">{{ __('Diskon!!') }}</span>
                                     @endif
-                                    <ul class="product__item__pic__hover">
-                                        <li><a href="{{ route('Product_customer.user.show', $product->id) }}?source={{ Str::random(10) }}"><i
-                                                    class="fa fa-info-circle"></i></a></li>
-                                        @auth
-                                            <!-- Jika pengguna sudah login -->
-                                            <li><a href="#" class="add-to-cart-btn" data-id="{{ $product->id }}"><i
-                                                        class="fa fa-shopping-cart"></i></a></li>
-                                        @else
-                                            <!-- Jika pengguna belum login -->
-                                            <li><a href="{{ route('login') }}"><i class="fa fa-shopping-cart"></i></a></li>
-                                        @endauth
-                                    </ul>
                                 </div>
-                                <div class="product__item__text">
-                                    <h6><a href="{{ route('Product_customer.user.show', $product->id) }}?source={{ Str::random(10) }}">{{ \Illuminate\Support\Str::limit($product->nama, 30, '...') }}</a>
-                                    </h6>
-                                    <span style="text-decoration: line-through; color: #ff0000;">
-                                        <b>Rp{{ number_format($product->harga_tayang, 0, ',', '.') }}</b>
-                                    </span>
-                                    <br>
-                                    <h5>Rp{{ number_format($product->pivot->harga_diskon, 0, ',', '.') }}</h5>
+                
+                                <div class="featured__item__text">
+                                    <h6><a href="{{ route('product.show', $product->slug) }}?source={{ Str::random(10) }}">{{ $product->name }}</a></h6>
+                                    <h5>
+                                        @if ($bigSales->discount_percentage || $bigSales->discount_amount)
+                                            <span style="text-decoration: line-through; color:darkgray">
+                                                Rp{{ number_format($product->price, 0, ',', '.') }}
+                                            </span>
+                                            <span style="color:red;">
+                                                ({{ round($discountPercentage) }}% Off)
+                                            </span>
+                                            <br>
+                                            <span>
+                                                Rp{{ number_format($finalPrice, 0, ',', '.') }}
+                                            </span>
+                                        @else
+                                            @if ($product->is_price_displayed === 'yes')
+                                                Rp{{ number_format($product->price, 0, ',', '.') }}
+                                            @else
+                                                {{ __('messages.hubungi_admin') }}
+                                            @endif
+                                        @endif
+                                    </h5>
                                 </div>
                             </div>
                         </div>
                     @endforeach
                 </div>
+                
             </div>
         </div>
     </div>
@@ -183,7 +240,7 @@
     });
 
     // Countdown Timer Script
-    @if($bigSale)
+    @if($bigSales)
     function startCountdown(endTime) {
         function updateCountdown() {
             const now = new Date().getTime();
@@ -213,7 +270,7 @@
         updateCountdown();
     }
 
-    const bigSaleEndTime = new Date("{{ date('Y-m-d\TH:i:s', strtotime($bigSale->berakhir)) }}").getTime();
+    const bigSaleEndTime = new Date("{{ date('Y-m-d\TH:i:s', strtotime($bigSales->berakhir)) }}").getTime();
     startCountdown(bigSaleEndTime);
     @endif
 </script>

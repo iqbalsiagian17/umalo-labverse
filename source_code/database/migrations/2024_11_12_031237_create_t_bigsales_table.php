@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('title');
             $table->string('slug')->unique();
             $table->text('banner')->nullable(); // For storing banner image URL or path
+            $table->text('modal_image')->nullable(); // New column for modal image on home page
             $table->dateTime('start_time');
             $table->dateTime('end_time');
             $table->decimal('discount_amount', 10, 2)->nullable(); // Fixed discount amount

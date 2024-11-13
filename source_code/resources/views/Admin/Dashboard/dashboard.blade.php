@@ -2,6 +2,8 @@
 
 @section('content')
 
+@include('customer.partials.home.welcome__messages')
+
 @if(session('warning'))
 <div class="alert alert-warning">
     {{ session('warning') }}

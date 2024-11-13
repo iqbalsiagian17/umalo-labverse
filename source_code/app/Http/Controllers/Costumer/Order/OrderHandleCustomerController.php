@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Costumer\Order;
 
 use App\Http\Controllers\Controller;
+use App\Models\BigSale;
 use App\Models\Cart;
 use Illuminate\Http\Request;
 use App\Models\Order;
@@ -11,6 +12,7 @@ use PDF;
 use Illuminate\Support\Facades\DB;
 use App\Models\PPN;
 use App\Models\Materai;
+use App\Models\TParameter;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
@@ -41,9 +43,11 @@ class OrderHandleCustomerController extends Controller
             $payment->is_viewed_by_customer = true;
             $payment->save();
         }
+
+        $parameter= TParameter::first();
     
         // Tampilkan halaman detail pesanan
-        return view('customer.order.detail-pesanan', compact('order'));
+        return view('customer.order.detail-pesanan', compact('order', 'parameter'));
     }
 
     public function index(Request $request)
@@ -58,76 +62,130 @@ class OrderHandleCustomerController extends Controller
     }
 
     public function checkout(Request $request)
-    {
-        $user = auth()->user();
-        $cartItems = Cart::where('user_id', $user->id)->get();
+{
+    $user = auth()->user();
+    $cartItems = Cart::where('user_id', $user->id)->get();
 
-        if ($cartItems->isEmpty()) {
-            return redirect()->back()->with('error', 'Your cart is empty.');
-        }
+    if ($cartItems->isEmpty()) {
+        return redirect()->back()->with('error', 'Your cart is empty.');
+    }
 
-        // Validasi stok produk
-        foreach ($cartItems as $item) {
-            if ($item->quantity > $item->product->stock) {
-                return redirect()->back()->with('error', "Product {$item->product->name} is out of stock.");
-            }
-        }
-
-        $isNegotiable = false;
-
-        // Mulai transaksi database
-        DB::beginTransaction();
-        try {
-            // Hitung total
-            $total = $cartItems->sum(function ($item) {
-                return $item->quantity * ($item->product->discount_price ?? $item->product->price);
-            });
-
-            // Buat pesanan
-            $order = Order::create([
-                'user_id' => $user->id,
-                'total' => $total,
-                'status' => Order::STATUS_WAITING_APPROVAL, // gunakan konstanta untuk status
-                'waiting_approval_at' => now(),
-            ]);
-
-            // Tambahkan item ke pesanan
-            foreach ($cartItems as $item) {
-                $negotiable = $item->product->negotiable === 'yes';
-                if ($negotiable) $isNegotiable = true;
-
-                $order->items()->create([
-                    'product_id' => $item->product_id,
-                    'quantity' => $item->quantity,
-                    'price' => $item->product->discount_price ?? $item->product->price,
-                    'total' => $item->quantity * ($item->product->discount_price ?? $item->product->price),
-                    'is_negotiated' => $negotiable,
-                ]);
-
-                $item->product->decrement('stock', $item->quantity);
-            }
-
-            // Kosongkan keranjang setelah checkout
-            Cart::where('user_id', $user->id)->delete();
-
-            if ($isNegotiable) {
-                $order->update([
-                    'status' => null, // Set status to null
-                    'negotiation_status' => Order::STATUS_NEGOTIATION_PENDING, // use negotiation_status
-                    'negotiation_pending_at' => now(),
-                ]);
-                DB::commit();
-                return redirect()->route('customer.order.show', $order->id)->with('success', 'Order submitted for negotiation.');
-            }
-
-            DB::commit();
-            return redirect()->route('customer.order.show', $order->id)->with('success', 'Checkout completed.');
-
-        } catch (\Exception $e) {
-            DB::rollBack();
-            return redirect()->back()->with('error', 'An error occurred during checkout: ' . $e->getMessage());
+    // Validate product stock
+    foreach ($cartItems as $item) {
+        if ($item->quantity > $item->product->stock) {
+            return redirect()->back()->with('error', "Product {$item->product->name} is out of stock.");
         }
     }
+
+    $isNegotiable = false;
+
+    // Begin database transaction
+    DB::beginTransaction();
+    try {
+        $total = 0;
+
+        // Calculate the total, applying Big Sale price if applicable
+        foreach ($cartItems as $item) {
+            $product = $item->product;
+            $bigSalePrice = $product->price;
+
+            // Check if the product is in an active Big Sale
+            $activeBigSale = BigSale::where('status', true)
+                ->where('start_time', '<=', now())
+                ->where('end_time', '>=', now())
+                ->whereHas('products', function ($query) use ($product) {
+                    $query->where('t_product.id', $product->id);
+                })
+                ->first();
+
+            if ($activeBigSale) {
+                // Apply Big Sale discount
+                if ($activeBigSale->discount_amount) {
+                    $bigSalePrice = $product->price - $activeBigSale->discount_amount;
+                } elseif ($activeBigSale->discount_percentage) {
+                    $bigSalePrice = $product->price - ($activeBigSale->discount_percentage / 100) * $product->price;
+                }
+            } elseif ($product->discount_price) {
+                // If not in Big Sale, apply product-specific discount
+                $bigSalePrice = $product->discount_price;
+            }
+
+            // Calculate total for each item
+            $itemTotal = $item->quantity * $bigSalePrice;
+            $total += $itemTotal;
+        }
+
+        // Create order
+        $order = Order::create([
+            'user_id' => $user->id,
+            'total' => $total,
+            'status' => Order::STATUS_WAITING_APPROVAL,
+            'waiting_approval_at' => now(),
+        ]);
+
+        // Add items to the order
+        foreach ($cartItems as $item) {
+            $negotiable = $item->product->negotiable === 'yes';
+            if ($negotiable) $isNegotiable = true;
+
+            $product = $item->product;
+            $bigSalePrice = $product->price;
+
+            // Re-check if the product is in an active Big Sale
+            $activeBigSale = BigSale::where('status', true)
+                ->where('start_time', '<=', now())
+                ->where('end_time', '>=', now())
+                ->whereHas('products', function ($query) use ($product) {
+                    $query->where('t_product.id', $product->id);
+                })
+                ->first();
+
+            if ($activeBigSale) {
+                if ($activeBigSale->discount_amount) {
+                    $bigSalePrice = $product->price - $activeBigSale->discount_amount;
+                } elseif ($activeBigSale->discount_percentage) {
+                    $bigSalePrice = $product->price - ($activeBigSale->discount_percentage / 100) * $product->price;
+                }
+            } elseif ($product->discount_price) {
+                $bigSalePrice = $product->discount_price;
+            }
+
+            $order->items()->create([
+                'product_id' => $product->id,
+                'quantity' => $item->quantity,
+                'price' => $bigSalePrice,
+                'total' => $item->quantity * $bigSalePrice,
+                'is_negotiated' => $negotiable,
+            ]);
+
+            // Decrement stock
+            $product->decrement('stock', $item->quantity);
+        }
+
+        // Clear the cart after checkout
+        Cart::where('user_id', $user->id)->delete();
+
+        // If there are negotiable items, mark order for negotiation
+        if ($isNegotiable) {
+            $order->update([
+                'status' => null,
+                'negotiation_status' => Order::STATUS_NEGOTIATION_PENDING,
+                'negotiation_pending_at' => now(),
+            ]);
+            DB::commit();
+            return redirect()->route('customer.order.show', $order->id)->with('success', 'Order submitted for negotiation.');
+        }
+
+        DB::commit();
+        return redirect()->route('customer.order.show', $order->id)->with('success', 'Checkout completed.');
+
+    } catch (\Exception $e) {
+        DB::rollBack();
+        return redirect()->back()->with('error', 'An error occurred during checkout: ' . $e->getMessage());
+    }
+}
+
+
 
    
 
@@ -148,16 +206,22 @@ class OrderHandleCustomerController extends Controller
 
         public function cancelOrder($orderId)
         {
-            $order = Order::find($orderId);
-    
-            if ($order->status !== 'pending') {
+            $order = Order::findOrFail($orderId);
+
+            // Allow cancellation only if the order is not in 'processing', 'shipped', or 'delivered' status
+            if (in_array($order->status, ['processing', 'shipped', 'delivered'])) {
                 return redirect()->back()->with('error', 'You cannot cancel this order.');
             }
-    
-            $order->update(['status' => 'cancelled']);
-    
+
+            $order->update([
+                'status' => 'cancelled',
+                'cancelled_at' => now(),
+            ]);
+
             return redirect()->back()->with('success', 'Order has been cancelled successfully.');
         }
+
+
 
 
 }

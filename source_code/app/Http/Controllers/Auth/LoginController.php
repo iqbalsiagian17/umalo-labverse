@@ -73,6 +73,7 @@ class LoginController extends Controller
 
     // Attempt to log in with the credentials and remember me option
     if (Auth::attempt($credentials, $request->filled('remember'))) {
+        
         // Login successful, clear login attempts
         Cache::forget('login_attempts_' . $email);
 
@@ -82,9 +83,39 @@ class LoginController extends Controller
             ->where('id', $user->id)
             ->update(['last_login_at' => now()]);
 
+
+            $welcomeMessages = [
+                'Selamat datang kembali, ' . $user->name . '!',
+                'Senang bertemu lagi denganmu, ' . $user->name . '!',
+                'Halo, ' . $user->name . '! Kami merindukanmu!',
+                'Selamat bergabung kembali, ' . $user->name . '!',
+                'Senang kamu kembali, ' . $user->name . '!',
+                'Hai, ' . $user->name . '! Siap untuk hari yang produktif?',
+                'Apa kabar, ' . $user->name . '? Senang melihatmu lagi!',
+                'Selamat datang, ' . $user->name . '! Kami berharap harimu menyenangkan!',
+                'Kembali lagi ya, ' . $user->name . '! Ayo kita mulai!',
+                'Kami selalu senang melihatmu kembali, ' . $user->name . '!',
+                'Hello, ' . $user->name . '! Terima kasih sudah kembali!',
+                'Hai, ' . $user->name . '! Yuk, mulai lagi dengan penuh semangat!',
+                'Luar biasa, ' . $user->name . '! Senang melihatmu aktif lagi!',
+                'Selamat datang di hari baru, ' . $user->name . '!',
+                'Senang melihatmu, ' . $user->name . '! Yuk lanjutkan aktivitas!',
+                'Semoga harimu menyenangkan, ' . $user->name . '!',
+                'Ayo, ' . $user->name . '! Kami siap membantumu hari ini!',
+                'Selamat datang, ' . $user->name . '! Semoga harimu penuh keberhasilan!',
+                'Hai, ' . $user->name . '! Senang kamu ada di sini lagi!',
+                'Halo lagi, ' . $user->name . '! Mari kita buat hari ini luar biasa!'
+            ];
+            
+
+            $randomMessage = $welcomeMessages[array_rand($welcomeMessages)];
+
+            session()->flash('welcome_message', $randomMessage);
+
+
         // Redirect based on user role
         if ($user->role == 'admin') {
-            return redirect()->route('dashboard');
+            return redirect()->route(route: 'dashboard');
         } elseif ($user->role == 'costumer') {
             return redirect()->route('home');
         }
@@ -121,18 +152,35 @@ public function logout(Request $request)
 {
     $user = Auth::user();  // Capture the user before logging out
 
-    Auth::logout();  // Log the user out
-    $request->session()->invalidate();  // Invalidate the session
-    $request->session()->regenerateToken();  // Regenerate the CSRF token
+    // Daftar pesan logout acak
+    $logoutMessages = [
+        'Sampai jumpa lagi, ' . $user->name . '!',
+        'Terima kasih sudah berkunjung, ' . $user->name . '!',
+        'Kami harap bisa bertemu lagi, ' . $user->name . '!',
+        'Logout berhasil. Sampai jumpa, ' . $user->name . '!',
+        'Selamat tinggal, ' . $user->name . '!',
+        'Jangan ragu untuk kembali lagi, ' . $user->name . '!'
+    ];
 
-    // Update the last_login_at to now to indicate they are no longer online
+    // Pilih pesan secara acak
+    $randomMessage = $logoutMessages[array_rand($logoutMessages)];
+
+    // Simpan pesan logout ke session
+    session()->flash('logout_message', $randomMessage);
+
+    // Logout the user
+    Auth::logout();
+    $request->session()->invalidate();
+    $request->session()->regenerateToken();
+
+    // Update last login time
     if ($user) {
         DB::table('t_users')
             ->where('id', $user->id)
             ->update(['last_login_at' => now()]);
     }
 
-    // Redirect based on user role
+    // Redirect berdasarkan role pengguna
     if ($user->role == 'admin') {
         return redirect('/login');  // Redirect admin users to the login page
     } elseif ($user->role == 'costumer') {
@@ -141,6 +189,7 @@ public function logout(Request $request)
 
     return redirect('/');  // Fallback to home for other roles
 }
+
 
     
 

@@ -133,7 +133,7 @@
                     @if($pageMessage)
                     <div class="page-message-container d-flex align-items-center justify-content-between bg-light p-3 rounded mb-4">
                         <span class="page-message-text">{{ $pageMessage }}</span>
-                        <a href="{{ route('shop') }}" class="btn btn-secondary btn-sm refresh-button" title="{{ __('Refresh Page') }}">
+                        <a href="{{ route('shop') }}" class="btn btn-secondary btn-sm refresh-button" style="pointer:cursor" title="{{ __('Refresh Page') }}">
                             <i class="fas fa-sync-alt"></i> {{ __('Refresh') }}
                         </a>
                     </div>
@@ -142,9 +142,20 @@
                     
                     <div class="row" id="product-list">
                         @if($products->isEmpty())
-                            <div class="col-12 text-center">
-                                <p class="alert alert-warning mt-4">Produk tidak ditemukan dalam kategori ini.</p>
-                            </div>
+                        <div class="col-12 text-center">
+                            <p class="alert alert-warning mt-4">
+                                Produk tidak ditemukan dalam kategori ini.
+                                @if(isset($activeBigSale))
+                                    <br><br>
+                                    Produk yang Anda cari mungkin sedang berada dalam <strong>Big Sale</strong> kami!
+                                    <br>
+                                    <a href="{{ route('customer.bigsale.index', ['slug' => $activeBigSale->slug]) }}" class="text-dark fw-bold">
+                                        <b>Lihat Big Sale Sekarang</b>
+                                    </a>
+                                @endif
+                            </p>
+                        </div>
+                        
                         @else
                             @foreach ($products as $product)
                                 <div class="col-lg-4 col-md-6 col-sm-6 product__item-container">
@@ -163,29 +174,50 @@
                                                 </a>
                                             </h6>
                                             <h5>
-                                                @if ($product->discount_price)
-                                                    @php
-                                                        $discount_percentage = (($product->price - $product->discount_price) / $product->price) * 100;
-                                                    @endphp
+                                                @php
+                                                    $finalPrice = $product->price;
+                                                    $isBigSale = false;
+                                                    
+                                                    // Check if there's an active Big Sale for this product
+                                                    if (isset($bigSales) && $bigSales->isActive() && $bigSales->products->contains($product->id)) {
+                                                        $isBigSale = true;
+                                                        
+                                                        // Calculate the Big Sale discounted price
+                                                        if ($bigSales->discount_amount) {
+                                                            $finalPrice = $product->price - $bigSales->discount_amount;
+                                                        } elseif ($bigSales->discount_percentage) {
+                                                            $finalPrice = $product->price - ($bigSales->discount_percentage / 100 * $product->price);
+                                                        }
+                                                    } elseif ($product->discount_price) {
+                                                        // If no Big Sale is active, use the product's own discount price
+                                                        $finalPrice = $product->discount_price;
+                                                    }
+                                        
+                                                    // Calculate discount percentage for display purposes if a discount exists
+                                                    $discountPercentage = ($product->price > $finalPrice) ? round((($product->price - $finalPrice) / $product->price) * 100) : null;
+                                                @endphp
+                                        
+                                                @if ($discountPercentage)
                                                     <span style="text-decoration: line-through; color:darkgray">
                                                         Rp{{ number_format($product->price, 0, ',', '.') }}
                                                     </span>
                                                     <span style="color:red;">
-                                                        ({{ round($discount_percentage) }}% Off)
+                                                        ({{ $discountPercentage }}% Off)
                                                     </span>
                                                     <br>
                                                     <span>
-                                                        Rp{{ number_format($product->discount_price, 0, ',', '.') }}
+                                                        Rp{{ number_format($finalPrice, 0, ',', '.') }}
                                                     </span>
                                                 @else
                                                     @if ($product->is_price_displayed === 'yes')
-                                                        Rp{{ number_format($product->price, 0, ',', '.') }}
+                                                        Rp{{ number_format($finalPrice, 0, ',', '.') }}
                                                     @else
                                                         {{ __('messages.hubungi_admin') }}
                                                     @endif
                                                 @endif
                                             </h5>
                                         </div>
+                                        
                                     </div>
                                 </div>
                             @endforeach

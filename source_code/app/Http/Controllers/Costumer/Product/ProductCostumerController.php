@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Costumer\Product;
 
 use App\Http\Controllers\Controller;
+use App\Models\BigSale;
 use App\Models\Category;
 use App\Models\Komoditas;
 use App\Models\Product;
@@ -17,8 +18,16 @@ class ProductCostumerController extends Controller
 {
     public function userShow($slug)
     {
-        $product = Product::where('slug', $slug)->firstOrFail();
+        $product = Product::where('slug', $slug)->with('bigSales')->firstOrFail();
         $images = $product->images;
+
+        $activeBigSale = BigSale::where('status', true)
+        ->where('start_time', '<=', now())
+        ->where('end_time', '>=', now())
+        ->whereHas('products', function($query) use ($product) {
+            $query->where('t_product.id', $product->id); // Specify 'products.id' to avoid ambiguity
+        })
+        ->first();
 
         $averageRating = $product->reviews()->avg('rating');
         $totalRatings = $product->reviews()->count();
@@ -44,7 +53,7 @@ class ProductCostumerController extends Controller
             ->whereIn('order_id', $deliveredOrders->pluck('id'))
             ->exists();
 
-            return view('customer.product.show', compact('product', 'images', 'averageRating', 'totalRatings', 'relatedProducts', 'isFavorite', 'deliveredOrders', 'reviewExists'));
+            return view('customer.product.show', compact('product', 'images', 'averageRating', 'totalRatings', 'relatedProducts', 'isFavorite', 'deliveredOrders', 'reviewExists', 'activeBigSale'));
         }
 
 

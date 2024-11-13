@@ -58,6 +58,7 @@
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
     @endif
+    
 
 <div class="container py-5">
     <!-- Judul dan Tombol Aksi -->
@@ -146,6 +147,19 @@
         </div>
     @endif
 
+    @if($order->status == 'negotiation_in_progress')
+        <div class="alert alert-info alert-dismissible fade show d-flex align-items-center" role="alert">
+            <i class="fas fa-info-circle me-2" style="font-size: 1.5em; color: #0056b3;"></i>
+            <div>
+                <p class="mb-1 fw-bold" style="font-size: 1.1em;">Negosiasi Sedang Berlangsung</p>
+                <p class="mb-0">Hubungi customer untuk memulai negosiasi:</p>
+                <p class="mb-0"><strong>Nomor Telepon:</strong> {{ $order->user->phone_number ?? 'Tidak tersedia' }}</p>
+            </div>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    @endif
+
+
     <!-- Bagian Informasi Pesanan -->
     <div class="card mb-4">
         <div class="card-header d-flex justify-content-between align-items-center">
@@ -202,7 +216,7 @@
     <!-- Bagian Item Pesanan -->
     <div class="card mb-4">
         <div class="card-header">
-            Item Pesanan
+            <h4 class="mb-0">Item Pesanan</h4>
         </div>
         <div class="card-body">
             <table class="table table-striped">
@@ -228,70 +242,59 @@
         </div>
     </div>
 
-    <!-- Bagian Alamat Pelanggan (Hanya tampil jika status adalah 'packing') -->
-    @if($order->status === 'packing')
-    <div class="card mb-4">
-        <div class="card-header">
-            Alamat Pelanggan
-        </div>
-        <div class="card-body">
-            @if($order->user)
+    @if($order->status === 'processing')
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">Alamat Pengiriman Pelanggan</h5>
+            </div>
+            <div class="card-body">
                 @php
-                    $activeAddress = $order->user->addresses->where('is_active', 1)->first();
+                    $activeAddress = $order->user->userAddresses->where('is_active', 1)->first();
                 @endphp
 
                 @if($activeAddress)
-                    <table class="table table-bordered">
-                        <thead>
-                            <tr>
-                                <th>Field</th>
-                                <th>Detail</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td><strong>Label Alamat</strong></td>
-                                <td>{{ $activeAddress->label_alamat }}</td>
-                            </tr>
-                            <tr>
-                                <td><strong>Nama Penerima</strong></td>
-                                <td>{{ $activeAddress->nama_penerima }}</td>
-                            </tr>
-                            <tr>
-                                <td><strong>Nomor Telepon</strong></td>
-                                <td>{{ $activeAddress->nomor_telepon }}</td>
-                            </tr>
-                            <tr>
-                                <td><strong>Provinsi</strong></td>
-                                <td>{{ $activeAddress->provinsi }}</td>
-                            </tr>
-                            <tr>
-                                <td><strong>Kota/Kabupaten</strong></td>
-                                <td>{{ $activeAddress->kota_kabupaten }}</td>
-                            </tr>
-                            <tr>
-                                <td><strong>Kodepos</strong></td>
-                                <td>{{ $activeAddress->kodepos }}</td>
-                            </tr>
-                            <tr>
-                                <td><strong>Kecamatan</strong></td>
-                                <td>{{ $activeAddress->kecamatan }}</td>
-                            </tr>
-                            <tr>
-                                <td><strong>Detail Alamat</strong></td>
-                                <td>{{ $activeAddress->detail_alamat }}</td>
-                            </tr>
-                        </tbody>
-                    </table>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <strong>Label Alamat:</strong>
+                            <p>{{ $activeAddress->address_label }}</p>
+                        </div>
+                        <div class="col-md-6">
+                            <strong>Nama Penerima:</strong>
+                            <p>{{ $activeAddress->recipient_name }}</p>
+                        </div>
+                        <div class="col-md-6">
+                            <strong>Nomor Telepon:</strong>
+                            <p>{{ $activeAddress->phone_number }}</p>
+                        </div>
+                        <div class="col-md-6">
+                            <strong>Provinsi:</strong>
+                            <p>{{ $activeAddress->province }}</p>
+                        </div>
+                        <div class="col-md-6">
+                            <strong>Kota/Kabupaten:</strong>
+                            <p>{{ $activeAddress->city }}</p>
+                        </div>
+                        <div class="col-md-6">
+                            <strong>Kodepos:</strong>
+                            <p>{{ $activeAddress->postal_code }}</p>
+                        </div>
+                        <div class="col-md-12">
+                            <strong>Alamat Lengkap:</strong>
+                            <p>{{ $activeAddress->address }}</p>
+                        </div>
+                        <div class="col-md-12">
+                            <strong>Informasi Tambahan:</strong>
+                            <p>{{ $activeAddress->additional_info }}</p>
+                        </div>
+                    </div>
                 @else
-                    <p>Tidak ada alamat aktif untuk pelanggan ini.</p>
+                    <p class="text-muted">Tidak ada alamat aktif yang ditemukan untuk pelanggan ini.</p>
                 @endif
-            @else
-                <p>Informasi pelanggan tidak ditemukan untuk pesanan ini.</p>
-            @endif
+            </div>
         </div>
-    </div>
     @endif
+
+
 
     <!-- Modal Pengiriman -->
     <div class="modal fade" id="shippingModal" tabindex="-1" aria-labelledby="shippingModalLabel" aria-hidden="true">

@@ -31,8 +31,22 @@ class ShopController extends Controller
     $categoryName = null;
     $subcategoryName = null;
 
+    // Find an active Big Sale
+    $activeBigSale = BigSale::where('status', true)
+        ->where('start_time', '<=', now())
+        ->where('end_time', '>=', now())
+        ->first();
+
     // Base query for published products
     $query = Product::with('images')->where('status', 'publish');
+
+    // Exclude products in the active Big Sale
+    if ($activeBigSale) {
+        $query->whereDoesntHave('bigSales', function ($q) use ($activeBigSale) {
+            $q->where('t_bigsales.id', $activeBigSale->id); // Use 'big_sales.id' to avoid ambiguity
+        });
+    }
+    
 
     // Filter by category if category slug is provided
     if ($categorySlug) {
@@ -117,8 +131,9 @@ class ShopController extends Controller
     $productCount = $products->total();
 
     // Return view with all parameters for correct display
-    return view('customer.shop.shop', compact('products', 'categories', 'subcategories', 'productCount', 'categorySlug', 'subcategorySlug', 'rating', 'queryParam', 'pageMessage'));
+    return view('customer.shop.shop', compact('products', 'categories', 'subcategories', 'productCount', 'categorySlug', 'subcategorySlug', 'rating', 'queryParam', 'pageMessage','activeBigSale'));
 }
+
 
 
 

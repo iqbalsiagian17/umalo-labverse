@@ -215,13 +215,14 @@ return [
     'view_details' => 'Lihat Detail',
     'removed_from_favorites' => 'Dihapus dari Favorit',
 
-    'waiting_approval' => 'Menunggu Persetujuan',
-    'approved' => 'Disetujui',
+    'waiting_approval' => 'Menunggu Konfirmasi dari Admin',
+    'approved' => 'Pesanan Telah Dikonfirmasi',
     'pending_payment' => 'Menunggu Pembayaran',
-    'confirmed' => 'Dikonfirmasi',
-    'processing' => 'Sedang Diproses',
-    'shipped' => 'Dikirim',
-    'delivered' => 'Terkirim',
+    'confirmed' => 'Pembayaran Terkonfirmasi',
+    'processing' => 'Pesanan Sedang Diproses',
+    'shipped' => 'Pesanan Telah Dikirim',
+    'delivered' => 'Pesanan Telah Diterima',
+
 
     "negotiation_history" => "Riwayat Negoisasi",
     "negotiation_pending" => "Menunggu Persetujuan Negoisasi",
@@ -232,4 +233,10 @@ return [
     
     "total_final_payment" => "Total Pembayaran Akhir",
 
+    'complete_address_data' => 'Lengkapi data alamat Anda',
+    'fill_address_data' => 'Isi Data Alamat',
+
+
+    'cancelled_by_admin' => 'Dibatalkan oleh Admin',
+    'cancelled_by_system' => 'Dibatalkan oleh Sistem',
 ];

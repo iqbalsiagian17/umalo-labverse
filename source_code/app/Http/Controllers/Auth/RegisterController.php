@@ -63,10 +63,29 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
-        return User::create([
+        // Buat pengguna baru
+        $user = User::create([
             'name' => $data['name'],
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
         ]);
+
+        // Daftar pesan selamat datang acak untuk pengguna baru
+        $welcomeMessages = [
+            'Selamat datang, ' . $user->name . '! Terima kasih telah bergabung.',
+            'Hai, ' . $user->name . '! Kami sangat senang kamu ada di sini.',
+            'Selamat datang di komunitas kami, ' . $user->name . '!',
+            'Halo, ' . $user->name . '! Selamat bergabung, semoga harimu menyenangkan!',
+            'Selamat datang di platform kami, ' . $user->name . '!',
+            'Hai ' . $user->name . '! Senang bertemu denganmu di sini!'
+        ];
+
+        // Pilih pesan acak
+        $randomMessage = $welcomeMessages[array_rand($welcomeMessages)];
+
+        // Set flash message untuk welcome message
+        session()->flash('welcome_message', $randomMessage);
+
+        return $user;
     }
 }
