@@ -313,7 +313,7 @@
                                         <label for="measurement_unit">Unit Pengukuran:</label>
                                         <select name="measurement_unit" class="form-control">
                                             <option value="set" {{ $product->measurement_unit == 'set' ? 'selected' : '' }}>Set</option>
-                                            <option value="paket" {{ $product->measurement_unit == 'paket' ? 'selected' : '' }}>Paket</option>
+                                            <option value="Package" {{ $product->measurement_unit == 'Package' ? 'selected' : '' }}>Paket</option>
                                         </select>
                                         @if ($errors->has('measurement_unit'))
                                             <small class="text-danger">{{ $errors->first('measurement_unit') }}</small>
@@ -414,7 +414,7 @@
                                         <label for="product_type">Jenis Product:</label>
                                         <select name="product_type" class="form-control">
                                             <option value="PDN" {{ $product->product_type == 'PDN' ? 'selected' : '' }}>PDN</option>
-                                            <option value="Impor" {{ $product->product_type == 'Impor' ? 'selected' : '' }}>Impor</option>
+                                            <option value="Import" {{ $product->product_type == 'Import' ? 'selected' : '' }}>Impor</option>
                                         </select>
                                         @if ($errors->has('product_type'))
                                             <small class="text-danger">{{ $errors->first('product_type') }}</small>

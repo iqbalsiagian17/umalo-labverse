@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Models\UserAddress;
 use App\Models\UserDetail;
+use App\Models\Visit;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -66,7 +67,7 @@ class UserController extends Controller
 {
     $validatedData = $request->validate([
         'name' => 'required|string|max:255',
-        'email' => 'required|email|unique:users,email,' . $id,
+        'email' => 'required|email|unique:t_users,email,' . $id,
         'role' => 'required|in:0,1', // 0 for customer, 1 for admin
     ]);
 
@@ -74,39 +75,6 @@ class UserController extends Controller
 
     // Update the user data
     $user->update($validatedData);
-
-    // Check if userDetail exists or create a new one
-    $userDetail = $user->userDetail;
-
-    if ($userDetail) {
-        // If userDetail exists, update it
-        $userDetail->update([
-            'no_telepone' => $request->no_telepone,
-            'perusahaan' => $request->perusahaan,
-            'lahir' => $request->lahir,
-            'jenis_kelamin' => $request->jenis_kelamin,
-        ]);
-    } else {
-        // If userDetail doesn't exist, create a new record
-        $user->userDetail()->create([
-            'no_telepone' => $request->no_telepone,
-            'perusahaan' => $request->perusahaan,
-            'lahir' => $request->lahir,
-            'jenis_kelamin' => $request->jenis_kelamin,
-        ]);
-    }
-
-    // Update or create user address
-    $user->addresses()->updateOrCreate(
-        ['user_id' => $user->id], // Criteria for matching the existing record
-        [
-            'alamat' => $request->alamat,
-            'kota' => $request->kota,
-            'provinsi' => $request->provinsi,
-            'kode_pos' => $request->kode_pos,
-            'tambahan' => $request->tambahan,
-        ]
-    );
 
     return redirect()->route('users.index')->with('success', 'User updated successfully.');
 }
@@ -135,5 +103,31 @@ class UserController extends Controller
         $user->delete();
 
         return redirect()->route('users.index')->with('success', 'User deleted successfully.');
+    }
+
+    public function visits()
+    {
+         // Daily visits for the last 30 days
+         $dailyVisits = Visit::selectRaw('DATE(visited_at) as date, COUNT(*) as total')
+         ->where('visited_at', '>=', now()->subDays(30))
+         ->groupBy('date')
+         ->orderBy('date', 'asc')
+         ->get();
+
+     // Monthly visits for the last 12 months
+     $monthlyVisits = Visit::selectRaw('DATE_FORMAT(visited_at, "%Y-%m") as month, COUNT(*) as total')
+         ->where('visited_at', '>=', now()->subYear())
+         ->groupBy('month')
+         ->orderBy('month', 'asc')
+         ->get();
+
+     // Hourly visits for the last 24 hours
+     $hourlyVisits = Visit::selectRaw('HOUR(visited_at) as hour, COUNT(*) as total')
+         ->where('visited_at', '>=', now()->subDay())
+         ->groupBy('hour')
+         ->orderBy('hour', 'asc')
+         ->get();
+
+        return view('admin.users.visits', compact('dailyVisits', 'monthlyVisits', 'hourlyVisits'));
     }
 }

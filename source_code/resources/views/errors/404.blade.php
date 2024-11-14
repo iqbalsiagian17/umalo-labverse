@@ -75,7 +75,11 @@
 
         <div class="error-code">404</div>
         <div class="error-message">Oops! Page not found.</div>
-        <a href="{{ url('/') }}" class="error-link">Go back to Home</a>
+        @if(Auth::check() && Auth::user()->role === 'admin')
+            <a href="{{ route('dashboard') }}" class="error-link">Go to Dashboard</a>
+        @else
+            <a href="{{ url('/') }}" class="error-link">Go back to Home</a>
+        @endif
     </div>
 </body>
 </html>

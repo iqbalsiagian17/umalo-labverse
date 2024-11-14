@@ -148,6 +148,12 @@
                 <a href="{{ route('users.index') }}">
                   <span class="sub-item">User</span>
                 </a>
+              </li>
+              <li>
+                <a href="{{ route('admin.visits') }}">
+                  <span class="sub-item">Statistik Pengunjung</span>
+                </a>
+              </li>
             </ul>
           </div>
         </li>

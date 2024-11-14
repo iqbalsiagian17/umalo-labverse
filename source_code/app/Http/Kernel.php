@@ -38,6 +38,7 @@ class Kernel extends HttpKernel
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
             \App\Http\Middleware\UpdateLastLoginAt::class,
             \App\Http\Middleware\LocaleMiddleware::class,
+            \App\Http\Middleware\LogVisit::class,
         ],
 
         'api' => [
@@ -66,5 +67,7 @@ class Kernel extends HttpKernel
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         'user-access' => \App\Http\Middleware\UserAccess::class,
+        'restrict_admin' => \App\Http\Middleware\RestrictAdminAccess::class,
+
     ];
 }

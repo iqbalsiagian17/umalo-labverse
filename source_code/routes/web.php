@@ -31,29 +31,24 @@ use App\Http\Controllers\LanguageController;
 
 Auth::routes();
 
-Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::middleware(['restrict_admin'])->group(function () {
 
-// Define each shop route with a unique name
-Route::get('/shop', [App\Http\Controllers\Costumer\Shop\ShopController::class, 'shop'])->name('shop');
-Route::get('/shop/{category_slug?}', [ShopController::class, 'shop'])->name('shop.category');
-Route::get('/shop/{category_slug?}/{subcategory_slug?}', [ShopController::class, 'shop'])->name('shop.subcategory');
-Route::get('/shop/rating/{rating}', [ShopController::class, 'filterByRating'])->name('shop.rating');
+    Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+    Route::get('/shop', [App\Http\Controllers\Costumer\Shop\ShopController::class, 'shop'])->name('shop');
+    Route::get('/shop/{category_slug?}', [ShopController::class, 'shop'])->name('shop.category');
+    Route::get('/shop/{category_slug?}/{subcategory_slug?}', [ShopController::class, 'shop'])->name('shop.subcategory');
+    Route::get('/shop/rating/{rating}', [ShopController::class, 'filterByRating'])->name('shop.rating');
+    Route::get('/bigsale/{slug}', [App\Http\Controllers\HomeController::class, 'bigsale'])->name('customer.bigsale.index');
+    Route::get('/product/lab/{id}', [ProductCostumerController::class, 'userShow'])->name('Product_customer.user.show');
+    Route::get('/search', [ProductCostumerController::class, 'search'])->name('Product.search');
+    Route::get('/labverse/lab/product/{slug}', [ProductCostumerController::class, 'userShow'])->name('product.show');
+    Route::get('/customer/faq', [FaqCustomerController::class, 'index'])->name('customer.faq');
+    Route::get('/order/{id}/generate-pdf', [OrderHandleAdminController::class, 'generatePdf'])->name('order.generate_pdf');
 
-Route::get('/bigsale/{slug}', [App\Http\Controllers\HomeController::class, 'bigsale'])->name('customer.bigsale.index');
-
-// Other routes
-Route::get('/product/lab/{id}', [ProductCostumerController::class, 'userShow'])->name('Product_customer.user.show');
-Route::get('/search', [ProductCostumerController::class, 'search'])->name('Product.search');
-Route::get('/labverse/lab/product/{slug}', [ProductCostumerController::class, 'userShow'])->name('product.show');
-Route::get('/customer/faq', [FaqCustomerController::class, 'index'])->name('customer.faq');
-Route::get('/order/{id}/generate-pdf', [OrderHandleAdminController::class, 'generatePdf'])->name('order.generate_pdf');
+});
 
 
-//Normal Users Routes List
 Route::middleware(['auth', 'user-access:costumer'])->group(function () {
-
-
-    //Detail Account
     Route::get('/personal', [UserDetailController::class, 'show'])->name('user.show');
     Route::get('/personal/create', [UserDetailController::class, 'create'])->name('user.create');
     Route::post('/personal', [UserDetailController::class, 'store'])->name('user.store');
@@ -74,7 +69,7 @@ Route::middleware(['auth', 'user-access:costumer'])->group(function () {
     Route::post('/wishlist/remove/{productId}', [WishlistController::class, 'removeFromWishlist'])->name('wishlist.remove');
     Route::post('/wishlist/move-to-cart/{productId}', [WishlistController::class, 'moveToCart'])->name('wishlist.moveToCart');
 
-
+    //Cart
     Route::get('/customer/cart', [CartController::class, 'index'])->name('cart.show');
     Route::post('/customer/cart/add', [CartController::class, 'addToCart'])->name('cart.add');
     Route::delete('/customer/cart/remove/{id}', [CartController::class, 'removeFromCart'])->name('cart.remove');
@@ -91,7 +86,7 @@ Route::middleware(['auth', 'user-access:costumer'])->group(function () {
     Route::get('/customer/orders', [OrderHandleCustomerController::class, 'index'])->name('customer.orders.index');
 
 
-    //
+    //Review
     Route::get('/product/{productId}/review', [ReviewCustomerController::class, 'createReview'])->name('review.create');
     Route::post('/product/{productId}/review', [ReviewCustomerController::class, 'storeReview'])->name('review.store');
 
@@ -118,6 +113,7 @@ Route::middleware(['auth', 'user-access:admin'])->group(function () {
     Route::resource('faq', FaqController::class);
     Route::resource('users', UserController::class);
     Route::put('/users/{id}/password', [UserController::class, 'updatePassword'])->name('users.update.password');
+    Route::get('/admin/visits', [UserController::class, 'visits'])->name('admin.visits');
 
 
     Route::get('/admin/bigsale/index', [BigSaleAdminHandleController::class, 'index'])->name('admin.bigsales.index');

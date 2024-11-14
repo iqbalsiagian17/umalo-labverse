@@ -158,10 +158,12 @@
               </div>
             </div>
             <div class="col col-stats ms-3 ms-sm-0">
+              <a href="{{ route('admin.visits') }}">
               <div class="numbers">
-                <p class="card-category">Order (Selesai)</p>
-                <h4 class="card-title">{{ $orderCount }}</h4> <!-- Display the order count -->
+                <p class="card-category">Statistik</p>
+                <h4 class="card-title">Pengguna Website</h4> <!-- Display the order count -->
               </div>
+            </a>
             </div>
           </div>
         </div>

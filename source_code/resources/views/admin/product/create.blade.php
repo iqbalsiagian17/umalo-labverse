@@ -198,7 +198,7 @@
                                         <select name="measurement_unit" class="form-control">
                                             <option value="" disabled {{ old('measurement_unit') ? '' : 'selected' }}>Pilih unit pengukuran</option>
                                             <option value="set" {{ old('measurement_unit') == 'set' ? 'selected' : '' }}>Set</option>
-                                            <option value="paket" {{ old('measurement_unit') == 'paket' ? 'selected' : '' }}>Paket</option>
+                                            <option value="Package" {{ old('measurement_unit') == 'Package' ? 'selected' : '' }}>Paket</option>
                                         </select>
                                         @if ($errors->has('measurement_unit'))
                                             <small class="text-danger">{{ $errors->first('measurement_unit') }}</small>
@@ -296,7 +296,7 @@
                                         <select name="product_type" class="form-control">
                                             <option value="" disabled {{ old('product_type') ? '' : 'selected' }}>Pilih jenis Product</option>
                                             <option value="PDN" {{ old('product_type') == 'PDN' ? 'selected' : '' }}>PDN</option>
-                                            <option value="Impor" {{ old('product_type') == 'Impor' ? 'selected' : '' }}>Impor</option>
+                                            <option value="Import" {{ old('product_type') == 'Import' ? 'selected' : '' }}>Impor</option>
                                         </select>
                                         @if ($errors->has('product_type'))
                                             <small class="text-danger">{{ $errors->first('product_type') }}</small>
