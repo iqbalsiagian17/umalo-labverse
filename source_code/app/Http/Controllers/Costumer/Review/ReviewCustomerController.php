@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Costumer\Review;
 
 use App\Http\Controllers\Controller;
 use App\Models\Order;
+use App\Models\Product;
 use App\Models\Review;
 use Illuminate\Http\Request;
 
@@ -13,7 +14,7 @@ class ReviewCustomerController extends Controller
     {
         // Validasi data
         $validated = $request->validate([
-            'product_id' => 'required|exists:t_product,id',
+            'product_id' => 'required|exists:t_product,slug',  // Menggunakan slug di sini
             'order_id' => 'required|exists:t_orders,id',
             'rating' => 'required|integer|min:1|max:5',
             'comment' => 'required|string|max:500',
@@ -26,30 +27,28 @@ class ReviewCustomerController extends Controller
                     ->first();
 
         if (!$order) {
-            return response()->json(['errors' => ['You do not have a delivered order for this product.']], 422);
+            return back()->with('error', 'You do not have a delivered order for this product.');
+        }
+
+        // Ambil produk berdasarkan slug
+        $product = Product::where('slug', $validated['product_id'])->first();
+
+        if (!$product) {
+            return back()->with('error', 'Product not found.');
         }
 
         // Simpan ulasan
         $review = Review::create([
             'user_id' => auth()->id(),
-            'product_id' => $validated['product_id'],
+            'product_id' => $product->id,
             'order_id' => $validated['order_id'],
             'rating' => $validated['rating'],
             'content' => $validated['comment'],
         ]);
 
-        // Kembalikan respons JSON
-        return response()->json([
-            'success' => true,
-            'message' => 'Thank you for your review!',
-            'review' => [
-                'created_at' => $review->created_at->format('F d, Y'),
-                'name' => $review->user->name,
-                'rating' => $review->rating,
-                'comment' => $review->content,
-                'profile_photo' => asset($review->user->profile_photo),
-            ]
-        ]);
+        // Redirect kembali dengan session sukses
+        return redirect()->route('product.show', ['slug' => $product->slug])  // Menggunakan slug di sini
+                        ->with('success', 'Thank you for your review!');
     }
 
 

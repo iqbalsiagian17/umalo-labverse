@@ -1,5 +1,8 @@
 @extends('layouts.customer.master')@section('content')
 <!-- Product Details Section Begin -->
+
+@include('customer.partials.order.order__messages')
+
 <section class="product-details spad">
     <div class="container">
         <div class="row">
@@ -814,10 +817,10 @@
                                     <div class="card-body">
                                         @if (!$reviewExists)
                                             @if ($deliveredOrders->isNotEmpty())
-                                                <form action="{{ route('review.store', ['productId' => $product->id]) }}" method="POST" enctype="multipart/form-data">
-                                                    @csrf
+                                            <form action="{{ route('review.store', ['productId' => $product->slug]) }}" method="POST">
+                                                @csrf
                                                     <input type="hidden" name="order_id" value="{{ $deliveredOrders->first()->id }}">
-                                                    <input type="hidden" name="product_id" value="{{ $product->id }}">
+                                                    <input type="hidden" name="product_id" value="{{ $product->slug }}">
 
                                                     <div class="form-group mb-3">
                                                         <label for="rating">Ulasan Anda</label>
