@@ -218,32 +218,31 @@
     </section>
     
 
-    <section class="hero">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-12">
+    <section class="hero-section-bigsale">
+        <div class="container-bigsale">
+            <div class="row-bigsale">
+                <div class="col-bigsale">
                     @if($bigSales && $bigSales->modal_image)
                     <!-- Modal with Image -->
-                    <div class="modal fade" id="myModal" tabindex="-1" aria-labelledby="myModalLabel" aria-hidden="true">
-                        <div class="modal-dialog modal-lg">
-                            <div class="modal-content custom-modal-content">
-                                <div class="modal-body p-0 position-relative">
+                    <div class="modal fade" id="bigsaleModal" tabindex="-1" aria-labelledby="bigsaleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-bigsale">
+                            <div class="modal-content modal-content-bigsale border-0">
+                                <div class="modal-body modal-body-bigsale p-0 position-relative">
                                     <!-- Link the image to the Big Sale page -->
                                     <a href="{{ route('customer.bigsale.index', ['slug' => $bigSales->slug]) }}">
-                                        <img src="{{ asset($bigSales->modal_image) }}" alt="Big Sale Banner" class="img-fluid" style="width: 50; height: 50; object-fit: cover; border-radius: 8px;">
+                                        <img src="{{ asset($bigSales->modal_image) }}" alt="Big Sale Banner" class="img-fluid img-bigsale">
                                     </a>
-                                    <button type="button" class="btn-close btn-close-custom" data-bs-dismiss="modal" aria-label="Close">✕</button>
+                                    <button type="button" class="btn-close btn-close-bigsale" data-bs-dismiss="modal" aria-label="Close">✕</button>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    
     
                     <!-- Bootstrap 5 JS Modal activation script -->
                     <script type="text/javascript">
                         document.addEventListener('DOMContentLoaded', function () {
-                            var myModal = new bootstrap.Modal(document.getElementById('myModal'));
-                            myModal.show();
+                            var bigsaleModal = new bootstrap.Modal(document.getElementById('bigsaleModal'));
+                            bigsaleModal.show();
                         });
                     </script>
                     @endif
@@ -253,46 +252,73 @@
     </section>
     
     <style>
-        /* Custom modal content styling */
-        .custom-modal-content {
-            background: #000;
-            color: #fff;
-            border-radius: 8px;
-            overflow: hidden;
-            border: none;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        /* Hero Section Custom Styling */
+        .hero-section-bigsale .container-bigsale {
+            width: 100%;
+            margin: 0 auto;
         }
-        
-        .modal-body {
-            padding: 0;
+    
+        .hero-section-bigsale .row-bigsale {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+    
+        .hero-section-bigsale .col-bigsale {
             position: relative;
         }
-        
-        /* Improved Close Button Styling */
-        .btn-close-custom {
+    
+        /* Custom Modal Content Styling */
+        .modal-content-bigsale {
+            position: relative;
+            overflow: hidden;
+            border-radius: 10px;
+            background-color: transparent; /* Removes background */
+        }
+    
+        .modal-body-bigsale {
+            padding: 0;
+        }
+    
+        /* Modal Image Styling */
+        .img-bigsale {
+            width: 100%;
+            height: auto; /* Maintain aspect ratio */
+            object-fit: cover; /* Preserve proportions */
+            border-radius: 10px; /* Rounded corners */
+        }
+    
+        /* Close Button Styling */
+        .btn-close-bigsale {
             position: absolute;
-            top: 10px;
-            right: 10px;
-            width: 35px;
-            height: 35px;
-            background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+            top: 15px;
+            right: 15px;
+            width: 40px;
+            height: 40px;
+            background-color: rgba(0, 0, 0, 0.6); /* Semi-transparent background */
             color: #fff; /* White icon color */
             border-radius: 50%;
             border: none;
-            font-size: 1.5rem;
+            font-size: 1.6rem;
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
             transition: background-color 0.3s ease;
         }
-        
-        .btn-close-custom:hover {
+    
+        .btn-close-bigsale:hover {
             background-color: rgba(255, 0, 0, 0.7); /* Red hover effect */
             color: #fff;
         }
-        
-        </style>
+    
+        /* Modal Dialog Styling */
+        .modal-dialog-bigsale {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+    </style>
+    
         
         
     
