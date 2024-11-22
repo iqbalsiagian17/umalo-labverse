@@ -18,7 +18,7 @@ Umalo-Labverse is a Laravel-based project built with Laravel 10 and PHP 8.2. Thi
 1. Clone the Repository
 
 ```bash
-git clone https://github.com/username/umalo-labverse.git
+git clone https://github.com/iqbalsiagian17/umalo-labverse.git
 cd umalo-labverse/source_code
 ```
 
