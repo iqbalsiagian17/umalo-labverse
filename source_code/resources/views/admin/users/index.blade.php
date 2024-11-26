@@ -28,8 +28,6 @@
                     </ul>
                 </div>
             
-                <!-- Add New User Button on the right -->
-                <a href="{{ route('users.create') }}" class="btn btn-primary">Add New User</a>
             </div>
             
             @if (session('success'))
@@ -61,7 +59,7 @@
                                 </td>
                                 <td>{{ $user->email }}</td>
                                 <td>{{ $user->company ?? 'N/A' }}</td>
-                                <td>{{ $user->role == 1 ? 'Admin' : 'Customer' }}</td>
+                                <td>{{ $user->role}}</td>
                                 <td>{{ $user->created_at->format('Y-m-d') }}</td>
                                 <td>
                                     @if(auth()->check() && auth()->user()->id === $user->id)

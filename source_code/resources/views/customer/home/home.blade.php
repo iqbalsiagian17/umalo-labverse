@@ -383,7 +383,7 @@
                     </div>
                 @endforeach
                 <div class="col-lg-12 text-center mt-3">
-                    <a href="{{ route('shop') }}" class="primary-btn rounded">{{ __('messages.selengkapnya') }}</a>
+                    <a href="{{ route('shop') }}" class="btn btn-primary">{{ __('messages.selengkapnya') }}</a>
                 </div>
             </div>
         </div>
