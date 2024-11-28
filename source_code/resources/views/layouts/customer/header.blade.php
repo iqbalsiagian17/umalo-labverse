@@ -21,7 +21,7 @@
     <!-- Css Styles -->
     <link rel="stylesheet" href="{{ asset('ogani/css/bootstrap.min.css') }}" type="text/css">
 
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link rel="stylesheet" href="{{ asset('ogani/fonts/css/all.min.css') }}">
     <link rel="stylesheet" href="{{ asset('ogani/css/elegant-icons.css') }}" type="text/css">
     <link rel="stylesheet" href="{{ asset('ogani/css/nice-select.css') }}" type="text/css">
     <link rel="stylesheet" href="{{ asset('ogani/css/jquery-ui.min.css') }}" type="text/css">
