@@ -68,13 +68,12 @@ $parameter = App\Models\TParameter::first();
             <div class="col-lg-3 col-md-12 col-sm-12 d-flex justify-content-center mb-4">
                 <div class="footer__widget">
                     <div class="footer__about__logo d-flex flex-column align-items-center">
-                        <a href="./index.html">
-                            <img src="{{ asset('assets/images/AGS-logo.png') }}" alt="" style="width: 100%; height: 100px; margin-bottom: 10px;">
+                        <a href="{{ route('home') }}">
+                            <img src="{{ $parameter->logo2 ? asset($parameter->logo2) : asset('assets/images/AGS-logo.png') }}" alt="" style="width: 100%; height: 100px; margin-bottom: 10px;">
                         </a>
-                        <a href="./index.html">
-                            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c9/100%25_Cinta_Indonesia_Logo.svg/1200px-100%25_Cinta_Indonesia_Logo.svg.png" alt="" style="width: 100%; height: 100px;">
+                        <a href="{{ route('home') }}">
+                            <img src="{{ $parameter->logo3 ? asset($parameter->logo3) : asset('assets/images/AGS-logo.png') }}" alt="" style="width: 100%; height: 100px;">
                         </a>
-                        
                     </div>
                 </div>
             </div>

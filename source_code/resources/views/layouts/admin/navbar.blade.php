@@ -253,15 +253,6 @@ $totalUnseenCount = $unseenOrderCount + $unseenPaymentCount;
                 <div class="quick-actions-scroll scrollbar-outer">
                   <div class="quick-actions-items">
                     <div class="row m-0">
-                      <a class="col-6 col-md-4 p-0" href="/chatify">
-                        <div class="quick-actions-item">
-                            <div class="avatar-item bg-success rounded-circle">
-                                <i class="fas fa-comments"></i>
-                            </div>
-                            <span class="text">Chat</span>
-                        </div>
-                      </a>
-                    
                       <a class="col-6 col-md-4 p-0" href="{{ route('admin.orders.index') }}">
                         <div class="quick-actions-item">
                             <div class="avatar-item bg-warning rounded-circle">
