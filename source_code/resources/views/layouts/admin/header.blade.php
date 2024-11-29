@@ -11,16 +11,15 @@
 
 
     <!-- Bootstrap CSS -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.18/summernote.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ asset('kaiadmin-lite-1.2.0/assets/summernote/summernote.min.css') }}">    
+    <link rel="stylesheet" href="{{ asset('kaiadmin-lite-1.2.0/assets/css/sweetalert2.min.css') }}">
 
+    <!-- jQuery -->
+    <script src="{{ asset('kaiadmin-lite-1.2.0/assets/js/core/jquery-3.7.1.min.js') }}"></script>
 
-<!-- jQuery -->
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-
-<!-- Bootstrap JS -->
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
+    <!-- Bootstrap JS -->
+    <script src="{{ asset('kaiadmin-lite-1.2.0/assets/js/core/bootstrap.bundle.min.js') }}"></script>
+    <script src="{{ asset('kaiadmin-lite-1.2.0/assets/js/plugin/sweetalert/sweetalert.min.js') }}"></script>
 
 
 

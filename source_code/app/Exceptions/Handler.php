@@ -39,9 +39,9 @@ class Handler extends ExceptionHandler
             // Logika untuk melaporkan exception
         });
     
-        $this->renderable(function (ErrorException $e, $request) {
+/*         $this->renderable(function (ErrorException $e, $request) {
             return response()->view('errors.generic_error', ['exception' => $e], 500);
-        });
+        }); */
     } 
  
     public function render($request, Throwable $exception)
