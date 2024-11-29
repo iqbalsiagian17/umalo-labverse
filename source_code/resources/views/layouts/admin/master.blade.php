@@ -1,9 +1,9 @@
-@include('layouts.Admin.header')
+@include('layouts.admin.header')
 
-@include('layouts.Admin.sidebar')
+@include('layouts.admin.sidebar')
 
-@include('layouts.Admin.navbar')
+@include('layouts.admin.navbar')
 
-@include('layouts.Admin.content')
+@include('layouts.admin.content')
 
-@include('layouts.Admin.footer')
+@include('layouts.admin.footer')
